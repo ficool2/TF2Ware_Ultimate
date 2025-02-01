@@ -1224,6 +1224,7 @@ function Ware_StartMinigameInternal(is_boss)
 		if (++attempts > 16)
 		{
 			Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
+			SetConvarValue("mp_restartgame", 5)
 			return
 		}
 		
