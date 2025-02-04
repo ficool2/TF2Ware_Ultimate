@@ -87,6 +87,7 @@ function OnPick()
 	data.opposite_win      = data_a.opposite_win || data_b.opposite_win
 	data.friendly_fire     = data_a.friendly_fire && data_b.friendly_fire
 	data.bonus_points      = data_a.bonus_points || data_b.bonus_points
+	data.non_stop          = data_a.non_stop || data_b.non_stop
 	// choose whichever one has non-default value
 	data.boss_count        = data_a.boss_threshold != data.boss_count ? data_a.boss_count : data_b.boss_count
 	data.boss_threshold    = data_a.boss_threshold != data.boss_threshold ? data_a.boss_threshold : data_b.boss_threshold

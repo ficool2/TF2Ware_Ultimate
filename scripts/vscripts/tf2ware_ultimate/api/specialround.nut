@@ -14,6 +14,7 @@ class Ware_SpecialRoundData
 		opposite_win      = false
 		friendly_fire     = true
 		bonus_points      = false
+		non_stop          = false
 		boss_count        = 1
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
@@ -60,6 +61,8 @@ class Ware_SpecialRoundData
 	friendly_fire            = null
 	// Award bonus points? Default is false
 	bonus_points             = null
+	// No breaks between minigames, default is false
+	non_stop                 = null
 	// Amount of bosses to play, default is 1
 	boss_count       		 = null
 	// Amount of minigames played before a boss, default is Ware_BossThreshold in config.nut

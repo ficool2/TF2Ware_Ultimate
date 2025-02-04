@@ -1211,7 +1211,11 @@ function Ware_BeginBossInternal()
 			Ware_ShowScreenOverlay2(player, null)
 		}
 		
-		CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
+		local sound_duration = Ware_GetThemeSoundDuration("boss")
+		if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+			sound_duration = 0.4
+
+		CreateTimer(@() Ware_BeginIntermission(true), sound_duration)
 	}
 }
 
@@ -1231,8 +1235,11 @@ function Ware_SpeedupInternal()
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
-		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
+		local sound_duration = Ware_GetThemeSoundDuration("speedup")
+		if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+			sound_duration = 0.4
+
+		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
 	}
 }
 
@@ -1916,6 +1923,9 @@ function Ware_FinishMinigameInternal()
 	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
+
+	if(Ware_SpecialRound && Ware_SpecialRound.non_stop)
+		sound_duration = 0.4
 	
 	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) 
 		|| (Ware_SpecialRound && Ware_SpecialRound.cb_on_check_gameover())
