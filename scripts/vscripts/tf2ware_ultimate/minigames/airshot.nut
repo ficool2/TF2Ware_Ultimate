@@ -14,7 +14,6 @@ hit_sound  <- "Player.HitSoundBeepo"
 function OnPrecache()
 {
     PrecacheModel(bot_model)
-    PrecacheScriptSound(hit_sound)
 }
 
 function OnStart()
@@ -85,7 +84,6 @@ function OnTakeDamage(params)
 
 		if (attacker && attacker.IsPlayer())
            Ware_PassPlayer(attacker, true)
-		   Ware_PlaySoundOnClient(attacker, hit_sound)
 	}
     return false
 }
