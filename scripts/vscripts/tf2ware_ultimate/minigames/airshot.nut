@@ -20,8 +20,9 @@ function OnPrecache()
 
 function OnStart()
 {   
-    Ware_CreateTimer(@() SpawnBot(), 2.0)
-	Ware_CreateTimer(@() SpawnBot2(), 2.0)
+	local angles = QAngle(0, -90, 0)
+    Ware_CreateTimer(@() SpawnBot(angles), 2.0)
+	Ware_CreateTimer(@() SpawnBot(QAngle(0, 90, 0)), 2.0)
     Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit")
 }
 
@@ -61,28 +62,11 @@ function OnTeleport(players)
 	TeleportSides(blue_players, red_players)
 }
 
-lines <- clone(Ware_Location.targetrange.lines)
-
-function SpawnBot()
+function SpawnBot(angles)
 {
+	local lines = clone(Ware_Location.targetrange.lines)
     local line = RemoveRandomElement(lines)
 	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
-	local angles = QAngle(0, -90, 0)
-    bot = Ware_SpawnEntity("prop_physics_override",
-    {
-        model = bot_model
-        origin = origin
-        angles = angles
-        health = 1
-    })
-    bot.AddEFlags(EFL_NO_DAMAGE_FORCES)
-    bot.SetPhysVelocity(Vector(RandomFloat(-300, 300), 0, RandomFloat(1500, 1700)))
-}
-function SpawnBot2()
-{
-    local line = RemoveRandomElement(lines)
-	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
-	local angles = QAngle(0, 90, 0)
     bot = Ware_SpawnEntity("prop_physics_override",
     {
         model = bot_model
