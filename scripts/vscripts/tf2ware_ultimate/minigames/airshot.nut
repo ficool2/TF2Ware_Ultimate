@@ -83,6 +83,7 @@ function OnTakeDamage(params)
 
 		if (attacker && attacker.IsPlayer())
            Ware_PassPlayer(attacker, true)
+	
+	return false
 	}
-    return false
 }
