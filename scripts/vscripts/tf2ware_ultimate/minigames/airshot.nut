@@ -1,6 +1,7 @@
 minigame <- Ware_MinigameData
 ({
-    name        = "Shoot the Target!"
+    name        = "Airshot"
+	description = "Shoot the Target!"
     author      = ["Black_Knight"]
     location    = "targetrange"
     duration    = 5.0
