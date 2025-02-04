@@ -11,8 +11,6 @@ minigame <- Ware_MinigameData
 bot_model <- "models/props_training/target_soldier.mdl"
 hit_sound  <- "Player.HitSoundBeepo"
 
-bot <- null
-
 function OnPrecache()
 {
     PrecacheModel(bot_model)
@@ -68,7 +66,7 @@ function SpawnBot(angles)
 	local lines = clone(Ware_Location.targetrange.lines)
     local line = RemoveRandomElement(lines)
 	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
-    bot = Ware_SpawnEntity("prop_physics_override",
+    local bot = Ware_SpawnEntity("prop_physics_override",
     {
         model = bot_model
         origin = origin
