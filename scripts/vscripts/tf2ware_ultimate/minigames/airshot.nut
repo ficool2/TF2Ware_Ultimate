@@ -9,7 +9,6 @@ minigame <- Ware_MinigameData
 })
 
 bot_model <- "models/props_training/target_soldier.mdl"
-hit_sound  <- "Player.HitSoundBeepo"
 
 function OnPrecache()
 {
