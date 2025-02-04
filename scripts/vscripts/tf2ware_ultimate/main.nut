@@ -1784,7 +1784,7 @@ function Ware_FinishMinigameInternal()
 		{
 			passed = data.passed == pass_flag
 		}
-		else
+		else if (player.GetTeam() == TEAM_SPECTATOR)
 		{
 			// if spectating, use the win status of our target
 			// otherwise just count it as "win" so it's not awkward silence
@@ -1793,6 +1793,10 @@ function Ware_FinishMinigameInternal()
 				passed = target.GetScriptScope().ware_data.passed == pass_flag
 			else
 				passed = true
+		}
+		else
+		{
+			passed = false
 		}
 		
 		if (all_passed)

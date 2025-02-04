@@ -83,5 +83,7 @@ Note that minigames, bossgames  and special rounds are hot loaded, therefore cha
 
 The text overlays for minigames and bossgames are static images. To generate one, run the `generate_text` Python script in the `tools` folder. This will automatically place all the materials and textures in the correct folder. Note if you are not using custom_overlay, the overlay must have the same file name as the minigame/bossgame .nut. There are also some common overlays in materials/hud/tf2ware_ultimate (such as get_end for any "course" minigames).
 
+Mapping changes are also welcome, but please be descriptive about changes made, and test your compile before submitting a PR. Note when compiling, please add the following parameters to VRAD: `-noskyboxrecurse -staticproppolys -textureshadows`. If using the Hammer/Hammer++ compiler, this is in Expert under $light.exe. If using CompilePal, you can add these parameters inidividually under VRAD.
+
 ## Credits
 Type `!ware_credits` in chat for a list of contributors in console.
