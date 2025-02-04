@@ -2,6 +2,7 @@
 buffer<-@"VERSION 2
 adrenaline_shot
 all_in
+barrels
 bonk
 bonus_points
 boss_rush
