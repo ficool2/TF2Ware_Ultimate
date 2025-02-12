@@ -23,7 +23,7 @@ minigame <- Ware_MinigameData
 	custom_overlay = ""
 	min_players    = 2
 	max_scale      = 1.0
-	convars = 
+	convars =
 	{
 		sv_maxvelocity = 5000.0
 	}
@@ -144,7 +144,7 @@ intro_camera_keyframes <-
 	]
 ]
 
-item_probability <- 
+item_probability <-
 [
 	[ 32.5, 17.5, 15.0, 7.50, 5.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 ],
 	[ 0.00, 25.0, 25.0, 20.0, 15.0, 10.0, 5.00, 2.50, 0.00, 0.00, 0.00, 0.00 ],
@@ -165,10 +165,10 @@ item_probability <-
 	[ 0.00, 5.00, 10.0, 10.0, 7.50, 5.00, 2.50, 0.00, 0.00, 0.00, 0.00, 0.00 ],
   //[ 0.00, 0.00, 5.00, 10.0, 10.0, 10.0, 7.50, 5.00, 0.00, 0.00, 0.00, 0.00 ],   probability added from thundercloud
 	[ 0.00, 0.00, 7.50, 17.5, 17.5, 17.5, 12.5, 10.0, 0.00, 0.00, 0.00, 0.00 ],
-	[ 10.0, 12.5, 10.0, 2.50, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 ], 
+	[ 10.0, 12.5, 10.0, 2.50, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 ],
 ]
-item_table_to_id <- 
-[	
+item_table_to_id <-
+[
 	ITEM_SHELL_GREEN_ONE
 	ITEM_SHELL_RED_ONE
 	ITEM_BANANA_ONE
@@ -212,7 +212,7 @@ function OnPrecache()
 	PrecacheModel("models/mariokart/items/shroom_gold.mdl")
 	PrecacheModel("models/mariokart/items/shroom_mega.mdl")
 	PrecacheModel("models/mariokart/items/star.mdl")
-	
+
 	PrecacheSound("ui/vote_no.wav")
 	PrecacheScriptSound("MK_Music_Pinball")
 	PrecacheScriptSound("MK_Lap")
@@ -220,7 +220,7 @@ function OnPrecache()
 	PrecacheScriptSound("MK_Race_Countdown")
 	PrecacheScriptSound("MK_Race_Finish")
 	PrecacheScriptSound("MK_Position_Gain")
-	PrecacheScriptSound("MK_Position_Loss")	
+	PrecacheScriptSound("MK_Position_Loss")
 	PrecacheScriptSound("MK_Cannon")
 	PrecacheScriptSound("MK_Boost")
 	PrecacheScriptSound("MK_Lakitu_Pickup")
@@ -267,7 +267,7 @@ function OnPrecache()
 	PrecacheScriptSound("MK_Item_Blooper_Attack")
 	PrecacheScriptSound("MK_Bound_Hit")
 	PrecacheScriptSound("MK_Pinball_Score")
-	
+
 	PrecacheParticle("bot_impact_heavy_sparks")
 	PrecacheParticle("kart_impact_sparks")
 	PrecacheParticle("drg_cow_explosion_sparkles")
@@ -280,7 +280,7 @@ function OnPrecache()
 	PrecacheParticle("mk_lightning_parent")
 	PrecacheParticle("spell_skeleton_bits_green")
 	PrecacheParticle("spell_pumpkin_mirv_bits_red")
-	
+
 	PrecacheMaterial("tf2ware_ultimate/grey")
 }
 
@@ -295,28 +295,28 @@ function OnPick()
 function OnTeleport(players)
 {
 	SetupMap()
-	
+
 	players = Ware_GetSortedScorePlayers(true)
-	
+
 	local start = Ware_MinigameLocation.start_position * 1.0
 	local spacing_x = 200.0
 	if (players.len() > 50)
 		spacing_x *= 0.5
 	Ware_TeleportPlayersRow(players, start, QAngle(0, 180, 0), 500.0, spacing_x, 150.0)
-	
+
 	foreach (player in players)
 	{
 		local origin = player.GetOrigin() + kart_base_offset
 		local angles = player.GetAbsAngles()
-		
+
 		local kart = CreateKart(origin, angles)
-		
+
 		kart.SetupPoint()
 		kart.Enter(player)
-		
+
 		karts.append(kart)
 	}
-	
+
 	if (players.len() > 24)
 		itembox_respawn_time = 0.75
 	else if (players.len() > 12)
@@ -336,23 +336,23 @@ function OnStart()
 		spawnflags = 8
 	})
 	camera.SetMoveType(MOVETYPE_NONE, 0)
-	
+
 	foreach (player in Ware_Players)
 	{
 		TogglePlayerViewcontrol(player, camera, true)
 		player.AddHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
 	}
-	
+
 	local start_duration = 2.5
 	intro_camera       = camera
 	intro_camera_start = Time()
 	intro_camera_end   = intro_camera_start + start_duration
-	
+
 	if (intro_skip)
 		race_sequence = 2
 	else
 		Ware_PlaySoundOnAllClients("MK_Race_Intro")
-	
+
 	CreateTimer(function()
 	{
 		race_sequence++
@@ -382,13 +382,13 @@ function RacePrepare()
 	// don't hit the sound limit...
 	local engine_sound_limiter = (karts.len() / 13) + 1
 	foreach (i, player in Ware_Players)
-	{	
+	{
 		local kart = GetKart(player)
 		if (kart)
 		{
 			player.RemoveHudHideFlags(HIDEHUD_HEALTH)
 			TogglePlayerViewcontrol(player, kart.m_camera, true)
-			
+
 			kart.m_engine_noises = (i % engine_sound_limiter) == 0 || player == Ware_ListenHost
 		}
 		else
@@ -398,7 +398,7 @@ function RacePrepare()
 		}
 	}
 	intro_camera.Kill()
-	
+
 	CreateTimer(RaceCountdown3, 2.0)
 }
 
@@ -424,7 +424,7 @@ function RaceCountdown1()
 function RaceCountdownGo()
 {
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, "hud/tf2ware_ultimate/go")
-	CreateTimer(function() 
+	CreateTimer(function()
 	{
 		Ware_ShowScreenOverlay(Ware_Players, null)
 		ToggleMusic(true)
@@ -434,39 +434,39 @@ function RaceCountdownGo()
 
 function ToggleMusic(toggle)
 {
-	local params = 
+	local params =
 	{
 		sound_name  = "MK_Music_Pinball"
 		entity      = null
 		filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 	}
-	
+
 	if (!toggle)
 		params.flags <- SND_STOP
-	
+
 	// must be played like this so it can be controlled per-player
 	foreach (player in Ware_Players)
 	{
 		params.entity = player
 		EmitSoundEx(params)
-	}	
+	}
 }
 
 function RaceStart()
 {
 	local time = Time()
-	
+
 	race_sequence = 4
 	race_start_time = time
 	SetPropVector(World, "m_WorldMaxs", Vector(race_max_laps, race_start_time, 0))
-	
+
 	item_shock_timer   = time + 30.0
 	item_blooper_timer = time + 15.0
-	
+
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, "hud/tf2ware_ultimate/go")
 	CreateTimer(@() Ware_ShowScreenOverlay(Ware_Players, null), 1.5)
-	
-	foreach (kart in karts)	
+
+	foreach (kart in karts)
 	{
 		SetPropEntity(kart.m_hud, "m_hBuilder", kart.m_driver)
 		kart.m_position_timer = time + 3.0
@@ -477,23 +477,23 @@ function RaceEnd()
 {
 	if (race_sequence != 4)
 		return
-		
+
 	race_sequence++
-	
+
 	karts_finished.clear()
-	karts_finished = clone(karts)				
+	karts_finished = clone(karts)
 	RaceCheckFinishers()
-	
+
 	CreateTimer(RaceResults, 2.0)
 }
 
 function RaceShowResult()
 {
 	local start = Ware_MinigameHomeLocation.mins + Vector(0, 0, 430)
-	
-	local padding = 32.0	
+
+	local padding = 32.0
 	local background_width = Ware_MinigameHomeLocation.maxs.y - Ware_MinigameHomeLocation.mins.y
-	local background = Ware_SpawnEntity("vgui_screen", 
+	local background = Ware_SpawnEntity("vgui_screen",
 	{
 		origin          = Ware_MinigameHomeLocation.mins - Vector(1, padding, 0)
 		angles          = QAngle()
@@ -503,7 +503,7 @@ function RaceShowResult()
 		height          = 640.0
 	})
 	SetPropInt(background, "m_fScreenFlags", 17)
-	
+
 	Ware_SpawnEntity("point_worldtext",
 	{
 		message  = "RANKINGS"
@@ -513,7 +513,7 @@ function RaceShowResult()
 		textsize = 130
 		rainbow  = true
 	})
-	
+
 	local text_size = 32
 	local spacing_x = 700.0
 	local spacing_y = 32.0
@@ -543,7 +543,7 @@ function RaceShowResult()
 		textspacingX = -18
 		color        = null
 	}
-	
+
 	local win_threshold
 	if (Ware_MinigamePlayers.len() > 64)
 		win_threshold = 10
@@ -553,7 +553,7 @@ function RaceShowResult()
 		win_threshold = 3
 	else
 		win_threshold = 1
-	
+
 	for (local i = Ware_MinigameScope.race_results.len() - 1; i >= 0; i--)
 	{
 		local result = Ware_MinigameScope.race_results[i]
@@ -561,7 +561,7 @@ function RaceShowResult()
 			kv.color = "255 255 0"
 		else
 			kv.color = format("%d %d %d", 255 - i, 255 - i, 255 - i)
-				
+
 		local pos = i + 1
 		local prefix = "th"
 		local postfix = i < 99 ? " " : ""
@@ -575,7 +575,7 @@ function RaceShowResult()
 			else if (digit == 3)
 				prefix = "rd"
 		}
-		
+
 		local time_format
 		if (result.timeout)
 		{
@@ -588,12 +588,12 @@ function RaceShowResult()
 				final_time += times
 			time_format = FloatToTimeFormat(final_time)
 		}
-		
+
 		kv.message = format("%2d%s: %24s : %s", pos, prefix + postfix, result.name, time_format)
 		kv.origin.y = start.y + spacing_x * (i / row_size)
 		kv.origin.z = start.z - spacing_y * (i % row_size)
 		Ware_SpawnEntity("point_worldtext", kv)
-		
+
 		local player = result.player
 		if (player.IsValid())
 		{
@@ -607,7 +607,7 @@ function RaceShowResult()
 					race_bonus_players.append(player)
 			}
 		}
-		
+
 		local volume = 1.0
 		local pitch
 		if (i >= 20)
@@ -635,7 +635,7 @@ function RaceShowResult()
 			volume = 1.0
 			pitch = 100
 		}
-		
+
 		Ware_PlaySoundOnAllClients("ui/vote_no.wav", volume, pitch)
 
 		if (i >= 20)
@@ -654,16 +654,16 @@ function RaceShowResult()
 function RaceResults()
 {
 	Ware_ToggleRespawnRooms(true)
-	
+
 	foreach (player in Ware_MinigamePlayers)
 		player.ForceRespawn()
-		
+
 	local result = RaceShowResult()
 	Ware_CreateTimer(function()
 	{
 		local delay = resume result
 		if (delay != null)
-			return delay		
+			return delay
 		game_over = true
 		foreach (player in race_bonus_players)
 		{
@@ -688,9 +688,9 @@ function RaceCheckFinishers()
 				}
 			}, 30.0)
 		}
-		
+
 		kart.Finish()
-			
+
 		local player = kart.m_driver
 		race_results.append
 		({
@@ -699,15 +699,15 @@ function RaceCheckFinishers()
 			times   = clone(kart.m_lap_times)
 			timeout = race_sequence > 4
 		})
-				
-		kart.Destroy()		
-		
+
+		kart.Destroy()
+
 		if (player)
 			KillPlayerSilently(player)
-	}	
-	
+	}
+
 	karts_finished.clear()
-	
+
 	if (race_sequence == 4 && karts.len() == 0)
 		RaceEnd()
 }
@@ -724,21 +724,21 @@ function UpdateIntroCamera(time)
 		EntityMarkTeleport(intro_camera)
 		intro_camera_seq = race_sequence
 	}
-	
+
 	local keyframes = intro_camera_keyframes[race_sequence]
 	local keyframe_a = keyframes[0]
 	local keyframe_b = keyframes[1]
 	local origin, angles
-	
+
 	local t = 1.0
 	if (time <= intro_camera_end)
 	{
-		t = RemapVal(time, intro_camera_start, intro_camera_end, 0.0, 1.0)	
+		t = RemapVal(time, intro_camera_start, intro_camera_end, 0.0, 1.0)
 		if (race_sequence == 2) // HACK interp is going crazy
 			t = 0.35 + (t * 0.65)
 		t = 1.0 - pow(1.0 - t, 2.0)
 	}
-	
+
 	if (keyframes.len() >= 3)
 	{
 		local keyframe_c = keyframes[2]
@@ -746,7 +746,7 @@ function UpdateIntroCamera(time)
 		local ab = Lerp(keyframe_a.origin, keyframe_b.origin, t)
 		local bc = Lerp(keyframe_b.origin, keyframe_c.origin, t)
 		origin = Lerp(ab, bc, t)
-		
+
 		local ab_quat = QuaternionBlend(keyframe_a.quat, keyframe_b.quat, t)
 		local bc_quat = QuaternionBlend(keyframe_b.quat, keyframe_c.quat, t)
 		angles = QuaternionBlend(ab_quat, bc_quat, t).ToQAngle()
@@ -754,9 +754,9 @@ function UpdateIntroCamera(time)
 	else
 	{
 		origin = Lerp(keyframe_a.origin, keyframe_b.origin, t)
-		angles = QuaternionBlend(keyframe_a.quat, keyframe_b.quat, t).ToQAngle()	
+		angles = QuaternionBlend(keyframe_a.quat, keyframe_b.quat, t).ToQAngle()
 	}
-	
+
 	intro_camera.SetAbsOrigin(origin)
 	intro_camera.SetAbsAngles(angles)
 }
@@ -765,13 +765,13 @@ function OnUpdate()
 {
 	local time = Time()
 	local frame = tick_counter++
-	
+
 	if (intro_camera && race_sequence < 3)
 		UpdateIntroCamera(time)
-		
+
 	foreach (kart in karts)
 		kart.m_map_point_delta = (kart.m_map_next_point - kart.m_origin).Length()
-	
+
 	karts.sort(function(a, b)
 	{
 		local x = b.m_lap_idx <=> a.m_lap_idx
@@ -782,9 +782,9 @@ function OnUpdate()
 			return x
 		return a.m_map_point_delta <=> b.m_map_point_delta
 	})
-	
+
 	local position_shift = race_results.len()
-		
+
 	foreach (i, kart in karts)
 	{
 		kart.SetPosition(i, position_shift, time)
@@ -792,7 +792,7 @@ function OnUpdate()
 	}
 
 	RaceCheckFinishers()
-	
+
 	// TODO this makes the kart in the camera very jittery
 	//if (karts.len() > 80)
 	//	kart_skip_tick = 3
@@ -830,9 +830,9 @@ function OnPlayerDeath(player, attacker, params)
 		EntFire("tf_ammo_pack", "Kill")
 		EntFire("tf_ragdoll", "Kill")
 		EntityEntFire(player, "DispatchEffect", "ParticleEffectStop")
-		EntityEntFire(player, "CallScriptFunction", "PlayerResetHealth")	
+		EntityEntFire(player, "CallScriptFunction", "PlayerResetHealth")
 		player.AddCond(TF_COND_HALLOWEEN_IN_HELL)
-		
+
 		if (race_sequence == 4)
 		{
 			CreateTimer(function()
@@ -884,7 +884,7 @@ function SetupMap()
 	{
 		local yaw = RemapVal(Time() % 10.0, 0.0, 10.0, -180.0, 180.0)
 		local rotation_yaw = QAngle(0, yaw, 0)
-		local rotation_pitch = QAngle(10, 0, 0)	
+		local rotation_pitch = QAngle(10, 0, 0)
 		foreach (bound in bounds)
 		{
 			local position = RotatePosition(vec3_zero, rotation_yaw, bound.origin_relative)
@@ -897,7 +897,7 @@ function SetupMap()
 
 	local points = [], planes = []
 	local point_start_indices = [], point_end_indices = []
-	
+
 	local group_index = 0
 	foreach (point_group in Ware_MinigameLocation.point_groups)
 	{
@@ -905,19 +905,19 @@ function SetupMap()
 		point_start_indices.append(group_index)
 		point_end_indices.append(group_index + point_group_len)
 		group_index += point_group_len
-		
+
 		foreach (i, point in point_group)
 			points.append(point)
 	}
-	
+
 	local points_len = points.len()
 	foreach (i, point in points)
-	{	
+	{
 		local dir = points[(i + 1) % points_len] - point
 		dir.Norm()
 		planes.append({normal = dir, dist = point.Dot(dir)})
 	}
-	
+
 	foreach (itembox_pos in Ware_MinigameLocation.itembox_positions)
 		CreateItembox(itembox_pos)
 
@@ -929,16 +929,16 @@ function SetupMap()
 		points              = points
 		point_count         = points_len
 		point_start_indices = point_start_indices
-		point_end_indices   = point_end_indices		
+		point_end_indices   = point_end_indices
 		planes              = planes
 	}
-	
+
 	foreach (sequence in intro_camera_keyframes)
 	{
 		foreach (keyframe in sequence)
 			keyframe.quat <- keyframe.angles.ToQuat()
 	}
-	
+
 	local map_camera = Ware_SpawnEntity("point_camera",
 	{
 		origin = Ware_MinigameLocation.hud_camera_pos
@@ -947,7 +947,7 @@ function SetupMap()
 	map_camera.AcceptInput("SetOn", "", null, null)
 	// workaround for networking bug
 	SetPropInt(map_camera, "m_nTransmitStateOwnedCounter", 1)
-	
+
 	// needed for camera to get networked for everyone
 	local network_dummy = Ware_SpawnEntity("handle_dummy",
 	{
@@ -982,16 +982,16 @@ function CreateItembox(origin)
 	{
 		self.EmitSound("MK_Itembox_Use")
 		DispatchParticleEffect("bot_impact_heavy_sparks", self.GetOrigin() - Vector(0, 0, 48), Vector(90, 0, 0))
-		
+
 		EntityAcceptInput(self, "DisableCollision")
 		EntityAcceptInput(self, "Disable")
 		EntityAcceptInput(sprite, "HideSprite")
-		
+
 		local delay = Ware_MinigameScope.itembox_respawn_time
 		EntityEntFire(self, "Enable", "", delay)
 		EntityEntFire(self, "EnableCollision", "", delay)
 		EntityEntFire(sprite, "ShowSprite", "", delay)
-		
+
 		kart.RollItem()
 	}
 	return itembox
@@ -1014,29 +1014,29 @@ function CreateKart(origin, angles)
 	SetPropInt(kart_entity, "m_nNextThinkTick", INT_MAX) // don't use base train think
 	SetPropFloat(kart_entity, "m_flMoveDoneTime", 1e30) // enables physics
 	kart_entity.ValidateScriptScope()
-	kart_entity.ConnectOutput("OnStartTouch", "Touch")	
+	kart_entity.ConnectOutput("OnStartTouch", "Touch")
 	local kart = kart_entity.GetScriptScope()
-	
+
 	// touches triggers
 	local kart_proxy = Ware_SpawnEntity("trigger_brush",
 	{
 		classname = "mk_kart_proxy"
 		origin    = origin
 		angles    = angles
-	})	
+	})
 	kart_proxy.DisableDraw()
 	kart_proxy.SetOwner(kart_entity)
 	kart_proxy.RemoveSolidFlags(FSOLID_TRIGGER)
 	kart_proxy.AddFlag(FL_NPC)
 	kart_proxy.SetSolid(SOLID_OBB)
-	kart_proxy.SetSize(kart_mins, kart_maxs)	
+	kart_proxy.SetSize(kart_mins, kart_maxs)
 	kart_proxy.ValidateScriptScope()
 	SetEntityParent(kart_proxy, kart_entity)
 	// HACK: chain inputs from proxy to kart
 	local kart_proxy_scope = kart_proxy.GetScriptScope()
 	local kart_proxy_parent = kart_proxy_scope.getdelegate()
 	SetInputHook(kart_proxy, "CallScriptFunction",
-		@() (kart_proxy_scope.setdelegate(kart), true), 
+		@() (kart_proxy_scope.setdelegate(kart), true),
 		@() kart_proxy_scope.setdelegate(kart_proxy_parent))
 
 	// visuals
@@ -1051,27 +1051,27 @@ function CreateKart(origin, angles)
 		disableshadows = true
 	})
 	kart_prop.SetOwner(kart_entity)
-	
+
 	kart.m_id                 <- kart_id++
-	kart.m_driver             <- null	
+	kart.m_driver             <- null
 	kart.m_driver_bot         <- false
 	kart.m_entity             <- kart_entity
 	kart.m_prop               <- kart_prop
 	kart.m_model              <- kart_model
 	kart.m_proxy              <- kart_proxy
 	kart.m_team               <- TF_TEAM_RED
-	
+
 	kart.m_buttons            <- 0
 	kart.m_buttons_last       <- 0
 	kart.m_buttons_pressed    <- 0
 	kart.m_buttons_released   <- 0
-	
+
 	kart.m_bot_distance       <- RandomFloat(175.0, 220.0)
 	kart.m_bot_angle          <- RandomFloat(20.0, 30.0)
-							  
+
 	kart.m_forward_move       <- 0.0
 	kart.m_side_move          <- 0.0
-							  
+
 	kart.m_origin             <- origin
 	kart.m_angles             <- angles
 	kart.m_forward            <- Vector()
@@ -1090,7 +1090,7 @@ function CreateKart(origin, angles)
 	kart.m_impact_timer       <- 0.0
 	kart.m_turn_rate          <- kart_turn_rate
 	kart.m_touch_timer        <- 0.0
-							  
+
 	kart.m_drifting           <- false
 	kart.m_hop_timer          <- 0.0
 	kart.m_hop_height         <- 0.0
@@ -1099,35 +1099,35 @@ function CreateKart(origin, angles)
 	kart.m_engine_noises      <- false
 	kart.m_tire_timer         <- 0.0
 	kart.m_cannon_end_pos     <- null
-	
+
 	kart.m_boost_stage        <- 0
 	kart.m_boost_counter      <- 0
 	kart.m_boost_type         <- BOOST_NONE
 	kart.m_boost_timer        <- 0.0
 	kart.m_boost_side_move    <- 0.0
-	
+
 	kart.m_spin_out_type      <- SPINOUT_NONE
 	kart.m_spin_out_timer     <- 0.0
-							  
+
 	kart.m_item_idx           <- ITEM_NONE
 	kart.m_item_scope         <- null
 	kart.m_items_held         <- []
 	kart.m_items_held_idx     <- ITEM_NONE
 	kart.m_items_held_scope   <- null
-	kart.m_cur_item_scope     <- null  
-	
+	kart.m_cur_item_scope     <- null
+
 	kart.m_star_timer         <- 0.0
 	kart.m_mega_timer         <- 0.0
 	kart.m_shrink_timer       <- 0.0
 	kart.m_blooper_timer      <- 0.0
 	kart.m_bullet_timer       <- 0.0
 	kart.m_shroom_gold_timer  <- 0.0
-	
+
 	kart.m_rescued            <- false
 	kart.m_rescue_point       <- null
 	kart.m_rescue_plane       <- null
 	kart.m_rescue_land_buffer <- 0
-	
+
 	kart.m_checkpoint_idx     <- map_data.checkpoint_last
 	kart.m_lap_idx            <- -1
 	kart.m_lap_valid_idx      <- INT_MIN
@@ -1136,7 +1136,7 @@ function CreateKart(origin, angles)
 	kart.m_position_idx       <- 0
 	kart.m_position_relative  <- 0
 	kart.m_position_timer     <- 1e30
-	
+
 	kart.m_map_point          <- null
 	kart.m_map_plane          <- null
 	kart.m_map_point_idx      <- -1
@@ -1144,20 +1144,20 @@ function CreateKart(origin, angles)
 	kart.m_map_next_plane     <- null
 	kart.m_map_next_point_idx <- null
 	kart.m_map_point_delta    <- null
-	
+
 	kart.m_camera             <- CreateCamera(kart)
 	kart.m_camera_pitch       <- 0.0
 	kart.m_camera_yaw         <- 180.0
 	kart.m_camera_offset      <- camera_base_offset
 	kart.m_camera_reverse     <- false
-	
+
 	kart.m_hud                <- CreateHud(kart)
-	kart.m_shadow             <- CreateShadow(kart)		
+	kart.m_shadow             <- CreateShadow(kart)
 	kart.m_head               <- CreateHead(kart)
 	kart.m_head_offset        <- Vector()
 
 	kart.m_pinball_score      <- true
-								
+
 	foreach (name, func in kart_routines)
 		kart[name] <- func.bindenv(kart)
 
@@ -1167,8 +1167,8 @@ function CreateKart(origin, angles)
 function CreateCamera(kart)
 {
 	local camera_angles = kart.m_entity.GetAbsAngles() + camera_base_rotaton
-	local camera_origin = kart.m_entity.GetOrigin() 
-		+ (camera_angles.Forward() * camera_base_offset.x) 
+	local camera_origin = kart.m_entity.GetOrigin()
+		+ (camera_angles.Forward() * camera_base_offset.x)
 		+ (camera_angles.Up() * camera_base_offset.z)
 	local camera = Ware_SpawnEntity("point_viewcontrol",
 	{
@@ -1186,7 +1186,7 @@ function CreateShadow(kart)
 	// save entities
 	if (MAX_CLIENTS > 64)
 		return null
-	
+
 	local shadow = Ware_SpawnEntity("prop_dynamic_override",
 	{
 		classname      = "mk_shadow"
@@ -1194,7 +1194,7 @@ function CreateShadow(kart)
 		angles         = kart.m_entity.GetAbsAngles()
 		model          = "models/mariokart/karts/shadow.mdl"
 		disableshadows = true
-	})	
+	})
 	return shadow
 }
 
@@ -1213,7 +1213,7 @@ function CreateHud(kart)
 	SetPropInt(hud, "m_fObjectFlags", 2)
 	SetPropInt(hud, "m_fEffects", EF_NOSHADOW)
 	SetEntityParent(hud, camera)
-	
+
 	SetPropInt(hud, "m_iTeamNum", kart.m_lap_idx + 4)
 	SetPropInt(hud, "m_clrRender", (kart.m_position_idx << 24) | 0x00FFFFFF)
 	SetPropInt(hud, "m_iTextureFrameIndex", kart.m_item_idx)
@@ -1242,25 +1242,42 @@ function GetKart(player)
 	return null
 }
 
-kart_routines <- 
+local function MakePlayerComplain(complainer)
+{
+	local num = RandomBool() ? "3" : "5"
+	ClientCmd.AcceptInput("Command", format("voicemenu 2 %s", num), complainer, null)
+}
+local function MakePlayerCheer(cheerer)
+{
+	local num = RandomBool() ? "2" : "4"
+	ClientCmd.AcceptInput("Command", format("voicemenu 2 %s", num), cheerer, null)
+}
+local function AddKillFeedAndVoiceCommand(victim, attacker, icon)
+{
+	AddKillFeedMessage(victim, attacker, icon)
+	MakePlayerComplain(victim)
+	MakePlayerCheer(attacker)
+}
+
+kart_routines <-
 {
 	Destroy = function()
 	{
 		local idx = karts.find(this)
 		if (idx != null)
 			karts.remove(idx)
-			
+
 		if (m_engine_idle)
 			m_prop.StopSound("MK_Kart_Engine_Idle")
 		else
 			m_prop.StopSound("MK_Kart_Engine")
-					
+
 		DriftStop()
 		BoostStop()
 		ClearItems()
-		
+
 		Exit()
-				
+
 		m_head.Kill()
 		m_camera.Kill()
 		m_prop.Kill()
@@ -1268,21 +1285,21 @@ kart_routines <-
 			m_shadow.Kill()
 		m_entity.Kill()
 	}
-	
+
 	Enter = function(player)
 	{
 		m_driver = player
 		m_driver_bot = player.IsFakeClient()
 		Ware_GetPlayerMiniData(player).kart <- this
-		
+
 		m_team = m_driver.GetTeam()
-		
-		m_head.SetBodygroup(0, player.GetPlayerClass() - 1)		
+
+		m_head.SetBodygroup(0, player.GetPlayerClass() - 1)
 		m_head.EnableDraw()
 		m_head_offset.x = -0.04 + player.entindex() * -0.04
-		
+
 		UpdateSkin()
-		
+
 		player.SetAbsVelocity(vec3_zero)
 		SetEntityParent(player, m_prop)
 		player.SetMoveType(MOVETYPE_NONE, 0)
@@ -1302,57 +1319,57 @@ kart_routines <-
 		player.AddCond(TF_COND_HALLOWEEN_IN_HELL)
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER)
 	}
-	
+
 	Exit = function()
 	{
 		local player = m_driver
 		if (!player)
 			return
-		
+
 		local spectator = (player.GetTeam() & TF_TEAM_MASK) == 0
-		
+
 		Ware_GetPlayerMiniData(player).kart = null
-		
+
 		TogglePlayerViewcontrol(player, m_camera, false)
-		SetEntityParent(player, null)	
-		
+		SetEntityParent(player, null)
+
 		m_driver = null
 		m_driver_bot = false
-		
+
 		m_head.DisableDraw()
 		SetPropEntity(m_hud, "m_hBuilder", null)
-		
+
 		local effects = GetPropInt(player, "m_fEffects")
 		SetPropInt(player, "m_fEffects", effects & ~(EF_BONEMERGE|EF_BONEMERGE_FASTCULL))
 		SetPropInt(player, "m_iFOV", 0)
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
-		SetPropInt(player, "m_nRenderMode", kRenderNormal)		
-		player.SetForceLocalDraw(false)	
+		SetPropInt(player, "m_nRenderMode", kRenderNormal)
+		player.SetForceLocalDraw(false)
 		player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS)
 		player.SetCustomModel("")
-			
+
 		if (player.IsAlive())
 		{
 			player.SetMoveType(MOVETYPE_WALK, 0)
 			player.RemoveFlag(FL_ATCONTROLS)
-			player.RemoveSolidFlags(FSOLID_NOT_SOLID)		
+			player.RemoveSolidFlags(FSOLID_NOT_SOLID)
 			player.RemoveCustomAttribute("no_attack")
 			player.RemoveCustomAttribute("no_jump")
 			SetPropBool(player, "pl.deadflag", false)
 			SetPropInt(player, "m_takedamage", DAMAGE_YES)
 			player.RemoveCond(TF_COND_SPEED_BOOST)
-			player.RemoveCond(TF_COND_INVULNERABLE)		
+			player.RemoveCond(TF_COND_INVULNERABLE)
 			player.RemoveCond(TF_COND_HALLOWEEN_IN_HELL)
 			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
 			player.RemoveCond(TF_COND_GRAPPLED_TO_PLAYER)
 		}
 	}
-	
+
 	UpdateSkin = function()
 	{
 		local skin = m_team
 		if (m_star_timer == 0.0)
-			skin -= 2		
+			skin -= 2
 		m_prop.SetSkin(skin)
 	}
 
@@ -1364,12 +1381,12 @@ kart_routines <-
 			return
 		}
 		local dt = kart_skip_tick * TICKDT
-			
+
 		m_origin   = m_entity.GetOrigin()
 		m_origin.z -= m_hop_height
 		m_angles   = m_entity.GetAbsAngles()
 		m_forward  = m_angles.Forward()
-		
+
 		UpdateBot()
 		UpdateInput(time)
 		UpdateCamera(time)
@@ -1379,19 +1396,19 @@ kart_routines <-
 		UpdateHead(tick)
 		//UpdateDebug()
 	}
-	
+
 	UpdateBot = function()
 	{
 		if (!m_driver_bot)
 			return
-		
+
 		m_buttons = IN_FORWARD
 
 		local target_dir = m_map_next_plane.normal
 		local cross = (m_origin - m_map_next_point).Cross(target_dir)
 		local dist = cross.Length()
 		local angle = fabs(acos(m_forward.Dot(target_dir)) * RAD2DEG)
-			
+
 		if (dist > m_bot_distance && angle < m_bot_angle)
 		{
 			if (cross.z < 0.0)
@@ -1400,7 +1417,7 @@ kart_routines <-
 				m_buttons = m_buttons | IN_MOVELEFT
 		}
 		else
-		{	
+		{
 			if (angle > 1.0)
 			{
 				if (m_forward.Cross(target_dir).z < 0.0)
@@ -1409,7 +1426,7 @@ kart_routines <-
 					m_buttons = m_buttons | IN_MOVELEFT
 			}
 		}
-		
+
 		if (m_cur_item_scope)
 		{
 			if (!(m_buttons_last & IN_ATTACK) && m_boost_type == BOOST_NONE)
@@ -1426,23 +1443,23 @@ kart_routines <-
 				buttons = m_buttons
 			else
 				buttons = GetPropInt(m_driver, "m_nButtons")
-				
+
 			if (m_cannon_end_pos || m_rescue_point || m_spin_out_timer != 0.0)
 				buttons = buttons & IN_DUCK
 		}
-		
+
 		local buttons_changed = (m_buttons_last ^ buttons)
 		m_buttons = buttons
 		m_buttons_pressed = buttons_changed & buttons
 		m_buttons_released = buttons_changed & (~buttons)
 		m_buttons_last = buttons
-		
+
 		m_cur_item_scope = null
 		if (m_items_held_idx != ITEM_NONE)
 			m_cur_item_scope = m_items_held_scope
 		else if (m_item_idx > ITEM_NONE)
 			m_cur_item_scope = m_item_scope
-		
+
 		if (m_cur_item_scope)
 		{
 			if (m_buttons_pressed & IN_ATTACK)
@@ -1459,20 +1476,20 @@ kart_routines <-
 			{
 				if ("OnReleasedAttack" in m_cur_item_scope)
 					m_cur_item_scope.OnReleasedAttack(this)
-			}				
+			}
 			else if (m_buttons_released & IN_ATTACK2)
 			{
 				if ("OnReleasedAttack2" in m_cur_item_scope)
 					m_cur_item_scope.OnReleasedAttack2(this)
 			}
-		}	
-		
+		}
+
 		if (buttons & IN_DUCK)
 		{
 			SetPropInt(m_driver, "m_Shared.m_nAirDucked", 3)
 			m_driver.RemoveFlag(FL_DUCKING)
 		}
-		
+
 		switch (buttons & (IN_MOVELEFT|IN_MOVERIGHT))
 		{
 			case IN_MOVELEFT:
@@ -1484,7 +1501,7 @@ kart_routines <-
 			default:
 				m_side_move = 0.0
 		}
-		
+
 		switch (buttons & (IN_FORWARD|IN_BACK))
 		{
 			case IN_FORWARD:
@@ -1496,7 +1513,7 @@ kart_routines <-
 				break
 			default:
 				m_forward_move = 0.0
-		}	
+		}
 	}
 
 	UpdateCamera = function(time)
@@ -1506,7 +1523,7 @@ kart_routines <-
 			camera_delta_y -= 360.0
 		else if (camera_delta_y < -180.0)
 			camera_delta_y += 360.0
-			
+
 		if (m_rescued)
 		{
 			m_camera_yaw = m_angles.y
@@ -1524,17 +1541,17 @@ kart_routines <-
 
 		local s = sin((m_camera_yaw - 90.0) * DEG2RAD)
 		local c = cos((m_camera_yaw - 90.0) * DEG2RAD)
-		
+
 		local camera_pitch = sin(m_angles.x * DEG2RAD) * 90.0
 		m_camera_pitch = Lerp(m_camera_pitch, camera_pitch, 0.05)
-		
+
 		local horizontal_offset, vertical_offset
-		
+
 		local camera_reverse = (m_buttons & IN_DUCK) != 0
 		if (camera_reverse != m_camera_reverse)
 			EntityMarkTeleport(m_camera)
 		m_camera_reverse = camera_reverse
-		
+
 		if (camera_reverse)
 		{
 			horizontal_offset = -m_camera_offset.x
@@ -1545,25 +1562,25 @@ kart_routines <-
 			horizontal_offset = m_camera_offset.x
 			vertical_offset = m_camera_offset.z + m_camera_pitch
 		}
-		
+
 		local new_camera_offset = Vector
 		(
 			-horizontal_offset * s,
 			horizontal_offset * c,
 			vertical_offset
 		)
-		
+
 		local camera_origin
 		if (m_spin_out_type == SPINOUT_LAUNCH_UP || (!m_rescued && m_rescue_point))
 			camera_origin = m_camera.GetOrigin()
 		else
 			camera_origin = m_origin + new_camera_offset
-			
+
 		local camera_dir = m_origin - camera_origin
-		
+
 		camera_dir.z += 28.0
 		camera_dir.Norm()
-	
+
 		m_camera.SetAbsOrigin(camera_origin)
 		m_camera.SetForwardVector(camera_dir)
 	}
@@ -1572,7 +1589,7 @@ kart_routines <-
 	{
 		if (m_ground && !m_ground.IsValid())
 			m_ground = null
-		
+
 		if (m_rescue_point)
 		{
 			PhysicsRescue(dt)
@@ -1583,36 +1600,36 @@ kart_routines <-
 		}
 		else if (m_cannon_end_pos)
 		{
-			PhysicsCannon()		
+			PhysicsCannon()
 		}
 		else
 		{
 			PhysicsGravity(dt)
 			PhysicsGroundCollision(dt)
 			PhysicsMove(time, dt)
-			PhysicsWallCollision(time)		
+			PhysicsWallCollision(time)
 		}
-		
+
 		local velocity_dt = m_velocity * dt
 		m_origin += velocity_dt
-				
+
 		if (m_shadow)
 		{
 			m_shadow.SetAbsOrigin(m_origin - m_base_offset + vec3_up)
 			m_shadow.SetAbsAngles(m_angles)
-			m_shadow.SetDrawEnabled(m_ground != null)	
-		}		
-		
+			m_shadow.SetDrawEnabled(m_ground != null)
+		}
+
 		m_origin.z += m_hop_height
-		
+
 		m_entity.SetAbsOrigin(m_origin)
 		m_entity.SetAbsVelocity(vec3_epsilon)
 		m_entity.SetLocalAngles(m_angles)
-		
+
 		m_prop.SetAbsOrigin(m_origin)
 		m_prop.SetAbsAngles(m_angles)
 	}
-	
+
 	PhysicsMove = function(time, dt)
 	{
 		local inv_dt = dt / TICKDT
@@ -1644,36 +1661,36 @@ kart_routines <-
 			if (m_ground)
 			{
 				if (m_last_speed < 200.0)
-					turn_rate *= RemapVal(m_last_speed, 0.0, 200.0, 1.5, 1.0)	
+					turn_rate *= RemapVal(m_last_speed, 0.0, 200.0, 1.5, 1.0)
 			}
 			else
 			{
 				turn_rate *= 0.5
-			}	
+			}
 			turn_amount = turn_rate * m_side_move * dt
 		}
-		
+
 		if (m_boost_type > BOOST_DRIFT || m_star_timer > 0.0)
 			turn_amount *= 1.3
-		
+
 		m_angles.y += turn_amount
-		
+
 		local v_forward = m_slope_normal.Cross(m_angles.Left())
 		v_forward.Norm()
 		local target_ang = VectorAngles2(v_forward, m_slope_normal)
 		local target_quat = target_ang.ToQuat()
 		local lerp_rate = m_landed ? 0.6 : 0.12
 		m_angles = QuaternionBlend(m_angles.ToQuat(), target_quat, lerp_rate).ToQAngle()
-		
+
 		local forward_move = m_forward_move
 		if (m_boost_timer > 0.0)
 		{
-			if (m_boost_timer < time)	
+			if (m_boost_timer < time)
 				BoostStop()
 			else
 				forward_move = 1.0
 		}
-		
+
 		local hop_duration = 0.3
 		if (m_drifting)
 		{
@@ -1686,7 +1703,7 @@ kart_routines <-
 				m_boost_stage = 0
 				m_drifting = false
 			}
-			
+
 			if (m_drifting)
 			{
 				if (m_ground)
@@ -1696,17 +1713,17 @@ kart_routines <-
 					else
 						m_boost_counter += 2 * inv_dt.tointeger()
 				}
-				
+
 				if (m_boost_counter >= 634)
 					m_boost_stage = 4
 				else if (m_boost_counter >= 498)
-					m_boost_stage = 3	
+					m_boost_stage = 3
 				else if (m_boost_counter >= 300)
 					m_boost_stage = 2
 				else if (m_boost_counter >= 165)
 					m_boost_stage = 1
 				else
-					m_boost_stage = 0				
+					m_boost_stage = 0
 			}
 			else
 			{
@@ -1714,14 +1731,14 @@ kart_routines <-
 					Boost(2.0, BOOST_DRIFT)
 				else if (m_boost_stage >= 2)
 					Boost(1.0, BOOST_DRIFT)
-							
+
 				m_drifting = true
-				DriftStop()			
+				DriftStop()
 			}
 		}
 		else if (m_hop_timer >= time)
 		{
-			m_hop_height = sin(RemapVal(m_hop_timer - time, hop_duration, 0.0, 0.0, PI)) * 10.0		
+			m_hop_height = sin(RemapVal(m_hop_timer - time, hop_duration, 0.0, 0.0, PI)) * 10.0
 		}
 		else if (m_hop_height != 0.0)
 		{
@@ -1729,26 +1746,26 @@ kart_routines <-
 			{
 				m_boost_side_move = m_side_move
 				m_boost_counter = 0
-				m_drifting = true	
+				m_drifting = true
 				m_prop.EmitSound("MK_Kart_Drift")
 			}
 			m_hop_height = 0.0
 		}
-		
+
 		if (m_ground)
-		{			
+		{
 			if (m_hop_timer < time && (m_buttons_pressed & IN_JUMP))
 			{
 				m_hop_timer = time + hop_duration
 				m_prop.EmitSound("MK_Kart_Hop")
 			}
-		
+
 			local wish_direction = m_direction * forward_move
 			local acceleration = m_acceleration_rate * inv_dt
 			local dot = m_forward.Dot(wish_direction)
 			local max_speed
 			local braking
-			
+
 			if (m_boost_timer >= time)
 			{
 				if (m_boost_type > BOOST_DRIFT)
@@ -1761,8 +1778,8 @@ kart_routines <-
 					max_speed = m_speed_cap * 1.2
 					acceleration *= 2.0
 				}
-				
-				if (dot < 0.0)	
+
+				if (dot < 0.0)
 				{
 					wish_direction *= -1.0
 					dot *= -1.0
@@ -1787,7 +1804,7 @@ kart_routines <-
 					}
 				}
 			}
-			
+
 			if (m_shrink_timer > 0.0)
 			{
 				max_speed *= 0.75
@@ -1795,26 +1812,26 @@ kart_routines <-
 			if (m_star_timer > 0.0)
 			{
 				max_speed *= 1.3
-				acceleration *= 2.0		
+				acceleration *= 2.0
 			}
 			if (m_mega_timer > 0.0)
 			{
 				max_speed *= 1.15
 			}
-			
+
 			m_velocity += wish_direction * acceleration
-			
-			if (m_slope_normal.z < 0.707) 
+
+			if (m_slope_normal.z < 0.707)
 			{
 				local slide_force = m_slope_normal * (800.0 * dt)
 				m_velocity += slide_force
 			}
-			
+
 			local friction = m_velocity * -1.0
 			friction.Norm()
-			friction *= m_friction_rate * dt		
-			
-			local speed = m_velocity.Length2D()	
+			friction *= m_friction_rate * dt
+
+			local speed = m_velocity.Length2D()
 			local friction_speed = friction.Length2D()
 			if (friction_speed < speed)
 			{
@@ -1826,16 +1843,16 @@ kart_routines <-
 				m_velocity *= 0.0
 				speed = 0.0
 			}
-			
+
 			if (speed > 1.0)
-			{				
-				if (speed > max_speed) 
+			{
+				if (speed > max_speed)
 				{
 					local crop = max_speed / speed
 					speed *= crop
 					m_velocity *=  crop
 				}
-				
+
 				if (m_tire_timer < time)
 				{
 					local tire_speed
@@ -1852,12 +1869,12 @@ kart_routines <-
 						if (tire_speed < -190.0)
 							tire_speed = -190.0
 					}
-							
+
 					// -190, 1190, -31, 32
 					tire_speed = -31 + 63 * (tire_speed.tointeger() + 190) / 1380
 					m_prop.SetTeam(tire_speed)
-					m_tire_timer = time + 0.2	
-					
+					m_tire_timer = time + 0.2
+
 					if (m_engine_noises)
 					{
 						if (m_engine_idle)
@@ -1866,7 +1883,7 @@ kart_routines <-
 							m_engine_pitch = 0
 							m_prop.StopSound("MK_Kart_Engine_Idle")
 						}
-						
+
 						local pitch = Min(70 + (abs(speed) * 50 / 1000), 140)
 						if (pitch != m_engine_pitch)
 						{
@@ -1883,20 +1900,20 @@ kart_routines <-
 				}
 			}
 			else
-			{				
+			{
 				if (m_engine_noises && !m_engine_idle
 					&& Ware_MinigameScope.race_sequence >= 3)
 				{
 					m_engine_idle = true
-					m_prop.StopSound("MK_Kart_Engine")			
+					m_prop.StopSound("MK_Kart_Engine")
 					m_prop.EmitSound("MK_Kart_Engine_Idle")
 				}
-				
+
 				m_prop.SetTeam(-23)
 			}
-			
+
 			m_last_speed = speed
-			
+
 			if (m_side_move != 0.0)
 				m_velocity = RotatePosition(vec3_zero, QAngle(0, turn_amount, 0), m_velocity)
 		}
@@ -1904,31 +1921,31 @@ kart_routines <-
 		{
 			m_velocity = RotatePosition(vec3_zero, QAngle(0, turn_amount, 0), m_velocity)
 		}
-		
+
 		m_landed = false
 	}
-	
+
 	PhysicsGravity = function(dt)
 	{
 		local gravity = gravity_rate * m_gravity_factor * dt
 		if (m_velocity.z > -1000.0)
 			m_velocity.z -= gravity
 	}
-	
+
 	PhysicsGroundCollision = function(dt)
 	{
 		local down = m_ground ? -20.0 : -0.1
 		local tr =
 		{
 			start  = m_origin
-			end    = m_origin 
+			end    = m_origin
 					- m_base_offset
 					+ Vector(0, 0, down + m_velocity.z * dt)
 			mask   = MASK_PLAYERSOLID_BRUSHONLY
 			ignore = self
 		}
 		TraceLineEx(tr)
-		
+
 		if (tr.hit && tr.plane_normal.z > 0.1)
 		{
 			if (tr.surface_flags & SURF_SKY)
@@ -1940,19 +1957,19 @@ kart_routines <-
 			{
 				Boost(2.0, BOOST_SURFACE)
 			}
-			
+
 			m_gravity_factor = 1.0
-			
+
 			m_origin = tr.endpos + m_base_offset
 			m_entity.SetAbsOrigin(m_origin)
-			
+
 			if (!m_ground)
 			{
 				if (m_velocity.z < -400.0)
 					m_prop.EmitSound("MK_Kart_Land")
 				m_landed = true
 			}
-			
+
 			if (m_rescue_land_buffer > 0)
 			{
 				--m_rescue_land_buffer
@@ -1965,37 +1982,37 @@ kart_routines <-
 				{
 					m_rescue_land_buffer = 0
 				}
-			}	
-			
+			}
+
 			m_ground = tr.enthit
 			if (tr.plane_normal.z > 0.1)
 				m_slope_normal = tr.plane_normal
-			
+
 			m_direction = m_slope_normal.Cross(m_forward)
-			m_direction = m_slope_normal.Cross(m_direction) * -1.0		
+			m_direction = m_slope_normal.Cross(m_direction) * -1.0
 
 			m_velocity.z = 0.0
 		}
 		else
 		{
 			m_ground = null
-			
+
 			m_direction = m_velocity * 1.0
 			m_direction.Norm()
 		}
 	}
-	
+
 	PhysicsWallCollision = function(time)
 	{
 		if (m_spin_out_type == SPINOUT_LAUNCH_UP)
 			return
-		
+
 		local dir = m_velocity * 1.0
 		dir.Norm()
 		dir.z = m_forward.z
 		dir.Norm()
-		
-		local tr = 
+
+		local tr =
 		{
 			start  = m_origin,
 			end    = m_origin + dir * 42.0
@@ -2003,29 +2020,29 @@ kart_routines <-
 			ignore = self
 		}
 		TraceLineEx(tr)
-		
+
 		if (tr.hit)
 		{
 			local normal = tr.plane_normal
 			local dot = dir.Dot(normal)
-			local speed = m_velocity.Length()			
+			local speed = m_velocity.Length()
 			if (dot < -0.4)
-			{				
+			{
 				local reflection = dir - (normal * (dot * 2.0))
 				reflection.Norm()
 				m_velocity = reflection * (speed * 0.5)
-				
+
 				if (m_impact_timer < time && speed > 200.0)
 				{
 					m_prop.EmitSound("MK_Kart_Collide_Concrete")
 					DispatchParticleEffect("kart_impact_sparks", (tr.pos + dir * -32.0) - Vector(0, 0, 32), vec3_zero)
 					m_impact_timer = time + 0.5
-					
+
 					if (speed > 300.0)
 					{
 						m_velocity.z += 150.0
 						m_ground = null
-					}						
+					}
 				}
 			}
 			else
@@ -2033,10 +2050,10 @@ kart_routines <-
 				local reflection = dir - (normal * dot)
 				reflection.Norm()
 				m_velocity = reflection * speed
-			}	
+			}
 		}
 	}
-	
+
 	PhysicsCannon = function()
 	{
 		m_direction = m_cannon_end_pos - m_origin
@@ -2044,10 +2061,10 @@ kart_routines <-
 
 		local target_quat = VectorAngles(m_direction).ToQuat()
 		m_angles = QuaternionBlend(m_angles.ToQuat(), target_quat, 0.1).ToQAngle()
-		
+
 		m_velocity = m_direction * 4500.0
 	}
-	
+
 	StartCannon = function()
 	{
 		EntityEntFire(m_driver, "SpeakResponseConcept", "halloweenlongfall", RandomFloat(0.0, 0.5))
@@ -2055,14 +2072,14 @@ kart_routines <-
 		m_cannon_end_pos = Ware_MinigameLocation.cannon_end_pos
 		m_ground = null
 	}
-	
+
 	StopCannon = function()
 	{
 		m_cannon_end_pos = null
 		m_touch_timer = Time() + 2.0
 		m_velocity *= 0.2
 	}
-	
+
 	Boost = function(duration, type)
 	{
 		if (type == BOOST_DRIFT)
@@ -2084,79 +2101,81 @@ kart_routines <-
 			if (m_blooper_timer > 0.0) m_blooper_timer = 0.01 // reset
 			m_prop.EmitSound("MK_Item_Shroom_Use")
 		}
-		
+
 		m_boost_type = type
 		m_boost_timer = Time() + duration
 		if (m_driver)
 			m_driver.AddCond(TF_COND_SPEED_BOOST)
 	}
-	
+
 	BoostStop = function()
 	{
 		if (m_boost_timer == 0.0)
 			return
-	
+
 		if (m_driver)
 			m_driver.RemoveCond(TF_COND_SPEED_BOOST)
 		m_boost_timer = 0.0
 		m_boost_type = BOOST_NONE
 	}
-	
+
 	DriftStop = function()
 	{
 		if (!m_drifting)
 			return
-			
+
 		m_drifting = false
 		m_boost_stage = 0
 		m_prop.StopSound("MK_Kart_Drift")
 	}
-	
+
 	RescueInit = function()
 	{
 		if (m_rescue_point != null)
 			return
-		
+
 		DriftStop()
 		BoostStop()
-		DropHeldItem()	
-		
+		DropHeldItem()
+
 		m_head.AcceptInput("SetAnimation", "spin", null, null)
-		
+
 		m_rescued = false
 		m_rescue_point = m_map_next_point + Vector(0, 0, 64)
 		m_rescue_plane = m_map_next_plane
 
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueStart", 1.0)
+
+		MakePlayerComplain(m_driver)
 	}
-	
+
 	RescueStart = function()
 	{
 		HudPlayAnimation("respawn_start")
 		EntityEntFire(m_entity, "CallScriptFunction", "Rescue", 2.0)
 	}
-	
+
 	Rescue = function()
 	{
 		m_rescued = true
 		m_gravity_factor = 1.0
-		
-		m_origin = m_rescue_point * 1.0	
-		m_angles = VectorAngles(m_rescue_plane.normal)		
+
+		m_origin = m_rescue_point * 1.0
+		m_angles = VectorAngles(m_rescue_plane.normal)
 		m_entity.SetAbsOrigin(m_origin)
 		m_entity.SetAbsAngles(m_angles)
-		
+
 		m_head.AcceptInput("SetAnimation", "idle", null, null)
 
 		m_prop.EmitSound("MK_Lakitu_Pickup")
 		m_prop.SetTeam(-23)
-		
+
 		ClearItems()
-		
+
 		HudPlayAnimation("respawn_end")
 		EntityEntFire(m_entity, "CallScriptFunction", "RescueDrop", 2.0)
-	}	
-	
+	}
+
 	RescueDrop = function()
 	{
 		m_rescued = false
@@ -2164,7 +2183,7 @@ kart_routines <-
 		m_rescue_plane = null
 		m_rescue_land_buffer = 15
 	}
-	
+
 	PhysicsRescue = function(dt)
 	{
 		if (m_rescued)
@@ -2178,27 +2197,27 @@ kart_routines <-
 			PhysicsGravity(dt)
 		}
 	}
-	
+
 	CanSpinout = function()
 	{
-		return m_star_timer == 0.0 && 
+		return m_star_timer == 0.0 &&
 				m_bullet_timer == 0.0 &&
 				m_mega_timer == 0.0 &&
 				m_cannon_end_pos == null
 	}
-	
+
 	Spinout = function(type)
 	{
 		if (m_spin_out_type != SPINOUT_NONE && type <= m_spin_out_type)
 			return false
-		
+
 		DriftStop()
 		BoostStop()
-		
+
 		if (m_spin_out_type == SPINOUT_NONE)
 			m_head.AcceptInput("SetAnimation", "spin", null, null)
-		
-		local drop_item = false		
+
+		local drop_item = false
 		switch (type)
 		{
 			case SPINOUT_SPIN:
@@ -2212,13 +2231,13 @@ kart_routines <-
 			{
 				m_prop.EmitSound("MK_Kart_Spin")
 				m_prop.AcceptInput("SetAnimation", "spinout_double", null, null)
-				m_spin_out_timer = Time() + 2.0	
+				m_spin_out_timer = Time() + 2.0
 				break
-			}		
+			}
 			case SPINOUT_TUMBLE_FORWARD:
 			{
 				m_prop.AcceptInput("SetAnimation", "tumble_forward", null, null)
-				m_spin_out_timer = Time() + 1.2	
+				m_spin_out_timer = Time() + 1.2
 				m_velocity *= 0.4
 				m_ground = null
 				break
@@ -2226,7 +2245,7 @@ kart_routines <-
 			case SPINOUT_TUMBLE_LEFT:
 			{
 				m_prop.EmitSound("MK_Item_Star_Hit")
-				m_prop.AcceptInput("SetAnimation", "tumble_right", null, null)			
+				m_prop.AcceptInput("SetAnimation", "tumble_right", null, null)
 				m_spin_out_timer = Time() + 1.2
 				m_velocity = m_entity.GetAbsAngles().Left() * -1.0
 				m_velocity.z += 2.5
@@ -2247,7 +2266,7 @@ kart_routines <-
 				m_velocity *= 400.0
 				m_ground = null
 				drop_item = true
-				break			
+				break
 			}
 			case SPINOUT_LAUNCH_UP:
 			{
@@ -2257,12 +2276,12 @@ kart_routines <-
 				m_ground = null
 				drop_item = true
 				break
-			}		
+			}
 			case SPINOUT_ENGINE_FAIL:
-			{	
+			{
 				m_prop.EmitSound("MK_Kart_Burnout")
-				DispatchParticleEffect("enginefail", 
-					m_origin + m_angles.Forward() * -60.0 + m_angles.Up() * 12.0, 
+				DispatchParticleEffect("enginefail",
+					m_origin + m_angles.Forward() * -60.0 + m_angles.Up() * 12.0,
 					vec3_up)
 				m_prop.AcceptInput("SetAnimation", "burnout", null, null)
 				m_spin_out_timer = Time() + 2.5
@@ -2270,14 +2289,14 @@ kart_routines <-
 				break
 			}
 		}
-		
+
 		if (drop_item)
 			DropItems()
-		
+
 		m_spin_out_type = type
 		return true
 	}
-	
+
 	Shrink = function(timer)
 	{
 		if (m_mega_timer > 0.0)
@@ -2285,7 +2304,7 @@ kart_routines <-
 			StopMega()
 			return true
 		}
-		
+
 		local not_shrinked = m_shrink_timer == 0.0
 		if (not_shrinked)
 			m_prop.EmitSound("MK_Kart_Shrink")
@@ -2294,10 +2313,10 @@ kart_routines <-
 			m_shadow.SetModelScale(0.5, 1.0)
 		Spinout(SPINOUT_SPIN)
 		m_shrink_timer = timer
-		
+
 		return not_shrinked
 	}
-	
+
 	Grow = function()
 	{
 		m_prop.EmitSound("MK_Kart_Grow")
@@ -2306,12 +2325,12 @@ kart_routines <-
 			m_shadow.SetModelScale(1.0, 1.0)
 		m_shrink_timer = 0.0
 	}
-	
+
 	Squish = function(duration)
 	{
 		local not_squished = m_shrink_timer == 0.0
 		local time = Time()
-		
+
 		if (not_squished)
 			m_prop.EmitSound("MK_Kart_Shrink")
 		m_prop.SetModelScale(0.5, 0.3)
@@ -2320,26 +2339,26 @@ kart_routines <-
 		m_spin_out_timer = time + 0.5
 		m_velocity *= 0.5
 		m_shrink_timer = time + duration
-		
+
 		return not_squished
 	}
-	
+
 	HudPlayAnimation = function(name)
 	{
 		m_hud.ResetSequence(m_hud.LookupSequence(name))
 		AddThinkToEnt(m_hud, "ThinkAdvanceAnimUntilEnd")
 	}
-	
+
 	HudStartShock = function()
 	{
 		m_hud.SetBodygroup(1, 1)
 	}
-	
+
 	HudResetShock = function()
 	{
 		m_hud.SetBodygroup(1, 0)
 	}
-	
+
 	UpdateHead = function(tick)
 	{
 		if ((m_id & 1) == (tick & 1))
@@ -2348,37 +2367,37 @@ kart_routines <-
 			delta.z = -delta.x
 			delta.x = 0.0
 			delta.y *= -1.0
-			m_head.SetAbsOrigin(delta + map_data.head_center + m_head_offset)		
+			m_head.SetAbsOrigin(delta + map_data.head_center + m_head_offset)
 		}
 	}
-	
-	Touch_mk_itembox     = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_banana      = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_fib         = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_bomb        = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_star        = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_shroom      = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_shroom_mega = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_shroom_gold = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_shell_green = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_shell_red   = function(entity) { entity.GetScriptScope().Touch(this) }	
-	Touch_mk_kart_proxy  = function(entity) 
+
+	Touch_mk_itembox     = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_banana      = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_fib         = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_bomb        = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_star        = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_shroom      = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_shroom_mega = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_shroom_gold = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_shell_green = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_shell_red   = function(entity) { entity.GetScriptScope().Touch(this) }
+	Touch_mk_kart_proxy  = function(entity)
 	{
 		if (activator == m_proxy)
 			return
 		if (m_cannon_end_pos || m_rescued)
 			return
-		
+
 		local other = activator.GetOwner().GetScriptScope()
 		local time = Time()
 		if (!kart_touch_swap)
 		{
 			if (m_touch_timer > time)
 				return
-				
+
 			m_touch_timer = time + 0.5
 			other.m_touch_timer = time + 0.5
-				
+
 			if (other.m_bullet_timer == 0.0
 				&& other.m_mega_timer == 0.0
 				&& other.m_star_timer == 0.0)
@@ -2386,7 +2405,7 @@ kart_routines <-
 				local speed = m_velocity.Length()
 				local target_speed = other.m_velocity.Length()
 				if (speed > target_speed)
-				{	
+				{
 					if (speed >= 100.0)
 					{
 						kart_touch_swap = this
@@ -2398,7 +2417,7 @@ kart_routines <-
 				{
 					if (target_speed < 100.0)
 						return
-				}				
+				}
 			}
 		}
 		else
@@ -2406,27 +2425,27 @@ kart_routines <-
 			other = kart_touch_swap
 			kart_touch_swap = null
 		}
-		
+
 		if (team_battle && other.m_team == m_team)
 			return
-		
+
 		local target_origin = other.m_origin
 		local target_direction = other.m_forward
 		local right = (target_origin - m_origin).Cross(target_direction).z <= 0.0
-		
+
 		if (other.m_bullet_timer > 0.0)
 		{
-			if (m_star_timer == 0.0 
+			if (m_star_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "vehicle")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "vehicle")
 			}
 		}
 		else if (other.m_mega_timer > 0.0)
 		{
 			if (m_star_timer == 0.0 && m_mega_timer == 0.0 && Squish(5.0))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "rocketpack_stomp")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "rocketpack_stomp")
 			}
 		}
 		else if (other.m_star_timer > 0.0)
@@ -2434,7 +2453,7 @@ kart_routines <-
 			if (m_bullet_timer == 0.0
 				&& Spinout(right ? SPINOUT_TUMBLE_RIGHT : SPINOUT_TUMBLE_LEFT))
 			{
-				AddKillFeedMessage(m_driver, other.m_driver, "wrench_golden")
+				AddKillFeedAndVoiceCommand(m_driver, other.m_driver, "wrench_golden")
 			}
 		}
 		// collision penalties disabled for more than 12 players
@@ -2452,7 +2471,7 @@ kart_routines <-
 			else if (target_speed > 350.0)
 				target_speed = 200.0
 			add_velocity *= right ? -target_speed : target_speed
-			
+
 			m_velocity *= 0.5
 			m_velocity += add_velocity
 		}
@@ -2462,26 +2481,26 @@ kart_routines <-
 		local normal = m_origin - entity.GetOrigin()
 		normal.z = 0.0
 		normal.Norm()
-		
+
 		local dir = m_velocity * 1.0
 		dir.Norm()
-		
+
 		local dot = dir.Dot(normal)
-		local speed = Max(300.0, m_velocity.Length())				
+		local speed = Max(300.0, m_velocity.Length())
 		local reflection = dir - (normal * (dot * 2.0))
 		reflection.Norm()
 		m_velocity = reflection * (speed * 2.0)
-		
-		m_entity.EmitSound("MK_Bound_Hit")		
+
+		m_entity.EmitSound("MK_Bound_Hit")
 		EmitSoundOnClient("MK_Bound_Hit", m_driver)
-		
-		Spinout(SPINOUT_SPIN)			
+
+		Spinout(SPINOUT_SPIN)
 	}
 	Touch_pinball_flipper = function(entity)
 	{
 		Spinout(SPINOUT_SPIN)
 	}
-	
+
 	Touch = function()
 	{
 		if (activator)
@@ -2489,28 +2508,28 @@ kart_routines <-
 			local name = activator.GetClassname()
 			local func_name = "Touch_" + name
 			if (func_name in this)
-				this[func_name](activator)	
+				this[func_name](activator)
 		}
 	}
-	
+
 	PickItem = function(position)
 	{
-		local id = ITEM_NONE	
+		local id = ITEM_NONE
 		local r = RandomFloat(0.0, 100.0)
 		local accum = 0.0
 		local item_table = Ware_MinigameScope.item_probability
 		local item_table_count = item_table.len()
 		local player_count = karts.len()
 		local position_count = 12
-		
+
 		// TODO HACK position is rarely higher than player count? WTF?
 		if (position >= player_count)
 			position = player_count - 1
-		
+
 		if (player_count > position_count)
 		{
 			local position_scale = position * position_count.tofloat() / player_count.tofloat()
-			
+
 			local position1 = position_scale.tointeger()
 			local position2 = position1 + 1
 			if (position2 >= position_count)
@@ -2518,10 +2537,10 @@ kart_routines <-
 				position_scale = position_count.tofloat()
 				position2 = position_count - 1
 			}
-			
+
 			local t = position_scale - position1.tofloat()
 			local t_inv = (1.0 - t)
-			for (local i = 0; i < item_table_count; i++) 
+			for (local i = 0; i < item_table_count; i++)
 			{
 				local chance = (t_inv * item_table[i][position1]) + (t * item_table[i][position2])
 				accum += chance
@@ -2530,11 +2549,11 @@ kart_routines <-
 					id = Ware_MinigameScope.item_table_to_id[i]
 					break
 				}
-			}		
+			}
 		}
 		else
 		{
-			for (local i = 0; i < item_table_count; i++) 
+			for (local i = 0; i < item_table_count; i++)
 			{
 				local chance = item_table[i][position]
 				accum += chance
@@ -2545,11 +2564,11 @@ kart_routines <-
 				}
 			}
 		}
-		
+
 		// pows are disabled for this version
 		if (id == ITEM_POW)
 		{
-			id = ITEM_SHROOM_TWO	
+			id = ITEM_SHROOM_TWO
 		}
 		// this is not the right way of doing this but solving it properly is x10 more code
 		else if (id == ITEM_SHOCK)
@@ -2572,33 +2591,33 @@ kart_routines <-
 			else
 				Ware_MinigameScope.item_blooper_timer = Time() + 30.0
 		}
-		
+
 		return id
 	}
-	
+
 	RollItem = function()
 	{
 		if (m_item_idx != ITEM_NONE)
 			return
-		
+
 		local idx = PickItem(m_position_idx)
 
 		m_item_idx = -idx
 		SetPropInt(m_hud, "m_iTextureFrameIndex", ITEM_LAST + 1)
-			
+
 		EmitSoundOnClient("MK_Item_Roulette", m_driver)
 		EntityEntFire(m_entity, "CallScriptFunction", "SelectItem", 4.0)
 	}
-	
+
 	SelectItem = function()
 	{
 		if (m_item_idx >= ITEM_NONE)
 			return
-				
+
 		local idx = -m_item_idx
 		SetItem(idx)
 	}
-	
+
 	SetItem = function(idx)
 	{
 		if (idx == ITEM_NONE)
@@ -2606,12 +2625,12 @@ kart_routines <-
 			if (m_item_idx < 0 && m_driver)
 				m_driver.StopSound("MK_Item_Roulette")
 		}
-		
+
 		m_item_idx = idx
 		m_item_scope = item_map[idx]
 		SetPropInt(m_hud, "m_iTextureFrameIndex", idx)
 	}
-	
+
 	SetHeldItems = function(idx, entities)
 	{
 		if (entities)
@@ -2621,16 +2640,16 @@ kart_routines <-
 		m_items_held_idx = idx
 		m_items_held_scope = item_map[idx]
 	}
-	
+
 	DropHeldItem = function()
 	{
 		if (m_items_held_idx != ITEM_NONE)
 		{
 			m_items_held_scope.OnDrop(m_items_held, this)
 			SetHeldItems(ITEM_NONE, null)
-		}			
+		}
 	}
-	
+
 	RemoveHeldItem = function(entity)
 	{
 		local idx = m_items_held.find(entity)
@@ -2644,26 +2663,26 @@ kart_routines <-
 			}
 		}
 	}
-	
+
 	DropItems = function()
 	{
 		DropHeldItem()
-		
+
 		if (m_item_idx != ITEM_NONE)
 		{
 			if (m_item_idx > ITEM_NONE)
 			{
 				if ("OnDrop" in m_item_scope)
-					m_item_scope.OnDrop(null, this)	
+					m_item_scope.OnDrop(null, this)
 			}
-			SetItem(ITEM_NONE)			
+			SetItem(ITEM_NONE)
 		}
 	}
-	
+
 	ClearItems = function()
 	{
 		DropHeldItem()
-		
+
 		if (m_star_timer > 0.0) m_star_timer = 0.01
 		if (m_mega_timer > 0.0) m_mega_timer = 0.01
 		if (m_shrink_timer > 0.0) m_shrink_timer = 0.01
@@ -2674,13 +2693,13 @@ kart_routines <-
 
 		SetItem(ITEM_NONE)
 	}
-		
+
 	StartStar = function()
 	{
 		if (m_star_timer == 0.0)
 		{
 			if (m_driver)
-				m_driver.AddCond(TF_COND_INVULNERABLE)		
+				m_driver.AddCond(TF_COND_INVULNERABLE)
 			QuietMusic()
 			EmitSoundEx
 			({
@@ -2689,10 +2708,10 @@ kart_routines <-
 				filter_type = RECIPIENT_FILTER_GLOBAL
 			})
 		}
-		m_star_timer = Time() + 6.5	
+		m_star_timer = Time() + 6.5
 		UpdateSkin()
 	}
-	
+
 	StopStar = function()
 	{
 		RestoreMusic()
@@ -2700,28 +2719,28 @@ kart_routines <-
 		if (m_driver)
 			m_driver.RemoveCond(TF_COND_INVULNERABLE)
 		m_prop.EmitSound("TFPlayer.InvulnerableOff")
-		m_star_timer = 0.0	
-		UpdateSkin()		
+		m_star_timer = 0.0
+		UpdateSkin()
 	}
-	
+
 	StartMega = function()
 	{
 		if (m_mega_timer == 0.0)
 		{
 			m_prop.EmitSound("MK_Item_Shroom_Mega_Use")
 			EntityEntFire(m_entity, "CallScriptFunction", "StartMegaMusic", 0.9)
-			m_prop.SetModelScale(1.5, 1.0)	
-			if (m_driver)			
-				Ware_AddPlayerAttribute(m_driver, "voice pitch scale", 0.8, -1)			
+			m_prop.SetModelScale(1.5, 1.0)
+			if (m_driver)
+				Ware_AddPlayerAttribute(m_driver, "voice pitch scale", 0.8, -1)
 		}
-		m_mega_timer = Time() + 10.0		
+		m_mega_timer = Time() + 10.0
 	}
-	
+
 	StartMegaMusic = function()
 	{
 		if (m_mega_timer == 0.0)
 			return
-		
+
 		QuietMusic()
 		EmitSoundEx
 		({
@@ -2730,16 +2749,16 @@ kart_routines <-
 			filter_type = RECIPIENT_FILTER_GLOBAL
 		})
 	}
-	
+
 	StopMega = function()
 	{
 		m_mega_timer = 0.0
-		
+
 		RestoreMusic()
 		m_prop.StopSound("MK_Item_Shroom_Mega_Music")
 		m_prop.EmitSound("MK_Item_Shroom_Mega_Finish")
 		m_prop.SetModelScale(1.0, 1.0)
-		
+
 		if (m_driver)
 			Ware_RemovePlayerAttribute(m_driver, "voice pitch scale")
 	}
@@ -2760,7 +2779,7 @@ kart_routines <-
 		EntityEntFire(blooper, "Kill", "", 2.0)
 		return blooper
 	}
-	
+
 	StartBlooper = function()
 	{
 		if (m_blooper_timer == 0.0)
@@ -2768,30 +2787,30 @@ kart_routines <-
 			SetPropInt(m_driver, "m_clrRender", 0xFF323232)
 			m_hud.SetBodygroup(2, 1)
 		}
-		m_blooper_timer = Time() + 8.0		
+		m_blooper_timer = Time() + 8.0
 	}
-	
+
 	StopBlooper = function()
 	{
 		SetPropInt(m_driver, "m_clrRender", 0xFFFFFFFF)
 		m_hud.SetBodygroup(2, 0)
 		m_blooper_timer = 0.0
 	}
-	
+
 	StartBullet = function()
 	{
 		if (m_bullet_timer != 0.0)
 			return
-		
+
 		DriftStop()
 		BoostStop()
-		
+
 		if (m_driver)
 		{
 			SetPropInt(m_driver, "m_nRenderMode", kRenderNone)
 			m_driver.SetForceLocalDraw(false)
 		}
-		
+
 		m_prop.EmitSound("MK_Item_Bullet_On")
 		EmitSoundEx
 		({
@@ -2801,22 +2820,22 @@ kart_routines <-
 		})
 		m_prop.SetModel("models/mariokart/items/bullet.mdl")
 		m_bullet_timer = Time() + 6.0
-		m_ground = null	
+		m_ground = null
 	}
-	
+
 	PhysicsBullet = function()
 	{
 		// epsilon to prevent being stuck
 		local next_point = m_map_next_point + m_map_next_plane.normal * 40.0
 		local dir = (next_point + Vector(0, 0, 40)) - m_origin
 		dir.Norm()
-		
+
 		local speed = m_cannon_end_pos ? 4500.0 : 2000.0
 		m_direction = dir
 		m_velocity = dir * speed
 		m_angles = QuaternionBlend(m_angles.ToQuat(), VectorAngles(dir).ToQuat(), 0.15).ToQAngle()
 	}
-	
+
 	StopBullet = function()
 	{
 		if (m_driver)
@@ -2828,15 +2847,15 @@ kart_routines <-
 		m_prop.StopSound("MK_Item_Bullet_Fly")
 		m_prop.EmitSound("MK_Item_Bullet_Off")
 		m_bullet_timer = 0.0
-		
+
 		SetItem(ITEM_NONE)
 	}
-	
+
 	UpdateItems = function(time, dt)
 	{
 		if (m_star_timer > 0.0 && m_star_timer < time)
 			StopStar()
-		
+
 		if (m_bullet_timer > 0.0)
 		{
 			if (m_cannon_end_pos)
@@ -2844,22 +2863,22 @@ kart_routines <-
 			if (m_bullet_timer < time)
 				StopBullet()
 		}
-		
+
 		if (m_blooper_timer > 0.0 && m_blooper_timer < time)
-			StopBlooper()	
-			
+			StopBlooper()
+
 		if (m_shroom_gold_timer > 0.0 && m_shroom_gold_timer < time)
 		{
 			SetItem(ITEM_NONE)
-			m_shroom_gold_timer = 0.0	
+			m_shroom_gold_timer = 0.0
 		}
-		
+
 		if (m_mega_timer > 0.0 && m_mega_timer < time)
 			StopMega()
-		
+
 		if (m_shrink_timer > 0.0 && m_shrink_timer < time)
-			Grow()	
-			
+			Grow()
+
 		if (m_spin_out_timer > 0.0 && m_spin_out_timer < time)
 		{
 			m_spin_out_timer = 0.0
@@ -2867,14 +2886,14 @@ kart_routines <-
 			m_head.AcceptInput("SetAnimation", "idle", null, null)
 		}
 	}
-	
+
 	SetupPoint = function()
 	{
 		local start_index = map_data.point_start_indices[map_data.checkpoint_last]
-		local end_index = map_data.point_end_indices[map_data.checkpoint_last]		
-		
+		local end_index = map_data.point_end_indices[map_data.checkpoint_last]
+
 		local pos = m_entity.GetOrigin()
-		local closest_dist = FLT_MAX	
+		local closest_dist = FLT_MAX
 		for (local i = start_index; i < end_index; i++)
 		{
 			local point = map_data.points[i]
@@ -2891,18 +2910,18 @@ kart_routines <-
 				}
 			}
 		}
-		
+
 		m_map_next_point_idx = (m_map_point_idx + 1) % map_data.point_count
 		m_map_next_point = map_data.points[m_map_next_point_idx]
 		m_map_next_plane = map_data.planes[m_map_next_point_idx]
 	}
-	
+
 	UpdatePoint = function()
 	{
 		local advance
 		if (m_origin.Dot(m_map_next_plane.normal) >= m_map_next_plane.dist)
 		{
-			advance = true		
+			advance = true
 			m_map_point_idx = m_map_point_idx + 1
 			if (m_map_point_idx >= map_data.point_count)
 			{
@@ -2912,7 +2931,7 @@ kart_routines <-
 		}
 		else if (m_origin.Dot(m_map_plane.normal) < m_map_plane.dist)
 		{
-			advance = true		
+			advance = true
 			m_map_point_idx = m_map_point_idx - 1
 			if (m_map_point_idx < 0)
 			{
@@ -2920,22 +2939,22 @@ kart_routines <-
 				m_map_point_idx = map_data.point_count - 1
 			}
 		}
-		
+
 		if (advance)
 		{
 			m_map_point = map_data.points[m_map_point_idx]
 			m_map_plane = map_data.planes[m_map_point_idx]
-			
+
 			m_map_next_point_idx = (m_map_point_idx + 1) % map_data.point_count
 			m_map_next_point = map_data.points[m_map_next_point_idx]
-			m_map_next_plane = map_data.planes[m_map_next_point_idx]		
+			m_map_next_plane = map_data.planes[m_map_next_point_idx]
 		}
 	}
-	
+
 	AddLap = function()
 	{
 		m_lap_idx++
-		
+
 		if (m_lap_valid_idx != INT_MIN)
 		{
 			if (m_lap_idx == m_lap_valid_idx)
@@ -2944,7 +2963,7 @@ kart_routines <-
 		}
 		if (m_lap_idx <= 0)
 			return
-			
+
 		local time = Time()
 		if (m_lap_last_time == 0.0)
 		{
@@ -2956,20 +2975,20 @@ kart_routines <-
 			m_lap_times.append(time - m_lap_last_time)
 			m_lap_last_time = time
 		}
-		
+
 		local lap_last = Ware_MinigameScope.race_max_laps
 		if (m_lap_idx == lap_last)
 		{
 			if (karts_finished.find(this) == null)
 				karts_finished.append(this)
 		}
-		else 
+		else
 		{
 			if (m_driver)
 			{
 				QuietMusic()
-				EmitSoundOnClient("MK_Lap", m_driver)	
-				EntityEntFire(m_entity, "CallScriptFunction", "RestoreMusic", 2.5)				
+				EmitSoundOnClient("MK_Lap", m_driver)
+				EntityEntFire(m_entity, "CallScriptFunction", "RestoreMusic", 2.5)
 			}
 			SetPropInt(m_hud, "m_iTeamNum", m_lap_idx + 3)
 		}
@@ -2986,20 +3005,20 @@ kart_routines <-
 	{
 		local idx = GetPropInt(caller, "m_iTextureFrameIndex")
 		if (m_checkpoint_idx == idx)
-			return	
+			return
 		if (idx == 1)
 			m_pinball_score = false
 		m_checkpoint_idx = idx
 	}
-	
+
 	SetPosition = function(position, shift, time)
-	{	
+	{
 		m_position_relative = position
-		
+
 		local idx = position + shift
 		if (idx == m_position_idx)
 			return
-		
+
 		if (m_position_timer < time)
 		{
 			if (idx > m_position_idx)
@@ -3008,11 +3027,11 @@ kart_routines <-
 				EmitSoundOnClient("MK_Position_Gain", m_driver)
 			m_position_timer = time + 0.5
 		}
-	
+
 		SetPropInt(m_hud, "m_clrRender", (idx << 24) | 0x00FFFFFF)
 		m_position_idx = idx
-	}	
-	
+	}
+
 	Finish = function()
 	{
 		if (m_driver)
@@ -3024,11 +3043,11 @@ kart_routines <-
 				flags       = SND_STOP
 				filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 			})
-			
-			EmitSoundOnClient("MK_Race_Finish", m_driver)	
+
+			EmitSoundOnClient("MK_Race_Finish", m_driver)
 		}
 	}
-	
+
 	QuietMusic = function()
 	{
 		if (m_driver)
@@ -3054,19 +3073,19 @@ kart_routines <-
 				volume      = 1.0
 				entity      = m_driver
 				flags       = SND_CHANGE_VOL
-				filter_type = RECIPIENT_FILTER_SINGLE_PLAYER			
+				filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
 			}
-			
+
 			if (m_lap_idx >= Ware_MinigameScope.race_max_laps - 1)
 			{
 				params.pitch <- 110
 				params.flags <- SND_CHANGE_VOL|SND_CHANGE_PITCH
 			}
-		
+
 			EmitSoundEx(params)
 		}
 	}
-	
+
 	PinballScore = function()
 	{
 		if (m_pinball_score)
@@ -3074,7 +3093,7 @@ kart_routines <-
 		m_pinball_score = true
 		EmitSoundOnClient("MK_Pinball_Score", m_driver)
 	}
-	
+
 	UpdateDebug = function()
 	{
 		if (Ware_ListenHost.IsAlive())
@@ -3086,8 +3105,8 @@ kart_routines <-
 		{
 			if (GetPropEntity(Ware_ListenHost, "m_hObserverTarget") != m_driver)
 				return
-		}	
-			
+		}
+
 		local x = 0.1, y = 0.35
 		local r = 200, g = 255, b = 200, a = 255
 		local i = 0
@@ -3096,9 +3115,9 @@ kart_routines <-
 		{
 			vargv.insert(0, this)
 			local text = format.acall(vargv)
-			DebugDrawScreenTextLine(x, y, i++, text, r, g, b, a, dt)			
+			DebugDrawScreenTextLine(x, y, i++, text, r, g, b, a, dt)
 		}
-		
+
 		DrawText("Buttons: %d", m_buttons)
 		DrawText("Forward Move: %d", m_forward_move)
 		DrawText("Side Move: %d", m_side_move)
@@ -3116,14 +3135,14 @@ kart_routines <-
 		DrawText("Item index: %d", m_item_idx)
 		DrawText("Held items index: %d", m_items_held_idx)
 		DrawText("Held items: %d", m_items_held.len())
-		
+
 		i++
 		DrawText("Position: %d (%d)", m_position_idx, m_position_relative)
 		DrawText("Checkpoint: %d", m_checkpoint_idx)
 		DrawText("Lap: %d", m_lap_idx)
 		if (m_lap_valid_idx != INT_MIN)
 			DrawText("Last Valid Lap: %d", m_lap_valid_idx)
-		
+
 		i++
 		DrawText("Point: %d", m_map_point_idx)
 		DrawText("Point Next: %d", m_map_next_point_idx)
@@ -3146,12 +3165,12 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 	scope.m_icon            <- icon
 	scope.m_blast_timer     <- Time() + 0.5
 	scope.m_hits            <- { [inflictor] = true }
-	scope.m_classnames      <- 
+	scope.m_classnames      <-
 	{
 		mk_kart        = true
 		mk_banana      = true
 		mk_fib         = true
-		mk_bomb        = true			
+		mk_bomb        = true
 		mk_shell_green = true
 		mk_shell_red   = true
 		mk_shroom      = true
@@ -3164,7 +3183,7 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 		local origin = m_origin
 		local radius = m_radius
 		local spinout_type = Time() < m_blast_timer ? SPINOUT_LAUNCH_UP : SPINOUT_SPIN
-		
+
 		// entities may get deleted as they are looped here, so store a list
 		local entities = []
 		for (local entity; entity = Entities.FindInSphere(entity, origin, radius);)
@@ -3174,26 +3193,26 @@ local function ExplosionCreate(origin, radius, duration, inflictor, owner_kart, 
 			m_hits[entity] <- true
 			entities.append(entity)
 		}
-		
+
 		foreach (entity in entities)
 		{
 			// bomb might delete them...
 			if (!entity.IsValid())
 				continue
-		
+
 			local classname = entity.GetClassname()
 			if (!(classname in m_classnames))
 				continue
-				
+
 			if (classname == "mk_kart")
 			{
 				local kart = entity.GetScriptScope()
 				if (kart.m_star_timer > 0.0 || kart.m_bullet_timer > 0.0 || kart.m_cannon_end_pos != null)
 					continue
-				
+
 				if (kart.Spinout(spinout_type))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, m_icon)
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, m_icon)
 				}
 			}
 			else if (classname == "mk_bomb")
@@ -3235,19 +3254,19 @@ local function ItemCreate(classname, model, owner_kart, type)
 	{
 		if (m_standby)
 			return -1
-		
+
 		local origin = self.GetOrigin()
 		local center = origin + m_origin_offset
 		m_velocity.z -= gravity_rate * TICKDT
-		
-		local trace = 
+
+		local trace =
 		{
 			start      = center
 			end        = center + m_velocity * TICKDT
 			mask       = MASK_PLAYERSOLID_BRUSHONLY
 			ignore     = self
 			startsolid = false
-		}	
+		}
 		TraceLineEx(trace)
 		if (trace.hit)
 		{
@@ -3256,13 +3275,13 @@ local function ItemCreate(classname, model, owner_kart, type)
 				Destroy()
 				return
 			}
-			
+
 			local normal = trace.plane_normal
 			if (!trace.startsolid && normal.z < 0.7)
 			{
 				local speed = m_velocity.Norm()
 				m_velocity = (m_velocity - (normal * (m_velocity.Dot(normal) * 2.0))) * speed * 0.5
-			}		
+			}
 			else
 			{
 				local pos = trace.pos
@@ -3270,55 +3289,55 @@ local function ItemCreate(classname, model, owner_kart, type)
 					pos.z += 32.0
 				self.SetAbsOrigin(pos)
 				m_velocity *= 0.0
-				
+
 				if (m_type == ITEM_TYPE_BANANA)
 					self.EmitSound("MK_Item_Banana_Land")
 				else if (m_type == ITEM_TYPE_FIB)
-					self.EmitSound("MK_Itembox_Land")		
+					self.EmitSound("MK_Itembox_Land")
 
 				RemoveEntityThink(self)
-			}				
+			}
 		}
 		else
 		{
 			self.SetAbsOrigin(trace.end - m_origin_offset)
 		}
-		
+
 		return -1
 	}
 	scope.Touch <- function(kart)
 	{
 		if (kart == m_owner_kart && m_grace_timer >= Time())
-			return	
-		
+			return
+
 		// HACK: don't know when exactly this happens, but it caused errors
 		if (!self.IsValid())
 			return
-			
+
 		switch (m_type)
 		{
 			case ITEM_TYPE_BANANA:
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_SPIN))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "warfan")
 				}
-				
-				Destroy()			
+
+				Destroy()
 				break
 			}
 			case ITEM_TYPE_FIB:
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, "thirddegree")
 				}
-				
+
 				DispatchParticleEffect("drg_cow_explosion_sparkles", self.GetOrigin(), vec3_zero)
 				kart.m_prop.EmitSound("MK_Itembox_Hit")
 				Destroy()
 				break
-			}		
+			}
 			case ITEM_TYPE_BOMB:
 			{
 				Explode()
@@ -3335,13 +3354,13 @@ local function ItemCreate(classname, model, owner_kart, type)
 				kart.Boost(2.0, BOOST_SHROOM)
 				Destroy()
 				break
-			}	
+			}
 			case ITEM_TYPE_SHROOM_MEGA:
 			{
 				kart.StartMega()
 				Destroy()
 				break
-			}	
+			}
 			case ITEM_TYPE_SHROOM_GOLD:
 			{
 				kart.Boost(4.0, BOOST_SHROOM)
@@ -3353,7 +3372,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 			{
 				if (kart.CanSpinout() && kart.Spinout(SPINOUT_TUMBLE_FORWARD))
 				{
-					AddKillFeedMessage(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null, 
+					AddKillFeedAndVoiceCommand(kart.m_driver, m_owner_kart ? m_owner_kart.m_driver : null,
 						m_type == ITEM_TYPE_SHELL_GREEN ? "passtime_pass" : "passtime_steal")
 				}
 
@@ -3366,14 +3385,14 @@ local function ItemCreate(classname, model, owner_kart, type)
 	{
 		// HACK
 		SetPropString(self, "m_iClassname", "")
-		
+
 		local origin = self.GetOrigin()
 		local center = origin + Vector(0, 0, 32)
-	
+
 		DispatchParticleEffect("fireSmokeExplosion_track", center, vec3_zero)
 		DispatchParticleEffect("asplode_hoodoo_burning_debris", center, vec3_zero)
 		self.EmitSound("MK_Item_Bomb_Explode")
-	
+
 		ExplosionCreate(origin, 192.0, 2.0, self, m_owner_kart, "taunt_soldier")
 		Destroy()
 	}
@@ -3381,7 +3400,7 @@ local function ItemCreate(classname, model, owner_kart, type)
 	{
 		if (m_owner_kart)
 			m_owner_kart.RemoveHeldItem(self)
-			
+
 		if (m_type == ITEM_TYPE_BOMB)
 		{
 			self.StopSound("MK_Item_Bomb_Fuse")
@@ -3389,10 +3408,10 @@ local function ItemCreate(classname, model, owner_kart, type)
 		else
 		{
 			local hit = "m_hit" in this && m_hit // HACK
-			if (m_type == ITEM_TYPE_SHELL_GREEN) 
+			if (m_type == ITEM_TYPE_SHELL_GREEN)
 			{
-				self.StopSound("MK_Item_Shell_Green_Follow")	
-				DispatchParticleEffect("spell_skeleton_bits_green", self.GetOrigin(), vec3_zero)			
+				self.StopSound("MK_Item_Shell_Green_Follow")
+				DispatchParticleEffect("spell_skeleton_bits_green", self.GetOrigin(), vec3_zero)
 				self.EmitSound(hit ? "MK_Item_Shell_Hit" : "MK_Item_Shell_Break")
 			}
 			else if (m_type == ITEM_TYPE_SHELL_RED)
@@ -3402,12 +3421,12 @@ local function ItemCreate(classname, model, owner_kart, type)
 				self.EmitSound(hit ? "MK_Item_Shell_Hit" : "MK_Item_Shell_Break")
 			}
 		}
-		
+
 		RemoveEntityThink(self)
 		self.Kill()
 	}
 	AddThinkToEnt(item, "Physics")
-	return item	
+	return item
 }
 
 local item_base_throwable =
@@ -3419,7 +3438,7 @@ local item_base_throwable =
 		else
 			Attach(kart)
 	}
-	
+
 	OnPressedAttack2 = function(kart)
 	{
 		if (kart.m_items_held_idx != ITEM_NONE)
@@ -3427,24 +3446,24 @@ local item_base_throwable =
 		else
 			Attach(kart)
 	}
-	
+
 	OnReleasedAttack = function(kart)
 	{
 		if (kart.m_items_held_idx != ITEM_NONE && kart.m_items_held_idx != ITEM_BANANA_THREE)
 			ThrowOne(kart, false)
 	}
-	
+
 	OnReleasedAttack2 = function(kart)
 	{
 		if (kart.m_items_held_idx != ITEM_NONE && kart.m_items_held_idx != ITEM_BANANA_THREE)
 			ThrowOne(kart, true)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		OnDropInternal(items, kart, m_type)
 	}
-	
+
 	// HACK for shrooms to pass their own type
 	OnDropInternal = function(items, kart, type)
 	{
@@ -3459,7 +3478,7 @@ local item_base_throwable =
 			case ITEM_SHELL_RED_THREE:
 			case ITEM_SHROOM_THREE:
 				count = 3
-				break				
+				break
 		}
 
 		if (!items)
@@ -3472,7 +3491,7 @@ local item_base_throwable =
 				items.append(item)
 			}
 		}
-		
+
 		foreach (item in items)
 		{
 			local item_scope = item.GetScriptScope()
@@ -3480,7 +3499,7 @@ local item_base_throwable =
 			Drop(item_scope)
 		}
 	}
-	
+
 	Drop = function(item_scope)
 	{
 		item_scope.m_standby = false
@@ -3489,9 +3508,9 @@ local item_base_throwable =
 		local velocity = Vector(cos(t), sin(t), 2.0)
 		velocity.Norm()
 		velocity *= 400.0
-		item_scope.m_velocity = velocity	
+		item_scope.m_velocity = velocity
 	}
-	
+
 	Attach = function(kart)
 	{
 		local item_idx = kart.m_item_idx
@@ -3502,27 +3521,27 @@ local item_base_throwable =
 		{
 			local item = Create(kart, m_type)
 			items.append(item)
-			SetEntityParent(item, kart.m_prop, "item_back")		
+			SetEntityParent(item, kart.m_prop, "item_back")
 			item.SetLocalOrigin(Vector(offset, 0, 0))
 			offset -= 16.0
 		}
-		
-		kart.SetItem(ITEM_NONE)	
-		kart.SetHeldItems(item_idx, items)		
+
+		kart.SetItem(ITEM_NONE)
+		kart.SetHeldItems(item_idx, items)
 	}
-	
+
 	ThrowOne = function(kart, front)
 	{
 		local item = kart.m_items_held.top()
 		Throw(item, kart, front)
-		kart.RemoveHeldItem(item)	
+		kart.RemoveHeldItem(item)
 	}
 
 	Throw = function(item, kart, front)
 	{
 		local item_scope = item.GetScriptScope()
 		local forward = kart.m_entity.GetAbsAngles().Forward()
-		local offset = front ? 85.0 : -60.0		
+		local offset = front ? 85.0 : -60.0
 		local velocity
 		if (front)
 		{
@@ -3541,7 +3560,7 @@ local item_base_throwable =
 			EntityEntFire(item, "CallScriptFunction", "Explode", 4.0)
 		}
 	}
-	
+
 	Create = function(kart, type)
 	{
 		local item
@@ -3553,7 +3572,7 @@ local item_base_throwable =
 				break
 			}
 			case ITEM_TYPE_FIB:
-			{			
+			{
 				item = ItemCreate("mk_fib", "models/mariokart/items/fib.mdl", kart, type)
 				local sprite = SpawnEntityFromTableSafe("env_glow",
 				{
@@ -3563,7 +3582,7 @@ local item_base_throwable =
 				})
 				SetEntityParent(sprite, item, "mark")
 				break
-			}	
+			}
 			case ITEM_TYPE_BOMB:
 			{
 				item = ItemCreate("mk_bomb", "models/mariokart/items/bomb.mdl", kart, type)
@@ -3588,26 +3607,26 @@ local item_base_throwable =
 			{
 				item = ItemCreate("mk_shroom_gold", "models/mariokart/items/shroom_gold.mdl", kart, type)
 				break
-			}	
+			}
 			case ITEM_TYPE_SHELL_GREEN:
 			{
 				item = ItemCreate("mk_shell_green", "models/mariokart/items/shell_green.mdl", kart, type)
 				break
-			}			
+			}
 			case ITEM_TYPE_SHELL_RED:
 			{
 				item = ItemCreate("mk_shell_red", "models/mariokart/items/shell_red.mdl", kart, type)
 				break
-			}	
+			}
 			case ITEM_TYPE_SHELL_BLUE:
 			{
 				item = ItemCreate("mk_shell_blue", "models/mariokart/items/shell_blue.mdl", kart, type)
 				break
-			}			
+			}
 		}
 		return item
 	}
-	
+
 	m_type = null
 }
 
@@ -3629,7 +3648,7 @@ item_shell <-
 		else
 			Attach(kart)
 	}
-	
+
 	OnPressedAttack2 = function(kart)
 	{
 		if (kart.m_items_held_idx != ITEM_NONE)
@@ -3637,65 +3656,65 @@ item_shell <-
 		else
 			Attach(kart)
 	}
-	
+
 	OnReleasedAttack = function(kart)
 	{
-		local held_idx = kart.m_items_held_idx 
+		local held_idx = kart.m_items_held_idx
 		if (held_idx != ITEM_NONE && held_idx != ITEM_SHELL_GREEN_THREE && held_idx != ITEM_SHELL_RED_THREE)
 			ThrowOne(kart, true)
 	}
-	
+
 	OnReleasedAttack2 = function(kart)
 	{
-		local held_idx = kart.m_items_held_idx 
+		local held_idx = kart.m_items_held_idx
 		if (held_idx != ITEM_NONE && held_idx != ITEM_SHELL_GREEN_THREE && held_idx != ITEM_SHELL_RED_THREE)
 			ThrowOne(kart, false)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		item_base_throwable.OnDropInternal(items, kart, m_type)
 	}
-	
+
 	Attach = function(kart)
 	{
 		local item_idx = kart.m_item_idx
 		local count = 1
 		if (item_idx == ITEM_SHELL_GREEN_THREE || item_idx == ITEM_SHELL_RED_THREE)
 			count = 3
-		
+
 		local items = []
 		for (local i = 0; i < count; i++)
 		{
 			local item = item_base_throwable.Create(kart, m_type)
 			items.append(item)
 			if (count == 1)
-				SetEntityParent(item, kart.m_prop, "item_back")		
+				SetEntityParent(item, kart.m_prop, "item_back")
 			else if (i == 0)
-				SetEntityParent(item, kart.m_prop, "item_spin1")		
+				SetEntityParent(item, kart.m_prop, "item_spin1")
 			else if (i == 1)
 				SetEntityParent(item, kart.m_prop, "item_spin2")
 			else if (i == 2)
-				SetEntityParent(item, kart.m_prop, "item_spin3")			
+				SetEntityParent(item, kart.m_prop, "item_spin3")
 		}
-		
-		kart.SetItem(ITEM_NONE)	
-		kart.SetHeldItems(item_idx, items)		
+
+		kart.SetItem(ITEM_NONE)
+		kart.SetHeldItems(item_idx, items)
 	}
-	
+
 	ThrowOne = function(kart, front)
 	{
 		local item = kart.m_items_held.top()
 		Throw(item, kart, front)
-		kart.RemoveHeldItem(item)	
+		kart.RemoveHeldItem(item)
 	}
 
 	Throw = function(item, kart, front)
 	{
 		local item_scope = item.GetScriptScope()
-		
+
 		item_scope.m_hit     <- false
-		item_scope.m_gravity <- 0.0		
+		item_scope.m_gravity <- 0.0
 		item_scope.m_bounces <- 0
 		item_scope.m_target_point     <- null
 		item_scope.m_target_point_idx <- -1
@@ -3707,7 +3726,7 @@ item_shell <-
 		{
 			if (m_standby)
 				return -1
-				
+
 			local origin = self.GetOrigin()
 
 			if (m_type == ITEM_TYPE_SHELL_RED)
@@ -3720,7 +3739,7 @@ item_shell <-
 						local dir = m_target_kart.m_entity.GetOrigin() - origin
 						dir.z = 0.0
 						dir.Norm()
-						m_velocity = dir * speed	
+						m_velocity = dir * speed
 					}
 					else
 					{
@@ -3728,39 +3747,39 @@ item_shell <-
 						{
 							m_target_point_idx++
 							if (m_target_point_idx >= map_data.point_count)
-								m_target_point_idx = 0							
+								m_target_point_idx = 0
 							m_target_point = map_data.points[m_target_point_idx]
 						}
-						
+
 						local current_point_idx = m_target_point_idx - 1
 						if (current_point_idx < 0)
 							current_point_idx = map_data.point_count - 1
-						
+
 						if (m_target_kart.m_map_point_idx == current_point_idx)
 						{
 							if ((origin - m_target_kart.m_entity.GetOrigin()).Length2D() < 1024.0)
 								m_target_lock = true
 						}
-						
+
 						local speed = m_velocity.Length()
 						local dir = m_target_point - origin
 						dir.Norm()
 						m_velocity = dir * speed
-					}				
+					}
 				}
 			}
-	
+
 			local origin_offset = Vector(0, 0, 18)
-			local gravity_offset = Vector(0, 0, m_gravity * TICKDT)		
-			local trace = 
+			local gravity_offset = Vector(0, 0, m_gravity * TICKDT)
+			local trace =
 			{
 				start      = origin + Vector(0, 0, 4)
 				end        = origin - gravity_offset
 				mask       = MASK_PLAYERSOLID_BRUSHONLY
 				ignore     = self
 				startsolid = false
-			}	
-			TraceLineEx(trace)		
+			}
+			TraceLineEx(trace)
 
 			if (trace.hit)
 			{
@@ -3768,7 +3787,7 @@ item_shell <-
 				if (normal.LengthSqr() == 0.0)
 				{
 					m_gravity = 0.0
-				}	
+				}
 				else
 				{
 					local speed = m_velocity.Norm()
@@ -3776,21 +3795,21 @@ item_shell <-
 					m_velocity = normal.Cross(m_velocity)
 					m_velocity.Norm()
 					m_velocity *= -speed
-					m_gravity = 0.0			
+					m_gravity = 0.0
 				}
 			}
 			else
 			{
 				origin.z -= m_gravity
-				m_gravity += 12.0 * TICKDT			
+				m_gravity += 12.0 * TICKDT
 			}
-			
+
 			origin += origin_offset
 			trace.start = origin
 			trace.end = origin + m_velocity * TICKDT
 			trace.startsolid = false
 			TraceLineEx(trace)
-			
+
 			if (trace.hit)
 			{
 				if (trace.startsolid)
@@ -3809,11 +3828,11 @@ item_shell <-
 						else
 						{
 							self.EmitSound("MK_Item_Shell_Hit")
-							
+
 							local speed = m_velocity.Norm()
 							m_velocity = (m_velocity - (normal * (m_velocity.Dot(normal) * 2.0))) * speed
 						}
-					}		
+					}
 					else
 					{
 						self.SetAbsOrigin(trace.pos)
@@ -3824,19 +3843,19 @@ item_shell <-
 			{
 				self.SetAbsOrigin(trace.pos - origin_offset)
 			}
-			
+
 			return -1
 		}
-		
+
 		item.AcceptInput("ClearParent", "", null, null)
-		
+
 		if (front)
 		{
 			item.SetAbsOrigin(kart.m_origin + kart.m_forward * 64.0)
 			local item_velocity = kart.m_forward * (m_type == ITEM_TYPE_SHELL_GREEN ? 500.0 : 250.0)
 			local item_speed = Max(item_velocity.Norm() + kart.m_velocity.Length(), 1400.0)
 			item_scope.m_velocity <- item_velocity * item_speed
-				
+
 			if (item_scope.m_type == ITEM_TYPE_SHELL_RED)
 			{
 				local target_kart
@@ -3844,32 +3863,32 @@ item_shell <-
 				{
 					local other = karts[i]
 					if (other.m_rescued || other.m_cannon_end_pos)
-						continue				
+						continue
 					if (team_battle && other.m_team == m_owner_kart.m_team)
-						continue					
+						continue
 					item_scope.m_target_point_idx = kart.m_map_next_point_idx
 					item_scope.m_target_point     = kart.m_map_next_point
 					item_scope.m_target_kart      = other
 					break
 				}
-			}			
+			}
 		}
 		else
 		{
 			item.SetAbsOrigin(kart.m_origin + kart.m_forward * -64.0)
 			item_scope.m_velocity <- kart.m_forward  * -400.0
 		}
-		
+
 		EntityEntFire(item, "CallScriptFunction", "Destroy", 20.0)
-		
+
 		EmitSoundEx
 		({
 			sound_name  = item_scope.m_type == ITEM_TYPE_SHELL_GREEN ? "MK_Item_Shell_Green_Follow" : "MK_Item_Shell_Red_Follow"
 			entity      = item
 			filter_type = RECIPIENT_FILTER_GLOBAL
-		})	
+		})
 	}
-	
+
 	m_type = null
 }
 
@@ -3884,7 +3903,7 @@ item_shell_blue <-
 	OnPressedAttack = function(kart)
 	{
 		kart.SetItem(ITEM_NONE)
-		
+
 		local item_origin = (kart.m_origin - kart.m_base_offset + Vector(0, 0, 2.0)) + kart.m_forward * 70.0
 		local item = Ware_SpawnEntity("prop_dynamic_override",
 		{
@@ -3903,10 +3922,10 @@ item_shell_blue <-
 			rendermode = kRenderTransColor
 		})
 		SetEntityParent(trail, item)
-			
+
 		item.ValidateScriptScope()
 		local scope = item.GetScriptScope()
-		
+
 		scope.m_owner_kart            <- kart
 		scope.m_target_point          <- kart.m_map_next_point
 		scope.m_target_point_idx      <- kart.m_map_next_point_idx
@@ -3917,7 +3936,7 @@ item_shell_blue <-
 		scope.m_spin_t                <- -PI
 		scope.m_wait_time             <- 0.5
 		scope.m_height_offset         <- Vector(0, 0, 140)
-	
+
 		scope.Physics <- function()
 		{
 			switch (m_stage)
@@ -3930,10 +3949,10 @@ item_shell_blue <-
 						m_target_point_idx++
 						if (m_target_point_idx >= map_data.point_count)
 							m_target_point_idx = 0
-							
+
 						m_target_point = map_data.points[m_target_point_idx]
 					}
-					
+
 					m_target_kart = null
 					foreach (kart in karts)
 					{
@@ -3942,12 +3961,12 @@ item_shell_blue <-
 						m_target_kart = kart
 						break
 					}
-					
+
 					local current_point_idx = m_target_point_idx - 1
 					if (current_point_idx < 0)
 						current_point_idx = map_data.point_count - 1
-					
-					if (m_target_kart 
+
+					if (m_target_kart
 						&& m_target_kart.m_entity.IsValid()
 						&& m_target_kart.m_map_point_idx == current_point_idx)
 					{
@@ -3955,10 +3974,10 @@ item_shell_blue <-
 						if ((origin - m_target_kart_origin).Length2D() < 1024.0)
 							m_stage++
 					}
-					
+
 					local dir = (m_target_point + m_height_offset) - origin
 					dir.Norm()
-					
+
 					local velocity = dir * 2500.0
 					self.SetAbsOrigin(origin + velocity * TICKDT)
 					break
@@ -3977,15 +3996,15 @@ item_shell_blue <-
 							entity      = self
 							filter_type = RECIPIENT_FILTER_GLOBAL
 						})
-			
+
 						m_height_offset.z = 90.0
 						m_stage++
 						return
 					}
-					
+
 					local dir = (m_target_kart_origin + m_height_offset) - origin
 					dir.Norm()
-		
+
 					local velocity = dir * 2500.0
 					self.SetAbsOrigin(origin + velocity * TICKDT)
 					break
@@ -3994,25 +4013,25 @@ item_shell_blue <-
 				{
 					if (m_target_kart.m_entity.IsValid())
 						m_target_kart_origin = m_target_kart.m_entity.GetOrigin()
-					
+
 					m_spin_t += 10.0 * TICKDT
 					if (m_spin_t >= PI)
 					{
 						m_wait_time = Time() + m_wait_time
 						m_stage++
 					}
-					
+
 					local origin = m_target_kart_origin + m_height_offset
 					origin.x += 48.0 * cos(m_spin_t)
 					origin.y += 48.0 * sin(m_spin_t)
 					self.SetAbsOrigin(origin)
 					break
-				}		
+				}
 				case 3:
 				{
 					if (m_wait_time < Time())
 						m_stage++
-					
+
 					if (m_target_kart.m_entity.IsValid())
 						m_target_kart_origin = m_target_kart.m_entity.GetOrigin()
 					self.SetAbsOrigin(m_target_kart_origin + m_height_offset)
@@ -4027,12 +4046,12 @@ item_shell_blue <-
 						Explode()
 						return
 					}
-					
+
 					self.SetAbsOrigin(m_target_kart_origin + m_height_offset)
 					break
 				}
 			}
-			
+
 			return -1
 		}
 		scope.Explode <- function()
@@ -4045,8 +4064,8 @@ item_shell_blue <-
 			self.EmitSound("MK_Item_Shell_Blue_Explode")
 
 			ExplosionCreate(origin, 192.0, 1.5, self, m_owner_kart, "taunt_soldier_lumbricus")
-			
-			Destroy()		
+
+			Destroy()
 		}
 		scope.Destroy <- function()
 		{
@@ -4054,19 +4073,19 @@ item_shell_blue <-
 				self.StopSound("MK_Item_Shell_Blue_Warning")
 			else
 				self.StopSound("MK_Item_Shell_Blue_Fly")
-			
+
 			self.Kill()
 		}
-		
+
 		EmitSoundEx
 		({
 			sound_name  = "MK_Item_Shell_Blue_Fly"
 			entity      = item
 			filter_type = RECIPIENT_FILTER_GLOBAL
 		})
-		
+
 		AddThinkToEnt(item, "Physics")
-		EntityEntFire(item, "CallScriptFunction", "Explode", 60.0)	
+		EntityEntFire(item, "CallScriptFunction", "Explode", 60.0)
 	}
 }
 
@@ -4077,12 +4096,12 @@ item_shroom <-
 		kart.Boost(2.0, BOOST_SHROOM)
 		if (kart.m_item_idx == ITEM_SHROOM_THREE)
 			kart.SetItem(ITEM_SHROOM_TWO)
-		else if (kart.m_item_idx == ITEM_SHROOM_TWO)		
+		else if (kart.m_item_idx == ITEM_SHROOM_TWO)
 			kart.SetItem(ITEM_SHROOM_ONE)
-		else if (kart.m_item_idx == ITEM_SHROOM_ONE)		
+		else if (kart.m_item_idx == ITEM_SHROOM_ONE)
 			kart.SetItem(ITEM_NONE)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		item_base_throwable.OnDropInternal(items, kart, ITEM_TYPE_SHROOM)
@@ -4097,7 +4116,7 @@ item_shroom_gold <-
 			kart.m_shroom_gold_timer = Time() + 7.5
 		kart.Boost(2.0, BOOST_SHROOM)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		item_base_throwable.OnDropInternal(items, kart, ITEM_TYPE_SHROOM_GOLD)
@@ -4111,7 +4130,7 @@ item_shroom_mega <-
 		kart.StartMega()
 		kart.SetItem(ITEM_NONE)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		item_base_throwable.OnDropInternal(items, kart, ITEM_TYPE_SHROOM_MEGA)
@@ -4125,7 +4144,7 @@ item_star <-
 		kart.StartStar()
 		kart.SetItem(ITEM_NONE)
 	}
-	
+
 	OnDrop = function(items, kart)
 	{
 		item_base_throwable.OnDropInternal(items, kart, ITEM_TYPE_STAR)
@@ -4146,35 +4165,38 @@ item_shock <-
 	{
 		Ware_PlaySoundOnAllClients("MK_Item_Shock_Use")
 		kart.SetItem(ITEM_NONE)
-		
+
 		local time = Time()
 		local min_time = time + 2.0
 		local max_time = time + 10.0
 		local delta_time = max_time - min_time
 		local player_count = (Max(karts.len(), 12) - 1).tofloat()
-		
+
 		foreach (other in karts)
 		{
-			DispatchParticleEffect("mk_lightning_parent", other.m_origin, vec3_up)		
-			other.HudStartShock()		
+			DispatchParticleEffect("mk_lightning_parent", other.m_origin, vec3_up)
+			other.HudStartShock()
 			EntityEntFire(other.m_entity, "CallScriptFunction", "HudResetShock", 1.5)
-			
+
 			if (other == kart)
 				continue
 			if (team_battle && other.m_team == kart.m_team)
-				continue				
-			if (other.m_rescued 
-				|| other.m_bullet_timer > 0.0 
-				|| other.m_star_timer > 0.0 
+				continue
+			if (other.m_rescued
+				|| other.m_bullet_timer > 0.0
+				|| other.m_star_timer > 0.0
 				|| other.m_cannon_end_pos)
 				continue
-	
+
 			AddKillFeedMessage(other.m_driver, kart.m_driver, "spellbook_lightning")
+			MakePlayerComplain(other.m_driver)
 			other.Shrink(max_time - delta_time * other.m_position_idx.tofloat() / player_count)
-			
+
 			other.DropItems()
 		}
-	}	
+
+		MakePlayerCheer(kart.m_driver)
+	}
 }
 
 item_blooper <-
@@ -4183,12 +4205,12 @@ item_blooper <-
 	{
 		EmitSoundOnClient("MK_Item_Blooper_Use", kart.m_driver)
 		kart.SetItem(ITEM_NONE)
-		
+
 		local position = kart.m_position_idx
 		foreach (other in karts)
 		{
 			if (team_battle && other.m_team == kart.m_team)
-				continue		
+				continue
 			if (other.m_position_idx > position)
 				continue
 			if (other.m_rescued || other.m_bullet_timer > 0.0)
@@ -4205,7 +4227,7 @@ item_blooper <-
 	}
 }
 
-item_map = 
+item_map =
 {
 	[ITEM_NONE]				 = null,
 	[ITEM_BANANA_ONE]		 = item_banana,
