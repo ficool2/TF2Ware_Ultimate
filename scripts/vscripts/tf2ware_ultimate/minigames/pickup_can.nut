@@ -3,8 +3,8 @@ minigame <- Ware_MinigameData
 	name          = "Pick Up That Can"
 	author		  = "CzechMate"
 	description   = "Pick up and trash the can!"
-	duration      = 7.0
-	music         = "sweetdays"
+	duration      = 13.0
+	music         = "adventuretime"
 })
 
 trashcan_model <- "models/props_trainstation/trashcan_indoor001b.mdl"
@@ -21,6 +21,7 @@ local canRadiusSqr = 32.0*32.0  // Pickup radius for cans, squared
 local propFaceSameDirection = false // If true, makes the prop face the same direction as the player (similar to Half-Life 2)
 local canName = "can_minigame"  // Can targetname
 local cans = []
+local trashDelay = 0.3	// Ware_CreateTimer delay
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,12 +40,20 @@ function OnStart()
 		minidata.LastActionKey <- false
         minidata.PickedProp <- player
 	}
-    SpawnTriggerPush()
-    Ware_CreateTimer(@() SpawnTrashcan(), 0.3)
-    SpawnTriggerMultiple()
-	SpawnCans()
 
-	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with mouse click, reload or action key!", 
+	if (Ware_MinigameLocation.name.find("big") != null)
+	{
+		SpawnTrashcan(Vector(0, 0, 5), trashDelay)
+		SpawnTrashcan(Vector(366, 366, 0), trashDelay)
+		SpawnTrashcan(Vector(366, -366, 0), trashDelay)
+		SpawnTrashcan(Vector(-366, 366, 0), trashDelay)
+		SpawnTrashcan(Vector(-366, -366, 0), trashDelay)
+	} else {
+		SpawnTrashcan(Vector(0, 0, 5), trashDelay)
+	}
+
+	SpawnCans()
+	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with mouse click, reload or action key and put them into the trash can!", 
 		COLOR_GREEN, TF_COLOR_DEFAULT)
 }
 
@@ -122,24 +131,28 @@ function OnPlayerDeath(player, attacker, params)
 		minidata.PickedProp.SetOwner(null)
 }
 
-function SpawnTrashcan() 
+function SpawnTrashcan(location, delay) 
 {
-    local center = Ware_MinigameLocation.center * 1.0
-	center += Vector(0, 0, 20)
-    local trashcan = Ware_SpawnEntity("prop_dynamic",
-    {  
-        model = trashcan_model
-        origin = center
-		solid = SOLID_VPHYSICS
-    })
+	local newLocation = Ware_MinigameLocation.center * 1.0 + location
+	SpawnTriggerPush(newLocation)
+	Ware_CreateTimer(function() {
+		local trashcan = Ware_SpawnEntity("prop_dynamic",
+		{  
+			model = trashcan_model
+			origin = newLocation + Vector(0, 0, 15)
+			solid = SOLID_VPHYSICS
+		})
 
-    if (outline)
-    {
-        local glow = Ware_CreateEntity("tf_glow")
-        glow.KeyValueFromString("GlowColor", "0 255 0 255")
-        SetPropEntity(glow, "m_hTarget", trashcan)
-		SetEntityParent(glow, trashcan)
-    }
+		if (outline)
+		{
+			local glow = Ware_CreateEntity("tf_glow")
+			glow.KeyValueFromString("GlowColor", "0 255 0 255")
+			SetPropEntity(glow, "m_hTarget", trashcan)
+			SetEntityParent(glow, trashcan)
+		}
+
+    	SpawnTriggerMultiple(newLocation)
+	}, delay)
 }
 
 function SpawnCans()
@@ -178,13 +191,12 @@ function SpawnCans()
 	}
 }
 
-function SpawnTriggerMultiple()
+function SpawnTriggerMultiple(location)
 {
-    local center = Ware_MinigameLocation.center
     local trigger_multiple = Ware_SpawnEntity("trigger_multiple",
     {
         targetname = "trashcan_trigger"
-        origin     = center
+        origin     = location
         spawnflags = SF_TRIGGER_ALLOW_PHYSICS
     })
     trigger_multiple.SetSize(Vector(-5, -5, 0), Vector(5, 5, 24))
@@ -195,13 +207,12 @@ function SpawnTriggerMultiple()
 	trigger_multiple.ConnectOutput("OnStartTouch", "OnStartTouch")
 }
 
-function SpawnTriggerPush()
+function SpawnTriggerPush(location)
 {
-    local center = Ware_MinigameLocation.center
     local trigger_push = Ware_SpawnEntity("trigger_push", 
     {
         targetname = "trashcan_push"
-        origin     = center
+        origin     = location
         pushdir    = QAngle(0, RandomFloat(0, 360), 0)
         speed      = 1000
         spawnflags = SF_TRIGGER_ALLOW_CLIENTS 
