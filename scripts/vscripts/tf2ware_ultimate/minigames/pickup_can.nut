@@ -5,6 +5,9 @@ minigame <- Ware_MinigameData
 	description   = "Pick up and trash the can!"
 	duration      = 7.0
 	music         = "sweetdays"
+	convars = {
+		tf_max_voice_speak_delay = -1
+	}
 })
 
 trashcan_model <- "models/props_trainstation/trashcan_indoor001b.mdl"
@@ -28,6 +31,7 @@ function OnPrecache()
 {
 	PrecacheModel(can_model)
 	PrecacheModel(trashcan_model)
+	PrecacheSound("common/wpn_select.wav")
 }
 
 function OnStart()
@@ -44,8 +48,10 @@ function OnStart()
     SpawnTriggerMultiple()
 	SpawnCans()
 
-	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with mouse click, reload or action key!", 
+	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with medic, mouse click, reload or action key!",
 		COLOR_GREEN, TF_COLOR_DEFAULT)
+
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT)
 }
 
 // Inspired by Prop Kill (https://github.com/Batfoxkid/TF2-Prop-Kill)
@@ -56,31 +62,35 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
-			
+
 		local weapon = player.GetActiveWeapon()
 		if (weapon)
-			SetPropFloat(weapon, "m_flNextPrimaryAttack", time + 0.3)			
-			
+			SetPropFloat(weapon, "m_flNextPrimaryAttack", time + 0.3)
+
 		local buttons = GetPropInt(player, "m_nButtons")
 		local minidata = Ware_GetPlayerMiniData(player)
 		local newButtons = buttons & ~minidata.LastButtons
 		local usingActionKey = player.IsUsingActionSlot()
-		
-		if ((newButtons & (IN_ATTACK|IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey))
+		local medTime = player.GetTimeSinceCalledForMedic()
+
+		if ((newButtons & (IN_ATTACK|IN_ATTACK2|IN_RELOAD|IN_USE)) || (usingActionKey && !minidata.LastActionKey)
+			|| medTime < 0.020)
 		{
 			if (minidata.PickedProp != player && minidata.PickedProp.IsValid())
 			{
 				minidata.PickedProp.SetOwner(null)
 				minidata.PickedProp = player
 			}
-			else 
+			else
 			{
 				local eye_pos = player.EyePosition()
 				local eye_fwd = player.EyeAngles().Forward()
 				foreach (can in cans)
 				{
 					if (can.GetOwner() != null)
-						continue				
+						continue
+					if (can.GetScriptScope().GraceHolderTime > time)
+						continue
 					local can_origin = can.GetOrigin()
 					if (VectorDistance(eye_pos, can_origin) > pickupDistance)
 						continue
@@ -89,7 +99,9 @@ function OnUpdate()
 						minidata.PickedProp = can
 						can.SetOwner(player)
 						can.GetScriptScope().LastHolder <- player
-						can.GetScriptScope().GraceHolderTime <- time + 0.25								
+						can.GetScriptScope().GraceHolderTime <- time + 0.4
+						player.EmitSound("common/wpn_select.wav")
+						break
 					}
 				}
 			}
@@ -107,7 +119,7 @@ function OnUpdate()
 				prop_angles = eye_angles
 			minidata.PickedProp.Teleport(false, prop_origin, true, prop_angles, true, velocity)
 			minidata.PickedProp.SetPhysAngularVelocity(Vector(0.0, 0.0, 0.0))
-			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.25
+			minidata.PickedProp.GetScriptScope().GraceHolderTime = time + 0.4
 		}
 
 		minidata.LastButtons = buttons
@@ -122,12 +134,12 @@ function OnPlayerDeath(player, attacker, params)
 		minidata.PickedProp.SetOwner(null)
 }
 
-function SpawnTrashcan() 
+function SpawnTrashcan()
 {
     local center = Ware_MinigameLocation.center * 1.0
 	center += Vector(0, 0, 20)
     local trashcan = Ware_SpawnEntity("prop_dynamic",
-    {  
+    {
         model = trashcan_model
         origin = center
 		solid = SOLID_VPHYSICS
@@ -173,7 +185,7 @@ function SpawnCans()
             SetPropEntity(glow, "m_hTarget", can)
 			SetEntityParent(glow, can)
         }
-		
+
 		cans.append(can)
 	}
 }
@@ -198,13 +210,13 @@ function SpawnTriggerMultiple()
 function SpawnTriggerPush()
 {
     local center = Ware_MinigameLocation.center
-    local trigger_push = Ware_SpawnEntity("trigger_push", 
+    local trigger_push = Ware_SpawnEntity("trigger_push",
     {
         targetname = "trashcan_push"
         origin     = center
         pushdir    = QAngle(0, RandomFloat(0, 360), 0)
         speed      = 1000
-        spawnflags = SF_TRIGGER_ALLOW_CLIENTS 
+        spawnflags = SF_TRIGGER_ALLOW_CLIENTS
     })
     trigger_push.SetSize(Vector(-20, -20, 0), Vector(20, 20, 50))
     trigger_push.SetSolid(SOLID_BBOX)
@@ -220,7 +232,7 @@ function OnTriggerTouch()
             Ware_PassPlayer(player, true)
 
 		RemoveElementIfFound(cans, activator)
-		
+
         activator.Destroy() // If the cans are not removed, they will lag the server due to physics calculations.
     }
 }
