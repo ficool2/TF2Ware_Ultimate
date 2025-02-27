@@ -2149,7 +2149,7 @@ function Ware_GameOverInternal()
 		}
 	}
 
-	Ware_CreateTimer(@() Ware_ToggleRespawnRooms(false), 2.0) // give time for winners to change class
+	Ware_ToggleRespawnRooms(false)
 }
 
 function Ware_OnUpdate()
