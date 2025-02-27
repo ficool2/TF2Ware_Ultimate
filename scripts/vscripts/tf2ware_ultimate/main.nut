@@ -251,7 +251,10 @@ function Ware_SetupMap()
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
 	
 	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
+	{
 		Ware_RespawnRooms.append(trigger)
+		trigger.SetTeam(0) // hack: game changes respawn rooms with unassigned team to the team of spawn points inside
+	}
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
@@ -2042,7 +2045,9 @@ function Ware_GameOverInternal()
 		// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)	
 	}
 	Ware_TogglePlayerLoadouts(false)
-	
+
+	Ware_ToggleRespawnRooms(false) // prevent losers from respawning
+
 	Ware_RoundEndMusicTimer <- CreateTimer(function() 
 	{
 		Ware_PlayGameSound(null, "results")
