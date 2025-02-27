@@ -252,6 +252,8 @@ function Ware_SetupMap()
 	
 	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
 		Ware_RespawnRooms.append(trigger)
+		trigger.SetTeam(0) // hack: game changes respawn rooms with unassigned team to the team of spawn points inside
+	}
 	
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
@@ -2146,6 +2148,8 @@ function Ware_GameOverInternal()
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
+
+	Ware_CreateTimer(@() Ware_ToggleRespawnRooms(false), 2.0) // give time for winners to change class
 }
 
 function Ware_OnUpdate()
