@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name            = "Say the Word"
 	author          = ["Gemidyne", "ficool2"]
 	description     = "Say the word below!"
-	duration        = 4.0
+	duration        = 4.0 + Ware_GetTimeScale() // extra time for lag compensation
 	end_delay       = 0.5
 	music           = "getready"
 	custom_overlay2 = "../chalkboard"
@@ -117,13 +117,21 @@ function OnStart()
 	// these spaces are to prevent localization
 	Ware_ShowMinigameText(null, format(" %s ", word))
 	word = word.tolower()
+
+	Ware_CreateTimer(@() OnNonLagCompensatedEnd(), Ware_Minigame.duration - Ware_GetTimeScale()) // fire the end early before lag compensation happens
+}
+
+function OnNonLagCompensatedEnd()
+{
+	Ware_ChatPrint(null, "The correct time was {color}{%02d}:{%02d}{color} or {color}{%02d}:{%02d}", 
+		COLOR_LIME, hour, minute, TF_COLOR_DEFAULT, COLOR_LIME, hour + 12, minute)
 }
 
 function OnPlayerSay(player, text)
 {	
 	if (text.tolower() == word)
 	{
-		if (player.IsAlive())
+		if (player.IsAlive() && Time() - GetPlayerLatency(player) < Ware_MinigameStartTime + Ware_Minigame.duration - Ware_GetTimeScale()) // pass the player if they typed it in time but server received it late
 		{
 			Ware_PassPlayer(player, true)
 			if (first)

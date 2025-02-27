@@ -5,7 +5,7 @@ minigame <- Ware_MinigameData
 	name            = "Type the Color"
 	author          = ["Mecha the Slag", "ficool2"]
 	description     = mode == 0 ? "Type the text below!" : "Type the color below!"
-	duration        = 4.0
+	duration        = 4.0 + Ware_GetTimeScale() // extra time for lag compensation
 	end_delay       = 0.5
 	music           = "getready"
 	custom_overlay  = mode == 0 ? "type_text" : "type_color"
@@ -42,8 +42,9 @@ text_colors <-
 
 function OnPrecache()
 {
-	PrecacheOverlay("hud/tf2ware_ultimate/minigames/type_text")
-	PrecacheOverlay("hud/tf2ware_ultimate/minigames/type_color")
+	local overlay = mode == 0 ? "type_text" : "type_color"
+
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/" + overlay)
 }
 
 function OnStart()
@@ -58,9 +59,11 @@ function OnStart()
 	Ware_ShowMinigameText(null, format(" %s ", text_color), colors[visual_idx])
 	
 	answer = mode == 0 ? text_color : visual_color
+
+	Ware_CreateTimer(@() OnNonLagCompensatedEnd(), Ware_Minigame.duration - Ware_GetTimeScale()) // fire the end early before lag compensation happens
 }
 
-function OnEnd()
+function OnNonLagCompensatedEnd()
 {
 	Ware_ChatPrint(null, "The correct answer was {color}{str}", CONST["COLOR_" + answer], answer)
 }
@@ -69,7 +72,7 @@ function OnPlayerSay(player, text)
 {	
 	if (text.tolower() == answer.tolower())
 	{
-		if (player.IsAlive())
+		if (player.IsAlive() && Time() - GetPlayerLatency(player) < Ware_MinigameStartTime + Ware_Minigame.duration - Ware_GetTimeScale()) // pass the player if they typed it in time but server received it late
 		{
 			Ware_PassPlayer(player, true)
 			if (first)

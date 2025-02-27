@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name            = "Say the Map"
 	author          = ["ficool2"]
 	description     = "Say the name of the map!"
-	duration        = 6.0
+	duration        = 6.0	+ Ware_GetTimeScale() // extra time for lag compensation
 	end_delay       = 0.5
 	music           = "whatsthat"
 	suicide_on_end  = true
@@ -87,9 +87,11 @@ function OnStart()
 			Ware_PassPlayer(player, true)
 		}
 	}
+
+	Ware_CreateTimer(@() OnNonLagCompensatedEnd(), Ware_Minigame.duration - Ware_GetTimeScale()) // fire the end early before lag compensation happens
 }
 
-function OnEnd()
+function OnNonLagCompensatedEnd()
 {
 	Ware_ChatPrint(null, "The correct answer was {color}{str}{color} ({str})", 
 		COLOR_LIME, map[1], TF_COLOR_DEFAULT, RandomElement(map[0]))
@@ -135,7 +137,7 @@ function OnPlayerSay(player, text)
 {	
 	if (MatchesMap(text.tolower()))
 	{
-		if (player.IsAlive())
+		if (player.IsAlive() && Time() - GetPlayerLatency(player) < Ware_MinigameStartTime + Ware_Minigame.duration - Ware_GetTimeScale()) // pass the player if they typed it in time but server received it late
 		{
 			Ware_PassPlayer(player, true)
 			if (first)

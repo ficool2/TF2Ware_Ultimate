@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	name           = "Say the Time"
 	author         = "ficool2"
 	description    = "Say the time!"
-	duration       = 7.0
+	duration       = 7.0 + Ware_GetTimeScale() // extra time for lag compensation
 	location       = "dirtsquare"
 	music          = "countdown"
 	start_freeze   = 0.5
@@ -85,9 +85,11 @@ function OnStart()
 	clock.SetPoseParameter(clock.LookupPoseParameter("minutes"), minute / 60.0)
 	clock.SetPoseParameter(clock.LookupPoseParameter("hours"), hour / 12.0 + ((1.0 / 12.0) * minute / 60.0))
 	clock.StudioFrameAdvance()
+
+	Ware_CreateTimer(@() OnNonLagCompensatedEnd(), Ware_Minigame.duration - Ware_GetTimeScale()) // fire the end early before lag compensation happens
 }
 
-function OnEnd()
+function OnNonLagCompensatedEnd()
 {
 	Ware_ChatPrint(null, "The correct time was {color}{%02d}:{%02d}{color} or {color}{%02d}:{%02d}", 
 		COLOR_LIME, hour, minute, TF_COLOR_DEFAULT, COLOR_LIME, hour + 12, minute)
@@ -119,7 +121,7 @@ function OnPlayerSay(player, text)
 	
 	if (accepted_text.find(clean_text) != null)
 	{
-		if (player.IsAlive())
+		if (player.IsAlive() && Time() - GetPlayerLatency(player) < Ware_MinigameStartTime + Ware_Minigame.duration - Ware_GetTimeScale()) // pass the player if they typed it in time but server received it late
 		{
 			Ware_PassPlayer(player, true)
 			if (first)
