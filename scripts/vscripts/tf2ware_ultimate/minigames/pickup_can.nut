@@ -112,6 +112,8 @@ function OnUpdate()
 						can.SetOwner(player)
 						can_scope.LastHolder <- player
 						can_scope.GraceHolderTime <- time + canGracePeriod
+						//No need to precache
+						player.EmitSound("common/wpn_select.wav")						
 						break
 					}
 				}
