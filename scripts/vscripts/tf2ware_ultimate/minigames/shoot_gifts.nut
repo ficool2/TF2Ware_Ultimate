@@ -16,7 +16,7 @@ minigame <- Ware_MinigameData
 })
 
 gift_model <- "models/tf2ware_ultimate/gift.mdl"
-hit_sound  <- "Player.HitSoundBeepo"
+hit_sound  <- RandomInt(0, 100) <= 5 ? "tf2ware_ultimate/mp_hit_indication_3c.wav" : "Player.HitSoundBeepo"
 bomb_model <- "models/props_lakeside_event/bomb_temp.mdl"
 bomb_modelindex <- PrecacheModel(bomb_model)
 bomb_count <- 0
@@ -29,8 +29,9 @@ function OnPrecache()
 {
 	PrecacheModel(gift_model)
 	PrecacheModel(bomb_model)
-	PrecacheScriptSound(hit_sound)
+	PrecacheScriptSound("Player.HitSoundBeepo")
 	PrecacheSound(bomb_sound)
+	PrecacheSound("tf2ware_ultimate/mp_hit_indication_3c.wav")
 }
 
 function OnStart()
