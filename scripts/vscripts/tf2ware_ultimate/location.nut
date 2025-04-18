@@ -762,3 +762,14 @@ Ware_Location.waluigi_pinball <-
 		}
 	}
 }
+
+Ware_Location.wega_challenge <-
+{
+	start   = Vector(-32, -13280, -12580)
+	cameras  = ["wega_camera"]
+	Teleport = function(players)
+	{
+		foreach (player in players)
+			Ware_TeleportPlayer(player, start, QAngle(0, 45, 0), vec3_zero)
+	}
+}
