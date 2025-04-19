@@ -14,6 +14,7 @@ build_this
 bullseye
 bumpers
 caber_king
+cap
 catch_cubes
 catch_money
 change_class
