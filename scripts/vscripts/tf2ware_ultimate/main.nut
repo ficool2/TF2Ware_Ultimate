@@ -237,7 +237,10 @@ if (!("Ware_Precached" in this))
 	}
 
 	// this shuts up incursion distance warnings from the nav mesh
-	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
+	dummy_boss <- CreateEntitySafe("base_boss")
+	dummy_boss.KeyValueFromString("classname", "point_commentary_viewpoint")
+	dummy_boss.SetSolidFlags(FSOLID_NOT_SOLID)
+
 }
 
 function Ware_SetupMap()

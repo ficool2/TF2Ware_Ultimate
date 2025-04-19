@@ -16,6 +16,7 @@ minigame <- Ware_MinigameData
 	music          = "beepblockskyway"
 	fail_on_death  = true
 	start_freeze   = 0.5
+	allow_damage   = true
 	convars =
 	{
 		tf_avoidteammates = 0
@@ -59,6 +60,10 @@ function OnPrecache()
 	
 	Ware_PrecacheMinigameMusic("beepblockskyway", true)
 	Ware_PrecacheMinigameMusic("beepblockskyway-twelve", true)
+
+	PrecacheModel("models/mariokart/itembox.mdl")
+	PrecacheModel("models/mariokart/itembox_mark.vmt")
+	PrecacheScriptSound("MK_Itembox_Use")
 }
 
 function OnStart()
@@ -120,7 +125,148 @@ function OnStart()
 				BeepBlock_Sequence()
 		}, bgm_offset + (6.0 * beat) + i * (8.0 * beat))
 	}
+
+	foreach (itembox_pos in Ware_MinigameLocation.itembox_positions)
+		CreateItembox(itembox_pos)
+
+	foreach (dispenser_pos in Ware_MinigameLocation.dispenser_positions)
+		CreateDispenser(dispenser_pos)
+
+	foreach (sentry in Ware_MinigameLocation.sentry_positions)
+		CreateSentry(sentry[0], sentry[1])
+
+
+
+	foreach (player in Ware_Players)
+		player.RemoveFlag(FL_NOTARGET)
 }
+
+function CreateItembox(origin)
+{
+	local itembox = Ware_SpawnEntity("prop_dynamic_override",
+	{
+		classname   = "bb_itembox"
+		origin      = origin
+		model       = "models/mariokart/itembox.mdl"
+		solid       = SOLID_NONE
+		defaultanim = "idle"
+	})
+	itembox.SetCycle(RandomFloat(0.0, 1.0))
+	local sprite = SpawnEntityFromTableSafe("env_glow",
+	{
+		origin     = itembox.GetOrigin() - Vector(0, 0, 2),
+		model      = "models/mariokart/itembox_mark.vmt"
+		scale      = 0.5
+		rendermode = kRenderTransColor
+	})
+	SetEntityParent(sprite, itembox)
+
+	local trigger = Ware_SpawnEntity("trigger_multiple",
+	{
+		origin     = origin
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	});		
+	trigger.SetSolid(SOLID_BBOX)
+	trigger.SetSize(itembox.GetBoundingMins(), itembox.GetBoundingMaxs())
+	trigger.ValidateScriptScope()
+	trigger.GetScriptScope().itembox <- itembox
+	trigger.GetScriptScope().sprite <- sprite
+	trigger.GetScriptScope().OnStartTouch <- OnTouchItembox
+	trigger.ConnectOutput("OnStartTouch", "OnStartTouch")
+	return itembox
+}
+
+
+function OnTouchItembox()
+{
+	local player = activator
+	if (player)
+	{
+		player.EmitSound("MK_Itembox_Use")
+		DispatchParticleEffect("bot_impact_heavy_sparks", itembox.GetOrigin() - Vector(0, 0, 48), Vector(90, 0, 0))
+		local minidata = Ware_GetPlayerMiniData(activator)
+		if(!("hasgun" in minidata))
+		{
+			minidata.hasgun <- true
+			Ware_GivePlayerWeapon(player, "Rescue Ranger", { "deploy time increased" : 1.0 })
+		}
+		//	player.SetHealth(125)
+		
+	}
+
+}
+
+function CreateSentry(origin, dir)
+{
+	local add = Vector(100, 0, -66)
+	local add2 = Vector(-100, 0, -66)
+	if(dir == 1)
+	{
+		add = Vector(0, 100, -66)
+		add2 = Vector(0, -100, -66)
+	}
+	local level = RandomInt(0,2)
+	local sentry = Ware_SpawnEntity("obj_sentrygun",
+	{
+		origin      = origin + add
+		teamnum       = 2
+		defaultupgrade = level
+		spawnflags  = 12
+	})
+	sentry.SetTeam(TF_TEAM_RED)
+	sentry.AddFlag(FL_NOTARGET)
+	sentry.SetOwner("worldspawn")
+	local sentry2 = Ware_SpawnEntity("obj_sentrygun",
+	{
+		origin      = origin + add2
+		teamnum       = 1
+		defaultupgrade = level
+		spawnflags  = 12
+	})
+	sentry2.SetTeam(TF_TEAM_BLUE)
+	sentry2.AddFlag(FL_NOTARGET)
+	sentry2.SetOwner("worldspawn")
+
+	local hp = 80 + Ware_MinigamePlayers.len() * 40
+	EntityAcceptInput(sentry, "SetHealth", hp.tostring())
+	EntityAcceptInput(sentry2, "SetHealth", hp.tostring())
+	return sentry
+}
+
+function CreateDispenser(origin)
+{
+	local add = Vector(100, 0, -66)
+	local add2 = Vector(-100, 0, -66)
+	local dir = 0
+	local level = 0
+	if(dir == 1)
+	{
+		add = Vector(0, 100, -66)
+		add2 = Vector(0, -100, -66)
+	}
+	local disp = Ware_SpawnEntity("obj_dispenser",
+	{
+		origin      = origin + add
+		teamnum       = 2
+		defaultupgrade = level
+		spawnflags  = 6
+	})
+	disp.SetTeam(TF_TEAM_RED)
+	disp.AddFlag(FL_NOTARGET)
+	SetPropInt(disp, "m_takedamage", DAMAGE_NO)
+	local disp2 = Ware_SpawnEntity("obj_dispenser",
+	{
+		origin      = origin + add2
+		teamnum       = 1
+		defaultupgrade = level
+		spawnflags  = 6
+	})
+	disp2.SetTeam(TF_TEAM_BLUE)
+	disp2.AddFlag(FL_NOTARGET)
+	SetPropInt(disp2, "m_takedamage", DAMAGE_NO)
+	return disp
+}
+
 
 function OnUpdate()
 {
@@ -133,6 +279,13 @@ function OnTakeDamage(params)
 {
 	if ((params.damage_type & DMG_FALL) && params.inflictor.GetClassname() != "trigger_hurt")
 		params.damage = 0.0
+	if (params.inflictor.GetClassname() == "obj_sentrygun")
+		params.damage *= 0.2
+
+	local victim = params.const_entity
+	local attacker = params.attacker
+	if (victim.IsPlayer() && attacker && attacker.IsPlayer())
+		return false
 }
 
 function BeepBlock_Sequence()
