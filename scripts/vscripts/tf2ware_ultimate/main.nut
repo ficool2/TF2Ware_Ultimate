@@ -2155,6 +2155,27 @@ function Ware_GameOverInternal()
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
+
+	function UpdateSpritePosition(target, sprite)
+	{
+		if(target && target.IsValid() && target.IsAlive())
+		{
+			sprite.KeyValueFromVector("origin", target.GetOrigin() + Vector(0,0,115))
+			return 0.015
+		}
+	}
+	foreach (player in top_players)
+	{
+		local sprite = SpawnEntityFromTableSafe("env_glow",
+		{
+			model       = SPRITE_WINNER
+			origin      = player.GetOrigin() + Vector(0,0,125)
+			scale       = 0.5
+			rendermode  = kRenderTransColor
+		})
+		local target = player //squirrel
+		CreateTimer(@() UpdateSpritePosition(target, sprite), 0.015)
+	}
 }
 
 function Ware_OnUpdate()
