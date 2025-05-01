@@ -1,11 +1,12 @@
+mode <- RandomInt(0, 1)
 minigame <- Ware_MinigameData
 ({
 	name           = "Most Bombs"
 	author         = ["Mecha the Slag", "ficool2"]
-	description    = "Shoot the most occuring color!"
+	description    = mode == 0 ? "Shoot the most occurring color!" : "Shoot the least occurring color!"
 	duration       = 8.0
 	music          = "thethinker"
-	custom_overlay = "most_bombs"
+	custom_overlay = mode == 0 ? "most_bombs" : "least_bombs"
 })
 
 colors <- ["red", "yellow", "blue"]
@@ -22,6 +23,8 @@ function OnPrecache()
 	PrecacheModel(prop_model)
 	foreach (color in colors)
 		PrecacheSprite(format(bomb_sprite, color))
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/most_bombs")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/least_bombs")
 }
 
 function CreateBomb()
@@ -72,23 +75,32 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SPY, "Revolver")
 	
     local color_counts = array(colors.len())
-    local max = 0
+    local selected = 0
 
     foreach (i, color in colors)
     {
         color_counts[i] = RandomInt(6, 15)
-        if (color_counts[i] > color_counts[max])
-            max = i
+		if(mode == 0)
+		{
+			if (color_counts[i] > color_counts[selected])
+            	selected = i
+		}
+		else
+		{
+        	if (color_counts[i] < color_counts[selected])
+            	selected = i
+		}
     }
 
-    color_counts[max] += RandomInt(1, 5)
-	color = max
+    color_counts[selected] += (mode == 0 ? RandomInt(1, 5) : -RandomInt(1, 5))
+
+	color = selected
 	
     foreach (i, color in colors)
 	{
 		for (local j = 0; j < color_counts[i]; j++)
 		{
-			bomb_queue.append([format(bomb_sprite, color), i == max])
+			bomb_queue.append([format(bomb_sprite, color), i == selected])
 		}
 	}
 	
