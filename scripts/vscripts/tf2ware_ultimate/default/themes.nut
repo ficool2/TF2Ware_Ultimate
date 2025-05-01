@@ -157,6 +157,30 @@ buffer<-@"VERSION 2
 	}
 },
 {
+	theme_name = ""mw_pandora""
+	visual_name = ""Pandora (MINDWAVE)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 1.5
+		""intro"":   1.9
+		""speedup"": 2.25
+		""victory"": 2.0
+	}
+},
+{
+	theme_name = ""mw_starlight""
+	visual_name = ""Starlight (MINDWAVE)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.0
+		""intro"":   1.947
+		""speedup"": 2.25
+		""victory"": 2.0
+	}
+},
+{
 	theme_name = ""wii_9volt""
 	visual_name = ""9-Volt (Wii)""
 	sounds = 
@@ -266,5 +290,15 @@ buffer<-@"VERSION 2
 		""gameover"":  3.684
 		""results"":   0.0
 		""speedup"":   4.388
+	}
+},
+{
+	theme_name = ""mw""
+	visual_name = ""MINDWAVE""
+	internal = 1
+	sounds = 
+	{
+		""boss"":      5.664
+		""results"":   0.0
 	}
 },"
