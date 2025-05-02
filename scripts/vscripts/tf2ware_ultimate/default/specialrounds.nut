@@ -26,6 +26,7 @@ opposite_day
 random_score
 reversed_text
 simon
+singleplayer
 size_matters
 skull
 slow_mo
