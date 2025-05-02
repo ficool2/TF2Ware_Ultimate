@@ -1170,6 +1170,8 @@ function Ware_SetupMinigameCallbacks()
 	minigame.cb_on_player_voiceline		= Ware_Callback(scope, "OnPlayerVoiceline")
 	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
 	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
+	minigame.cb_on_player_inventory		= Ware_Callback(scope, "OnPlayerInventory")
+	
 }
 
 function Ware_BeginIntermissionInternal(is_boss)
