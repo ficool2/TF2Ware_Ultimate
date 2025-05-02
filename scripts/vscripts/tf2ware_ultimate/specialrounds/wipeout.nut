@@ -1,11 +1,21 @@
 
 // TODO: More testing/fixes when players join or leave mid-round
-// TODO: Make spectators more interesting (use actual spectating stuff?)
-// TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging.
 
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
 player_thresholds <- [
+	[20, 100],
+	[19, 95],
+	[18, 90],
+	[17, 85],
+	[16, 80],
+	[15, 75],
+	[14, 70],
+	[13, 65],
+	[12, 60],
+	[11, 55],
+	[10, 50],
+	[9, 45],
 	[8, 40],
 	[7, 35],
 	[6, 30],
@@ -20,7 +30,7 @@ duel_sounds <- {
 	two_lives        = "ui/duel_challenge_accepted.wav"
 	one_life         = "ui/duel_event.wav"
 	three_lives_last = "ui/duel_challenge_with_restriction.wav"
-	two_lives_last   = "duel_challenge_accepted_with_restriction.wav"
+	two_lives_last   = "ui/duel_challenge_accepted_with_restriction.wav"
 }
 
 overlay <- "hud/tf2ware_ultimate/get_ready.vmt"
@@ -56,18 +66,17 @@ function OnStart()
 		Ware_GetPlayerSpecialRoundData(player).lives <- max_lives
 		Ware_GetPlayerData(player).score = max_lives
 	}
+	Ware_SetTheme("_tf2ware_classic")
 }
 
 function OnPlayerConnect(player)
 {
-	Ware_GetPlayerSpecialRoundData(player).lives <- 0
-}
-
-function OnPlayerSpawn(player)
-{
 	local data = Ware_GetPlayerSpecialRoundData(player)
-	if (!("lives" in data))
+	if (!("lives" in data) && special_round.boss_threshold != 0)
+		data.lives <- 1
+	else
 		data.lives <- 0
+	Ware_GetPlayerData(player).score = data.lives
 }
 
 function OnPlayerDisconnect(player)
@@ -83,7 +92,7 @@ function OnPlayerDisconnect(player)
 function OnTakeDamage(params)
 {
 	local arr = Wipeout_Spectators
-	if (arr.find(params.const_entity) != null || arr.find(params.inflictor) != null)
+	if (!Ware_Finished && arr.find(params.const_entity) != null || arr.find(params.inflictor) != null)
 		params.damage = 0.0
 }
 
@@ -180,6 +189,32 @@ function OnBeginIntermission(is_boss)
 	return true
 }
 
+function OnUpdate()
+{
+	if(Ware_Minigame)
+	{
+		foreach(spec in Wipeout_Spectators)
+		{
+			if(!spec.IsAlive()) continue
+			local origin1 = spec.GetOrigin()
+			foreach(pl in Wipeout_ValidPlayers)
+			{
+				if(!pl.IsAlive()) continue
+				local origin2 = pl.GetOrigin()
+				if(VectorDistance(origin1, origin2) < 300)
+				{
+
+           			local delta = origin2 - origin1
+					local dir = delta * 1.0
+					dir.Norm()
+                	local newOrigin = origin1 - (dir * 80)
+                	spec.KeyValueFromVector("origin", newOrigin)
+				}		
+			}
+		}
+	}
+}
+
 function GetValidPlayers()
 {
 	return Wipeout_ValidPlayers
@@ -199,6 +234,19 @@ function Wipeout_GetAlivePlayers()
 	return alive_players
 }
 
+function OnCalculateTopScorers(top_players)
+{
+	foreach (data in Ware_PlayersData)
+	{
+		local player = data.player
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if (lives > 0)
+		{
+			top_players.append(player)
+		}
+	}
+}
+
 function OnCalculateScore(data)
 {
 	local specialdata = Ware_GetPlayerSpecialRoundData(data.player)
@@ -211,6 +259,36 @@ function OnCalculateScore(data)
 	data.score = specialdata.lives
 }
 
+function OnMinigameStart()
+{
+	if("Teleport" in Ware_MinigameLocation)
+		Ware_MinigameLocation.Teleport(Wipeout_Spectators)
+	else if(Ware_MinigameLocation != Ware_MinigameHomeLocation)
+	{
+		local spacing_x = 58.0, spacing_y = 65.0
+
+		Ware_TeleportPlayersRow(Wipeout_Spectators,
+			Ware_MinigameLocation.center,
+			QAngle(0, 0, 0),
+			500.0,
+			-spacing_x, spacing_y)
+	}
+	foreach(player in Wipeout_Spectators)
+	{
+		//Put this before ghost mode or it'll spawn a bunch of pdas and run out of edicts
+		Ware_SetPlayerClass(player, TF_CLASS_SPY)
+		player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
+		if(Ware_MinigameLocation != Ware_MinigameHomeLocation)
+			player.SetOrigin(player.GetOrigin() + Vector(0,0,225))
+
+		//Ware_AddPlayerAttribute(player, "mod see enemy health", 1, -1)
+
+		player.SetMoveType(MOVETYPE_NOCLIP, 0)
+
+		SetPropInt(player, "m_nRenderMode", kRenderTransColor)	
+		SetEntityColor(player, 255, 255, 255, 40)
+	}
+}
 function OnMinigameEnd()
 {
 	switch (Wipeout_GetAlivePlayers().len()) {
@@ -227,15 +305,78 @@ function OnMinigameEnd()
 			{
 				local data = Ware_GetPlayerSpecialRoundData(player)
 				data.lives <- 1
+				Ware_GetPlayerData(player).score = data.lives
 			}
 			break
 	}
 	
 	foreach(player in Wipeout_Spectators)
 	{
-		Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
+		//Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
+		
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if(lives > 0)
+		{
+			player.RemoveCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			Ware_SetPlayerClass(player, RandomInt(TF_CLASS_FIRST, TF_CLASS_SNIPER))
+		}
+
+		player.SetMoveType(MOVETYPE_WALK, 0)
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		player.RemoveCond(TF_COND_HALLOWEEN_KART)
+		SetPropInt(player, "m_nRenderMode", kRenderNormal)	
+		SetEntityColor(player, 255, 255, 255, 100)
+
+
 	}
+	Ware_MinigameHomeLocation.Teleport(Wipeout_Spectators)
+
+	AnnounceKnockouts()
 }
+
+
+function AnnounceKnockouts()
+{
+	local knocked_out = 0
+	
+	foreach (data in Ware_PlayersData)
+	{
+		local player = data.player
+		local idx = Wipeout_ValidPlayers.find(player)
+		if (idx == null)
+			continue
+
+		local lives = Ware_GetPlayerSpecialRoundData(player).lives
+		if (lives <= 0)
+		{
+			knocked_out++
+			Ware_ChatPrint(null, "{player}{color} has been {color}wiped out!", player, "9AB973", COLOR_GREEN);
+			
+			Wipeout_ValidPlayers.remove(idx)
+			if(Wipeout_GetAlivePlayers().len() != 2)
+				player.AddCond(TF_COND_HALLOWEEN_GHOST_MODE)
+			SetEntityColor(player, 255, 255, 255, 40)
+		}
+	}
+	
+	local players_len = Wipeout_GetAlivePlayers().len()
+
+	if (knocked_out > 0)
+	{
+		Ware_ChatPrint(null, "{int} {str} been wiped out! There are {int} {str} still standing.", 
+			knocked_out,
+			knocked_out > 1 ? "players have" : "player has",
+			players_len,
+			players_len == 1 ? "player" : "players")
+	}
+	//else
+	//{
+	//	Ware_ChatPrint(null, "No one has been knocked out! There are {int} {str} still standing.", 
+	//		players_len,
+	//		players_len == 1 ? "player" : "players")		
+	//}
+}
+
 
 function OnDeclareWinners(top_players, top_score, winner_count)
 {

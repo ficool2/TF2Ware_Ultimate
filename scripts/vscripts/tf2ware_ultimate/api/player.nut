@@ -713,7 +713,7 @@ function Ware_GetUnpassedPlayers(alive_only = false)
 
 // Gets a list of alive players that are on red or blue team
 // Internally this decides what players will be placed into a minigame
-function Ware_GetValidPlayers()
+function Ware_GetValidPlayers(is_boss = false)
 {
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_get_valid_players.IsValid())
 		return Ware_SpecialRound.cb_get_valid_players()
@@ -722,8 +722,26 @@ function Ware_GetValidPlayers()
 		local valid_players = []
 		foreach (player in Ware_Players)
 		{
-			if ((player.GetTeam() & TF_TEAM_MASK) && player.IsAlive())
-				valid_players.append(player)
+			if (player.GetTeam() & TF_TEAM_MASK)
+			{
+				if (!player.IsAlive())
+				{
+					// only respawn everyone before the boss
+					// for minigames intentionally not respawning people
+					// as punishment for dying in certain special rounds (like Skull)
+					if (is_boss && Ware_CanPlayerRespawn(player))
+					{
+						player.ForceRespawn()
+						// safety check
+						if (player.IsAlive())
+							valid_players.append(player)	
+					}
+				}
+				else
+				{
+					valid_players.append(player)
+				}
+			}
 		}
 		return valid_players
 	}
