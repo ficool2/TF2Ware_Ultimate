@@ -10,6 +10,7 @@ bombs
 boxing
 break_barrel
 break_box
+buff
 build_this
 bullseye
 bumpers
