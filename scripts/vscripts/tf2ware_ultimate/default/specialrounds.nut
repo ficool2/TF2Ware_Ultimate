@@ -18,6 +18,7 @@ inclinity_problem
 //invisible  TODO need a better performance implementation
 low_gravity
 math_only
+merasmus
 mirrored_world
 no_movingback
 non_stop

@@ -200,7 +200,7 @@ function SpawnWitch()
 		origin    = witch_origin
 		angles    = QAngle(0, RandomFloat(-180, 180), 0)
 		model     = witch_model
-		health    = INT_MAX
+		health    = 999999
 	})
 	EntityAcceptInput(witch, "Disable")
 	witch.ResetSequence(witch.LookupSequence("idle"))

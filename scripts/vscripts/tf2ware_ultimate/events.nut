@@ -122,8 +122,9 @@ function OnScriptHook_OnTakeDamage(params)
 					local viewmodel = GetPropEntity(attacker, "m_hViewModel")
 					if (viewmodel)
 						viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"))
-						
-					params.damage       = victim.GetHealth() * 2.0
+					
+					if(victim.GetClassname() != "merasmus")
+						params.damage       = victim.GetHealth() * 2.0
 					params.damage_stats = TF_DMG_CUSTOM_BACKSTAB
 					params.damage_type  = params.damage_type | DMG_CRIT
 				}			
