@@ -27,6 +27,7 @@ eat_plate
 extinguish
 flipper_ball
 flood
+floppy
 ghost
 goomba
 grapple_cutout
