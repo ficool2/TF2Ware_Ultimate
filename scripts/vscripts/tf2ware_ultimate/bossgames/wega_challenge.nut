@@ -223,6 +223,7 @@ function OnEnd()
     foreach (player in Ware_MinigamePlayers)
 	{
         SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", null)
+        RestoreHUD(player)
     }
 }
 
@@ -987,6 +988,8 @@ function Wega_player_tick(player)
                 Ware_TeleportPlayer(player, Ware_Location.home.center, ang_zero, vec3_zero)
 	            Ware_ShowScreenOverlay(player, null)
 	            Ware_PassPlayer(player, true)
+                RestoreHUD(player)
+
             }, 0.1)
         }
     }
@@ -1017,4 +1020,15 @@ function IncreaseWegaSpeedByOne()
 {
     foreach (wega in WegaArray)
         wega.GetScriptScope().speed++
+}
+
+function RestoreHUD(player)
+{
+    player.RemoveHudHideFlags(HIDEHUD_WEAPONSELECTION)
+    player.RemoveHudHideFlags(HIDEHUD_FLASHLIGHT)
+    player.RemoveHudHideFlags(HIDEHUD_HEALTH)
+    player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS)
+    player.RemoveHudHideFlags(HIDEHUD_CROSSHAIR)
+    player.RemoveHudHideFlags(HIDEHUD_BONUS_PROGRESS)
+    player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 }
