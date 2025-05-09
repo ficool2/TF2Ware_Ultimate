@@ -70,7 +70,9 @@ function OnPlayerSay(player, text)
 	if (num != count)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
-			Ware_SuicidePlayer(player)
+		{
+			Ware_CreateTimer(@() Ware_SuicidePlayer(player), 0.1)
+		}
 	}
 	else
 	{
