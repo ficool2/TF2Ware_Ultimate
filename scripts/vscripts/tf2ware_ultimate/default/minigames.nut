@@ -74,6 +74,7 @@ stun
 sumo
 swim_up
 taunt_kill
+time_jump
 touch_sky
 treasure_hunt
 trivia
