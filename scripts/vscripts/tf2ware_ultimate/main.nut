@@ -1600,12 +1600,13 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_SetupMinigameCallbacks()	
 	
 	// late precache if new minigames are added at runtime
-	if (developer() > 0 && "OnPrecache" in Ware_MinigameScope)
+	if (developer() > 0)
 	{
 		if (Ware_Minigame.music)
 			Ware_PrecacheMinigameMusic(Ware_Minigame.music, is_boss)
-	
-		Ware_MinigameScope.OnPrecache()
+
+		if("OnPrecache" in Ware_MinigameScope)
+			Ware_MinigameScope.OnPrecache()
 	}
 	
 	if (custom_teleport)
