@@ -37,7 +37,9 @@ This script will automatically place all the materials and textures in the corre
 
 For the overlay text, try be as concise as possible - remember most minigames are only a few seconds long, even before speedup. For example **GET TO THE END!** is better than **GET TO THE END OF THE COURSE!**. The convention is white text with an exclamation mark at the end, though exceptions can be made for emphasis. Any "failure" overlays, such as the one used in [Double Jump](scripts/vscripts/tf2ware_ultimate/minigames/double_jump.nut) are typically red and in brackets.
 
-For longer overlays or those using multiple colours, manual editing is required - longer overlays in particular will need to have a line break to prevent going off the screen, which is *not* handled by the script. To achieve this, comment out the lines `os.remove(name1)` and `os.remove(name2)` in the python script. This will preserve the created `.png` files, which can be processed in any graphics editor such as [GIMP](https://www.gimp.org/). Make sure to uncomment these lines again before submitting a PR.
+Longer overlays will need to have a line break to prevent going off the screen, ex. `GET TO\nTHE END!`.
+
+For overlays using multiple colours, manual editing is required - To achieve this, comment out the lines `os.remove(name1)` and `os.remove(name2)` in the python script. This will preserve the created `.png` files, which can be processed in any graphics editor such as [GIMP](https://www.gimp.org/). Make sure to uncomment these lines again before submitting a PR.
 
 The processed files can then be converted using VTFEdit and manually imported into the repo. One of the generated `.png`s is a reversed text version which must be added to the VTF as a separate frame by importing both into VTFEdit simultaneously.
 

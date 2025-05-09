@@ -8,20 +8,31 @@ def textsize(text, font):
     _, _, width, height = draw.textbbox((0, 0), text=text, font=font)
     return width, height
 
-def generate_image_internal(name, text, color, idx):
+def next_power_of_2(x):  
+    return 1 if x == 0 else 2**(x - 1).bit_length()
 
-    # Set the image size
-    vmt_scale_x = 3
-    vmt_scale_y = 14
+def generate_image_internal(name, text, color, idx):
+    
+    text = text.replace("\\n", "\n")
+    texta = text.splitlines()
+    print(texta)
     
     width = 1024
-    if len(text) >= 15:
+    longest = len(max(texta, key=len))
+    vmt_scale_x = 3
+    if longest >= 15:
         vmt_scale_x = 1.5
         width = 2048
-    elif len(text) <= 5:
+    elif longest <= 5:
         vmt_scale_x = 6
         width = 512
-    height = 128
+
+    nlines = text.count('\n')
+    height = next_power_of_2(128 * (nlines + 1))
+
+    # Set the image size
+
+    vmt_scale_y = 14 / (height / 128)
     
     font_size = 110
 
@@ -38,23 +49,25 @@ def generate_image_internal(name, text, color, idx):
     font = ImageFont.truetype(font_path, size=font_size)
     
     if idx == 1:
-        text = text[::-1]
+        for i, t in enumerate(texta):
+            texta[i] = t[::-1]
 
     # Set the text and its position
-    text_width, text_height = textsize(text, font=font)
-    x = (width - text_width) / 2
-    y = (height - text_height) / 2
+    for i, t in enumerate(texta):
+        text_width, text_height = textsize(t, font=font)
+        x = (width - text_width) / 2
+        y = i * 128 + (128 - text_height) // 2  # Start at i*128 and add vertical offset
 
-    # Draw outline
-    border = 8
-    border_color = (0,0,0)
-    points = 15
-    for step in range(0, math.floor(border * points), 1):
-        angle = step * 2 * math.pi / math.floor(border * points)
-        draw.text((x - border * math.cos(angle), y - border * math.sin(angle)), text, border_color, font)
+        # Draw outline
+        border = 8
+        border_color = (0,0,0)
+        points = 15
+        for step in range(0, math.floor(border * points), 1):
+            angle = step * 2 * math.pi / math.floor(border * points)
+            draw.text((x - border * math.cos(angle), y - border * math.sin(angle)), t, border_color, font)
 
-    # Draw the text
-    draw.text((x, y), text, font=font, fill=color)
+        # Draw the text
+        draw.text((x, y), t, font=font, fill=color)
 
     image = image.transform(image.size, Image.AFFINE, (1, 0.2, 0, 0, 1, 0))
 
@@ -103,8 +116,8 @@ def generate_image(name, text, color):
     
     os.system(command)
     
-    os.remove(name1)
-    os.remove(name2)
+    #os.remove(name1)
+    #os.remove(name2)
 
 file_name = str(input("Input file name, e.g. 'flash_flood'\n"))
 the_text = str(input("Input text to display, e.g. 'FLASH FLOOD'\n"))
