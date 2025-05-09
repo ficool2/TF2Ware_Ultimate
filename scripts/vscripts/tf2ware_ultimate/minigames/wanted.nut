@@ -135,23 +135,23 @@ function OnUpdate()
         if (pos.x - minigameLocation.x > xRange[1]) 
 		{
             vel.x = -abs(vel.x)
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
+			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
         }
 		else if (pos.x - minigameLocation.x < xRange[0]) 
 		{
             vel.x = abs(vel.x)
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
+			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
         }
 
         if (pos.z - minigameLocation.z > zRange[1]) 
 		{
             vel.z = -abs(vel.z)
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
+			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
         }
 		else if (pos.z - minigameLocation.z < zRange[0]) 
 		{
             vel.z = abs(vel.z)
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
+			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
         }
 
         prop.SetAbsVelocity(vel)
