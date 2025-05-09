@@ -189,6 +189,24 @@ item_table_to_id <-
 	ITEM_BANANA_THREE
 ]
 
+const PARTICLE_COLOR_DIRT			= 0
+const PARTICLE_COLOR_LAST			= 1
+const PARTICLE_ALPHA_30				= 0
+const PARTICLE_ALPHA_LAST			= 1
+
+KartParticleDrift <- array(4)
+KartParticleOffroad <- null
+KartParticleColors <- array(PARTICLE_COLOR_LAST)
+KartParticleAlphas <- array(PARTICLE_ALPHA_LAST)
+
+
+const PFX_KART_MINI_DRIFT_SPARKS	= "sparks_blue"
+const PFX_KART_MINI_DRIFT			= "drift_blue"
+const PFX_KART_SUPER_DRIFT_SPARKS	= "sparks_orange"
+const PFX_KART_SUPER_DRIFT			= "drift_orange"
+
+const SFX_KART_DRIFT_SPARKS			= "MK_Kart_Drift_Sparks"
+
 function OnPrecache()
 {
 	PrecacheModel("effects/flagtrail_blu.vmt")
@@ -280,7 +298,12 @@ function OnPrecache()
 	PrecacheParticle("mk_lightning_parent")
 	PrecacheParticle("spell_skeleton_bits_green")
 	PrecacheParticle("spell_pumpkin_mirv_bits_red")
-	
+
+	PrecacheParticle(PFX_KART_MINI_DRIFT_SPARKS)
+	PrecacheParticle(PFX_KART_MINI_DRIFT)
+	PrecacheParticle(PFX_KART_SUPER_DRIFT_SPARKS)
+	PrecacheParticle(PFX_KART_SUPER_DRIFT)
+
 	PrecacheMaterial("tf2ware_ultimate/grey")
 }
 
@@ -291,6 +314,31 @@ function OnPick()
 		return Ware_TimeScale <= 1.1
 	return true
 }
+
+function CreateMapEntities()
+{
+	KartParticleDrift[0] = GetParticleIndex(PFX_KART_MINI_DRIFT_SPARKS)
+	KartParticleDrift[1] = GetParticleIndex(PFX_KART_MINI_DRIFT)
+	KartParticleDrift[2] = GetParticleIndex(PFX_KART_SUPER_DRIFT_SPARKS)
+	KartParticleDrift[3] = GetParticleIndex(PFX_KART_SUPER_DRIFT)
+	
+	//MK_KartParticleColors[PARTICLE_COLOR_DIRT] = CreateParticleColor(64, 41, 5)
+	//MK_KartParticleAlphas[PARTICLE_ALPHA_30]   = CreateParticleAlpha(30)
+}
+
+function GetParticleIndex(name)
+{
+	local particle = Ware_SpawnEntity("info_particle_system", 
+	{
+		effect_name = name, 
+		start_active = false
+	})
+	
+	local index = GetPropInt(particle, "m_iEffectIndex")
+	particle.Destroy()
+	return index
+}
+
 
 function OnTeleport(players)
 {
@@ -877,6 +925,8 @@ function OnPlayerDisconnect(player)
 
 function SetupMap()
 {
+	CreateMapEntities()
+
 	local bound_thinker = Ware_CreateEntity("logic_relay")
 	local bounds = Ware_MinigameLocation.bound_spinners
 	local bound_spin_pos = Ware_MinigameLocation.bound_spin_pos
@@ -998,6 +1048,20 @@ function CreateItembox(origin)
 	return itembox
 }
 
+function CreateDriftParticle(kart_prop, origin, angles)
+{
+	// TODO should be decided by attachments
+	local particle = Ware_SpawnEntity("info_particle_system",
+	{
+		effect_name = "error",
+		origin = origin,
+		angles = angles,
+		start_active = true
+	})
+	SetEntityParent(particle, kart_prop)
+	return particle
+}
+
 function CreateKart(origin, angles)
 {
 	// touches items and itemboxes
@@ -1055,6 +1119,19 @@ function CreateKart(origin, angles)
 						
 	foreach (name, func in kart_routines)
 		kart[name] <- func.bindenv(kart)
+	
+	kart.m_particle_drift_restart <- 0
+
+	const_height <- 18.0
+
+	// TODO should be decided by attachments
+	//kart.m_particle_wheel_right <- CreateDriftParticle(kart_prop, 
+	//		origin - (angles.Forward() * 36.0) - (angles.Left() * 22.0) - (angles.Up() * const_height) + Vector(0, 44, 0),
+	//	 	angles)
+	
+	kart.m_particle_wheel_left <- null
+
+	kart.m_drift_particle <- 0
 	
 	kart.m_id                 <- kart_id++
 	kart.m_driver             <- null	
@@ -1678,6 +1755,9 @@ kart_routines <-
 		local hop_duration = 0.3
 		if (m_drifting)
 		{
+			if (m_particle_drift_restart > 0 && --m_particle_drift_restart == 0)
+				ToggleWheelParticles(true, false)
+			
 			if (!(m_buttons & IN_JUMP))
 			{
 				m_drifting = false
@@ -1697,7 +1777,8 @@ kart_routines <-
 					else
 						m_boost_counter += 2 * inv_dt.tointeger()
 				}
-				
+
+				local old_boost_stage = m_boost_stage
 				if (m_boost_counter >= 634)
 					m_boost_stage = 4
 				else if (m_boost_counter >= 498)
@@ -1707,7 +1788,22 @@ kart_routines <-
 				else if (m_boost_counter >= 165)
 					m_boost_stage = 1
 				else
-					m_boost_stage = 0				
+					m_boost_stage = 0	
+
+				if (old_boost_stage != m_boost_stage)
+				{
+					EmitSoundEx({
+						sound_name = SFX_KART_DRIFT_SPARKS,
+						pitch = 50 + (m_boost_stage * 9),
+						flags = SND_CHANGE_PITCH,
+						entity = m_prop
+					})
+					
+					local particle = Ware_MinigameScope.KartParticleDrift[m_boost_stage - 1]		
+					m_drift_particle = particle
+					ToggleWheelParticles(false, false)
+					m_particle_drift_restart = 5
+				}							
 			}
 			else
 			{
@@ -2111,6 +2207,9 @@ kart_routines <-
 		m_drifting = false
 		m_boost_stage = 0
 		m_prop.StopSound("MK_Kart_Drift")
+
+		// TODO: drifting into offroad stops particles
+		ToggleWheelParticles(false, true)
 	}
 	
 	RescueInit = function()
@@ -2279,6 +2378,33 @@ kart_routines <-
 		return true
 	}
 	
+	ToggleWheelParticles = function (active, kill)
+	{
+		if(active && !m_particle_wheel_left)
+		{
+			m_particle_wheel_left = Ware_MinigameScope.CreateDriftParticle(m_prop, 
+			m_origin - (m_angles.Forward() * 36.0) - (m_angles.Left() * 1) - (m_angles.Up() * 18.0),
+		 	m_angles)
+		}
+		if(m_particle_wheel_left)
+		{
+			SetPropInt(m_particle_wheel_left, "m_iEffectIndex", m_drift_particle)
+			SetPropBool(m_particle_wheel_left, "m_bActive", active)		
+			m_particle_wheel_left.SetDrawEnabled(active)
+		}
+
+
+		//SetPropBool(m_particle_wheel_right, "m_bActive", active)
+		
+		if(kill && m_particle_wheel_left)
+		{
+			m_particle_wheel_left.Destroy()
+			m_particle_wheel_left = null
+		}
+
+		//m_particle_wheel_right.SetDrawEnabled(active)
+	}
+
 	Shrink = function(timer)
 	{
 		if (m_mega_timer > 0.0)
