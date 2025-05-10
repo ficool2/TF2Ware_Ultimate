@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "wega/uario_jumpscare"
+"Proxies" 
+{ 
+"AnimatedTexture" 
+{ 
+"animatedTextureVar" "$basetexture" 
+"animatedTextureFrameNumVar" "$frame" 
+"animatedTextureFrameRate" "50" 
+}
+} 
+
+
+}
