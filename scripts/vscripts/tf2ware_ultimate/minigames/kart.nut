@@ -4,6 +4,7 @@ minigame <- Ware_MinigameData
 	author        = ["TonyBaretta", "pokemonPasta"]
 	music         = "moomoofarm"
 	description   = "Race to the End!"
+	modes         = 3
 	end_delay     = 0.5
 	start_freeze  = 0.5
 	allow_damage  = true
@@ -18,15 +19,14 @@ tracks <-
 	["kart_ramp",       Vector(-8000, -6475, -6527), 10.0],
 ]
 
-mode <- RandomInt(0, 2)
 if (Ware_Players.len() > 40)
-	mode = 0
+	Ware_MinigameMode = 0
 
-first <- mode != 2
+first <- Ware_MinigameMode != 2
 
-minigame.location    = tracks[mode][0]
-endzone_vector      <- tracks[mode][1]
-minigame.duration    = tracks[mode][2]
+minigame.location    = tracks[Ware_MinigameMode][0]
+endzone_vector      <- tracks[Ware_MinigameMode][1]
+minigame.duration    = tracks[Ware_MinigameMode][2]
 
 function OnPrecache()
 {

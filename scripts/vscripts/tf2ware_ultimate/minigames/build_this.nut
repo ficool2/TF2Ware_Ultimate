@@ -1,4 +1,4 @@
-mode <- RandomInt(0, 4)
+
 building_modes <-
 [
 	[ "Build a Sentry!",              "build_sentry",        OBJ_SENTRYGUN  ],
