@@ -61,6 +61,7 @@ class Ware_MinigameData
 	// Maximum amount of players needed to start, default is 256
 	max_players     = null
 	// Number of modes the minigame has, default is 1. This is used for minigames that share code but have variations such as Simon Says.
+	// Setting a higher value than 1 will randomly assign a value Ware_MinigameMode every time the minigame starts between 0 and (value - 1), which can be referred to for different modes
 	modes           = null
 	// Whether players will be flagged as passed when minigame starts, default is false
 	start_pass		= null
