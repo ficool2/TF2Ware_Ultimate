@@ -176,6 +176,7 @@ if (!("Ware_BossgameRotation" in this))
 if (!("Ware_SpecialRoundRotation" in this))
 	Ware_SpecialRoundRotation <- []
 
+Ware_MinigameMode         <- 0
 Ware_MinigameSavedConvars <- {}
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
@@ -380,6 +381,7 @@ function Ware_PrecacheNext()
 				{
 					min_players = minigame.min_players
 					max_players = minigame.max_players
+					modes       = minigame.modes
 				}					
 			}
 			else if ("special_round" in scope)
@@ -1482,6 +1484,13 @@ function Ware_StartMinigameInternal(is_boss)
 			}
 		}
 		
+		// Set mode before scope is assigned in case any params depend on it
+		local modes = Ware_MinigameCache[minigame].modes
+		if(modes > 1)
+			Ware_MinigameMode = RandomInt(0, modes - 1)
+		else
+			Ware_MinigameMode = 0	
+		
 		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (Ware_MinigameScope)
 		{		
@@ -1510,7 +1519,10 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_MinigameStartTime = time
 	
-	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
+	if(Ware_Minigame.modes > 1)
+		printf("[TF2Ware] Starting %s '%s' with mode %d\n", is_boss ? "bossgame" : "minigame", minigame, Ware_MinigameMode)
+	else
+		printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
 	
 	local player_indices_valid = ""
 	foreach (player in valid_players)
