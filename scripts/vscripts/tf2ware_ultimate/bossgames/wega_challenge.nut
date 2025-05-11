@@ -3,6 +3,8 @@
 //May god have mercy on your soul whoever reads those lines, this has been ported as-it-is from the original map
 //Script by Alex Turtle
 
+Mask_Wega <- 69257 // HIDEHUD_WEAPONSELECTION | HIDEHUD_FLASHLIGHT | HIDEHUD_HEALTH | HIDEHUD_MISCSTATUS | HIDEHUD_CROSSHAIR | HIDEHUD_BONUS_PROGRESS | HIDEHUD_TARGET_ID
+
 TriggerEnding <- true
 
 SpawnCenter <- Vector(-32, -13280, -12608)
@@ -111,13 +113,7 @@ function OnStart()
         Ware_GetPlayerMiniData(player).jumping <- false
         SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 
-        player.AddHudHideFlags(HIDEHUD_WEAPONSELECTION)
-        player.AddHudHideFlags(HIDEHUD_FLASHLIGHT)
-        player.AddHudHideFlags(HIDEHUD_HEALTH)
-        player.AddHudHideFlags(HIDEHUD_MISCSTATUS)
-        player.AddHudHideFlags(HIDEHUD_CROSSHAIR)
-        player.AddHudHideFlags(HIDEHUD_BONUS_PROGRESS)
-        player.AddHudHideFlags(HIDEHUD_TARGET_ID)
+        EnableWegaHUD(player)
         player.SetScriptOverlayMaterial("wega/wega_counter.vmt")
 
         local weapon = player.GetActiveWeapon()
@@ -1025,13 +1021,12 @@ function IncreaseWegaSpeedByOne()
         wega.GetScriptScope().speed++
 }
 
+function EnableWegaHUD(player)
+{
+    player.AddHudHideFlags(Mask_Wega)
+}
+
 function RestoreHUD(player)
 {
-    player.RemoveHudHideFlags(HIDEHUD_WEAPONSELECTION)
-    player.RemoveHudHideFlags(HIDEHUD_FLASHLIGHT)
-    player.RemoveHudHideFlags(HIDEHUD_HEALTH)
-    player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS)
-    player.RemoveHudHideFlags(HIDEHUD_CROSSHAIR)
-    player.RemoveHudHideFlags(HIDEHUD_BONUS_PROGRESS)
-    player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
+    player.RemoveHudHideFlags(Mask_Wega)
 }
