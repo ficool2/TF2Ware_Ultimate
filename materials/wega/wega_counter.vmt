@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "wega/wega_counter"
+
+	"$translucent" 1
+	"$ignorez" 1
+	
+	"$basetexturetransform" "center 0.03 0.03 scale 15.15 8.5 rotate 0 translate 0 0"
+}
