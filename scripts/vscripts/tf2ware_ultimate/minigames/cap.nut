@@ -86,8 +86,8 @@ function PushClosestTarget(player, radius)
 		// using DMG_CLUB here caused pain voiceline scenes to take 5-10 ms to load.. WTF
 		closest_player.TakeDamage(5, DMG_GENERIC, player)
 		
-		forward.z = 1.5
 		forward.Norm()
+		forward.z = 1.5
 		closest_player.ApplyAbsVelocityImpulse(forward * 360.0)
 	}
 }
@@ -234,4 +234,9 @@ function OnTriggerEndCap()
 function OnCleanup()
 {
 	SetPropInt(GameRules, "m_nHudType", 0)
+	//Prevent capture tooltip from staying forever
+	foreach(pl in Ware_MinigamePlayers)
+	{
+		SendGlobalGameEvent("intro_finish", { player = pl.entindex() })
+	}
 }
