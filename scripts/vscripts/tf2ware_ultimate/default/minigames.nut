@@ -39,6 +39,7 @@ headshot
 heavy_medic
 hit_balls
 hit_player
+homerun_contest
 hoop
 hot_potato
 jarate
