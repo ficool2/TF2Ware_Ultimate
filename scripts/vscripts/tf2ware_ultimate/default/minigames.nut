@@ -86,6 +86,7 @@ type_map
 type_time
 type_word
 vacc
+upgrade
 wanted
 watch_fall
 water_war

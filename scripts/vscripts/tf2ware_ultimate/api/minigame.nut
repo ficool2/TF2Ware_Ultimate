@@ -159,6 +159,9 @@ class Ware_MinigameData
 	cb_on_player_horn		= null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
+	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application.
+	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
+	cb_on_player_inventory     = null
 }
 
 // Global variables

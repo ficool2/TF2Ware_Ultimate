@@ -454,6 +454,9 @@ function OnGameEvent_post_inventory_application(params)
 	if (player == null)
 		return
 	
+	if (Ware_Minigame != null)
+		Ware_Minigame.cb_on_player_inventory(player)
+		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_player_inventory(player)
 }
