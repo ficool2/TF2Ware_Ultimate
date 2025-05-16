@@ -100,14 +100,14 @@ Ware_DevCommands <-
 		if (args.len() >= 1)
 		{
 			local mode = args[0].tointeger()
-			if(typeof(mode) == "integer")
+			if(typeof(mode) == "integer" && mode >= 0)
 			{
 				Ware_DebugForceMode = mode
 				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
 			}
 			else
 			{
-				Ware_ChatPrint(player, "Arguments: <mode>")
+				Ware_ChatPrint(player, "Arguments: <mode>, where mode >= 0")
 			}
 		}
 		else
