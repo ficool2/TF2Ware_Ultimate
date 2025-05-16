@@ -1,11 +1,11 @@
-mode <- RandomInt(0, 1)
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Double Jump"
 	author         = ["Gemidyne", "pokemonPasta"]
-	description    = mode == 0 ? "Double Jump!" : "Triple Jump!"
-	custom_overlay = mode == 0 ? "double_jump" : "triple_jump"
+	modes          = 2
+	description    = Ware_MinigameMode == 0 ? "Double Jump!" : "Triple Jump!"
+	custom_overlay = Ware_MinigameMode == 0 ? "double_jump" : "triple_jump"
 	duration       = 4.0
 	music          = "ringring"
 	fail_on_death  = true
@@ -28,7 +28,7 @@ function OnUpdate()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		local airdashes = GetPropInt(player, "m_Shared.m_iAirDash") // doesn't count jump from ground - double == 1, triple == 2
-		switch (mode)
+		switch (Ware_MinigameMode)
 		{
 			case 0:
 				if (airdashes == 1)

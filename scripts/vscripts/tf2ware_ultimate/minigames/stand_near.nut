@@ -1,10 +1,10 @@
-mode <- RandomInt(0, 1)
-	
+
 minigame <- Ware_MinigameData
 ({
 	name           = "Stand Near"
 	author         = ["sasch", "ficool2"]
-	description    = mode == 1 ? "Don't stand near anybody!" : "Stand near somebody!"
+	modes          = 2
+	description    = Ware_MinigameMode == 1 ? "Don't stand near anybody!" : "Stand near somebody!"
 	duration       = 4.0
 	end_delay      = 1.0
 	music          = "spotlightsonyou"
@@ -12,7 +12,7 @@ minigame <- Ware_MinigameData
 	start_pass     = true
 	allow_damage   = true
 	fail_on_death  = true
-	custom_overlay = mode == 1 ? "stand_away" : "stand_near"
+	custom_overlay = Ware_MinigameMode == 1 ? "stand_away" : "stand_near"
 })
 
 function OnPrecache()
@@ -47,7 +47,7 @@ function OnEnd()
 			local dist = VectorDistance(target1.origin, target2.origin)
 			if (dist < threshold)
 			{
-				if (mode == 1)
+				if (Ware_MinigameMode == 1)
 					target1.player.TakeDamage(1000.0, DMG_BLAST, target2.player)
 				else
 					target1.kill = false
@@ -56,7 +56,7 @@ function OnEnd()
 		}
 	}
 	
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		foreach (target in targets)
 		{

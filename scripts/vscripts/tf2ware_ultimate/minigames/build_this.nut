@@ -1,4 +1,4 @@
-mode <- RandomInt(0, 4)
+
 building_modes <-
 [
 	[ "Build a Sentry!",              "build_sentry",        OBJ_SENTRYGUN  ],
@@ -7,12 +7,13 @@ building_modes <-
 	[ "Build a Teleporter Exit!",     "build_tele_exit",     OBJ_TELEPORTER ],
 	[ "Build Something!",             "build_something",     null           ],
 ]
-building_mode <- building_modes[mode]
+building_mode <- building_modes[Ware_MinigameMode]
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Build This"
 	author         = ["Gemidyne", "pokemonPasta"]
+	modes = 5
 	description    = building_mode[0]
 	duration       = 4.0
 	music          = "sillytime"
@@ -39,7 +40,7 @@ function OnGameEvent_player_builtobject(params)
 	if (!player)
 		return
 	
-	if (mode == 4)
+	if (Ware_MinigameMode == 4)
 	{
 		Ware_PassPlayer(player, true)
 	}
@@ -48,9 +49,9 @@ function OnGameEvent_player_builtobject(params)
 		local building_enum = params.object
 		if (building_enum == building_mode[2])
 		{
-			if ((mode < 2) ||
-				(mode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
-				(mode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
+			if ((Ware_MinigameMode < 2) ||
+				(Ware_MinigameMode == 2 && GetPropInt(building, "m_iObjectMode") != 1) || // tele entrance
+				(Ware_MinigameMode == 3 && GetPropInt(building, "m_iObjectMode") == 1) // tele exit
 			)
 			{
 				Ware_PassPlayer(player, true)

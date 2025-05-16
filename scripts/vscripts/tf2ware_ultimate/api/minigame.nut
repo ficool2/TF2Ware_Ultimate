@@ -8,6 +8,7 @@ class Ware_MinigameData
 		location        = "home"
 		min_players     = 0
 		max_players     = 256
+		modes           = 1
 		start_pass      = false
 		allow_damage    = false
 		allow_suicide   = false
@@ -51,7 +52,7 @@ class Ware_MinigameData
 	// == Optional settings ==
 	
 	// Music to play when the minigame starts
-	// If you are going to be playing music yourself, make sure to precache it in OnPrecache with Ware_PrecacheMinigameMusic
+	// If you are going to be playing music separate from this parameter, make sure to precache it in OnPrecache with Ware_PrecacheMinigameMusic
 	music			= null
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null
@@ -59,6 +60,9 @@ class Ware_MinigameData
 	min_players		= null
 	// Maximum amount of players needed to start, default is 256
 	max_players     = null
+	// Number of modes the minigame has, default is 1. This is used for minigames that share code but have variations such as Simon Says.
+	// Setting a higher value than 1 will randomly assign a value Ware_MinigameMode every time the minigame starts between 0 and (value - 1), which can be referred to for different modes
+	modes           = null
 	// Whether players will be flagged as passed when minigame starts, default is false
 	start_pass		= null
 	// Is damage to other players allowed? Default is false

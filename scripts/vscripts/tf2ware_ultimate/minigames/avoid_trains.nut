@@ -5,11 +5,10 @@ minigame <- Ware_MinigameData
 	description   = "Dodge the trains!"
 	duration      = 6.0
 	music         = "train"
+	modes         = 2
 	start_pass    = true
 	fail_on_death = true
 })	
-
-mode <- RandomInt(0, 1)
 
 train_model <- "models/props_vehicles/train_enginecar.mdl"
 
@@ -36,7 +35,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		local sound = RandomElement(train_rain)
 		Ware_PlaySoundOnAllClients(sound)
@@ -47,9 +46,9 @@ function OnStart()
 	local minigame_players = clone(Ware_MinigamePlayers)
 	
 	local train_count
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 		train_count = Max(Min(minigame_players.len() / 3, minigame_players.len()), 1)
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 		train_count = Min(minigame_players.len(), 2)
 	
 	local i = 0
@@ -71,13 +70,13 @@ function OnStart()
 function SpawnTrain(pos)
 {
 	local train_pos, train_ang, train_vel
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		train_pos = pos + Vector(0, 0, RandomFloat(1950, 2020))
 		train_ang = QAngle(90, 0, 0)
 		train_vel = Vector(0, 0, RandomFloat(-800, -1000))
 	}
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 	{
 		local axes = [[1, 0], [-1, 0], [0, -1], [0, 1]]
 		local axis = RandomElement(axes)

@@ -1,16 +1,15 @@
 // 0: Iron Bomber
 // 1: Thermal Thruster
 
-mode <- RandomInt(0, 1)
-
 minigame <- Ware_MinigameData
 ({
 	name          = "Land the Platform"
 	author        = ["Gemidyne", "ficool2"]
 	description   = "Land on the platform!"
-	duration      = mode == 0 ? 6.0 : 5.0
+	modes         = 2
+	duration      = Ware_MinigameMode == 0 ? 6.0 : 5.0
 	location      = "factoryplatform"
-	music         = mode == 0 ? "sweetdays" : "surfin"
+	music         = Ware_MinigameMode == 0 ? "sweetdays" : "surfin"
 	max_scale     = 1.0
 	start_freeze  = 0.4
 })
@@ -52,7 +51,7 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber")
 	}
