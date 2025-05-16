@@ -94,6 +94,28 @@ Ware_DevCommands <-
 		}
 		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
 	}
+	"forcemode": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+		{
+			local mode = args[0].tointeger()
+			if(typeof(mode) == "integer")
+			{
+				Ware_DebugForceMode = mode
+				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
+			}
+			else
+			{
+				Ware_ChatPrint(player, "Arguments: <mode>")
+			}
+		}
+		else
+		{
+			Ware_DebugForceMode = null
+			Ware_ChatPrint(null, "{str} cleared forced mode for moded minigames", Ware_DevCommandTitle(player))
+		}	
+	}
 	"shownext": function(player, text)
 	{
 		local vars = [

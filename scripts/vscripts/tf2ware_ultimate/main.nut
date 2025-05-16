@@ -159,6 +159,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- ""
 	Ware_DebugNextSpecialRound2 <- []
+	Ware_DebugForceMode         <- 0
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -1486,7 +1487,14 @@ function Ware_StartMinigameInternal(is_boss)
 		
 		// Set mode before scope is assigned in case any params depend on it
 		local modes = Ware_MinigameCache[minigame].modes
-		if(modes > 1)
+		if (Ware_DebugForceMode != null)
+		{
+			// disallow modes above max mode
+			Ware_MinigameMode = Min(Ware_DebugForceMode, modes - 1)
+			if(modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
+				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", Ware_DebugForceMode, Ware_MinigameMode)
+		}
+		else if (modes > 1)
 			Ware_MinigameMode = RandomInt(0, modes - 1)
 		else
 			Ware_MinigameMode = 0	
