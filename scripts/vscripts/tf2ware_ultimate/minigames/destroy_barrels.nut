@@ -7,6 +7,10 @@ minigame <- Ware_MinigameData
 	music         = "hardsteer"
 	allow_damage  = true
 	fail_on_death = true
+	convars       =
+	{
+		phys_timescale = 0.5
+	}
 })
 
 barrel_model <- "models/tf2ware_ultimate/explosive_barrel.mdl"
