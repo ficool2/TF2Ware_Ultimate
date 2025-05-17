@@ -12,10 +12,13 @@ minigame <- Ware_MinigameData
 jump_count <- 10
 target_height  <- 500.0
 wing_model <- "models/workshop/player/items/medic/sf14_purity_wings/sf14_purity_wings.mdl"
+bird <- null
+bird_model <- "models/props_forest/dove.mdl"
 
 function OnPrecache()
 {
 	PrecacheModel(wing_model)
+	PrecacheModel(bird_model)
 }
 
 function OnStart()
@@ -32,6 +35,21 @@ function OnStart()
 	}
 	
 	Ware_ShowAnnotation(Ware_MinigameLocation.center + Vector(0, 0, target_height), "Goal!")
+
+	bird = Ware_SpawnEntity("prop_dynamic",
+	{
+		model       = bird_model
+		origin      = Ware_MinigameLocation.center + Vector(RandomFloat(-200, 200), RandomFloat(-200, 200), 100)
+		defaultanim = "fly_cycle"
+		modelscale  = 5
+	})
+	bird.SetMoveType(MOVETYPE_FLYGRAVITY, 0)
+
+	Ware_CreateTimer(function()
+	{
+		bird.SetAbsVelocity(Vector(0,0,300))
+		return 0.45
+	}, 0.0)
 }
 
 function OnUpdate()
