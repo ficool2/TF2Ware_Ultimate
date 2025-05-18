@@ -1370,8 +1370,12 @@ function Ware_ReloadMinigameRotation(is_boss)
 			
 		// Weight moded minigames more in rotation
 		foreach(minigame in Ware_Minigames)
-			for(local i = 0; i < Ware_MinigameCache[minigame].modes; i++)
+		{
+			local modes = Ware_MinigameCache[minigame].modes
+			local weight = Ware_MaxMinigameWeight == 0 ? modes : Min(modes, Ware_MaxMinigameWeight)
+			for(local i = 0; i < weight; i++)
 				Ware_MinigameRotation.append(minigame)
+		}
 		
 		return Ware_MinigameRotation
 	}	
