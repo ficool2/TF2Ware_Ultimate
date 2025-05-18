@@ -159,7 +159,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- ""
 	Ware_DebugNextSpecialRound2 <- []
-	Ware_DebugForceMode         <- 0
+	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -1366,8 +1366,13 @@ function Ware_ReloadMinigameRotation(is_boss)
 	else
 	{
 		if (Ware_Minigames.len() == 0)
-			Ware_Error("Minigame rotation is empty")			
-		Ware_MinigameRotation = clone(Ware_Minigames)
+			Ware_Error("Minigame rotation is empty")
+			
+		// Weight moded minigames more in rotation
+		foreach(minigame in Ware_Minigames)
+			for(local i = 0; i < Ware_MinigameCache[minigame].modes; i++)
+				Ware_MinigameRotation.append(minigame)
+		
 		return Ware_MinigameRotation
 	}	
 }
@@ -1486,7 +1491,8 @@ function Ware_StartMinigameInternal(is_boss)
 		}
 		
 		// Set mode before scope is assigned in case any params depend on it
-		local modes = Ware_MinigameCache[minigame].modes
+		local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
+		local modes = cache[minigame].modes
 		if (Ware_DebugForceMode != null)
 		{
 			// disallow modes above max mode

@@ -227,8 +227,7 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_ToggleTruce(true)
 
 	Ware_MinigameRotation.clear()
-	foreach (minigame in Ware_Minigames)
-		Ware_MinigameRotation.append(minigame)
+	Ware_ReloadMinigameRotation(false)
 	
 	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
