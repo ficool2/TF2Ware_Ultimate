@@ -99,8 +99,8 @@ Ware_DevCommands <-
 		local args = split(text, " ")
 		if (args.len() >= 1)
 		{
-			local mode = args[0].tointeger()
-			if(typeof(mode) == "integer" && mode >= 0)
+			local mode = StringToInteger(args[0])
+			if (mode != null && mode >= 0)
 			{
 				Ware_DebugForceMode = mode
 				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
