@@ -1496,7 +1496,7 @@ function Ware_StartMinigameInternal(is_boss)
 		
 		// Set mode before scope is assigned in case any params depend on it
 		local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
-		local modes = cache[minigame].modes
+		local modes = minigame in cache ? cache[minigame].modes : 0
 		if (Ware_DebugForceMode != null)
 		{
 			// disallow modes above max mode
