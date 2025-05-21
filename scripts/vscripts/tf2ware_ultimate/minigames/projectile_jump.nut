@@ -1,26 +1,29 @@
+local MODE_ROCKET       = 0
+local MODE_STICKY       = 1
+local MODE_SENTRY       = 2
+local MODE_FLARE        = 3
+local MODE_SHORTCIRCUIT = 4
+
 mode_infos <- 
-[
-	[ "Needle jump!",       "needle_jump",        700.0],
-	[ "Rocket jump!",       "rocket_jump",        384.0],
-	[ "Sticky jump!",       "sticky_jump",        384.0],
-	[ "Sentry jump!",       "sentry_jump",        384.0],
-	[ "Flare jump!",        "flare_jump",         400.0],
-	[ "Short Circuit jump!", "shortcircuit_jump", 384.0],
-]
-// needle jump generates crazy amount of entities
-local min_mode = Ware_Players.len() > 40 ? 1 : 0
-mode <- RandomInt(min_mode, 5)
+{
+	[MODE_ROCKET]       = [ "Rocket jump!",       "rocket_jump",        384.0],
+	[MODE_STICKY]       = [ "Sticky jump!",       "sticky_jump",        384.0],
+	[MODE_SENTRY]       = [ "Sentry jump!",       "sentry_jump",        384.0],
+	[MODE_FLARE]        = [ "Flare jump!",        "flare_jump",         400.0],
+	[MODE_SHORTCIRCUIT] = [ "Short Circuit jump!", "shortcircuit_jump", 384.0],
+}
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Projectile Jump"
 	author         = ["Mecha the Slag", "TonyBaretta", "ficool2"]
-	description    = mode_infos[mode][0]
-	duration       = mode == 3 ? 6.0 : 4.0
-	end_delay      = mode == 3 ? 0.0 : 1.0
+	modes          = mode_infos.len()
+	description    = mode_infos[Ware_MinigameMode][0]
+	duration       = Ware_MinigameMode == MODE_SENTRY ? 6.0 : 4.0
+	end_delay      = Ware_MinigameMode == MODE_SENTRY ? 0.0 : 1.0
 	music          = "goodtimes"
-	custom_overlay = mode_infos[mode][1]
-	allow_damage   = mode == 0 // original ware allowed it, for fun
+	custom_overlay = mode_infos[Ware_MinigameMode][1]
+	allow_damage   = false
 	convars        = 
 	{
 		tf_damageforcescale_self_soldier_badrj = 10
@@ -39,22 +42,17 @@ function OnPrecache()
 function OnStart()
 {
 	local player_class, weapon
-	if (mode == 0)
-	{
-		player_class = TF_CLASS_MEDIC
-		weapon = "Syringe Gun"
-	}
-	else if (mode == 1)
+	if (Ware_MinigameMode == MODE_ROCKET)
 	{
 		player_class = TF_CLASS_SOLDIER
 		weapon = "Rocket Launcher"
 	}
-	else if (mode == 2)
+	else if (Ware_MinigameMode == MODE_STICKY)
 	{
 		player_class = TF_CLASS_DEMOMAN
 		weapon = "Stickybomb Launcher"
 	}
-	else if (mode == 3)
+	else if (Ware_MinigameMode == MODE_SENTRY)
 	{
 		player_class = TF_CLASS_ENGINEER
 		weapon = [ "Construction PDA", "Toolbox", "Wrangler"]
@@ -62,12 +60,12 @@ function OnStart()
 		foreach (player in Ware_MinigamePlayers)
 			Ware_GetPlayerMiniData(player).took_dmgtype <- 0
 	}
-	else if (mode == 4)
+	else if (Ware_MinigameMode == MODE_FLARE)
 	{
 		player_class = TF_CLASS_PYRO
 		weapon = "Detonator"
 	}
-	else if (mode == 5)
+	else if (Ware_MinigameMode == MODE_SHORTCIRCUIT)
 	{
 		player_class = TF_CLASS_ENGINEER
 		weapon = "Short Circuit"
@@ -79,7 +77,7 @@ function OnStart()
 
 function OnUpdate()
 {
-	local height = mode_infos[mode][2]
+	local height = mode_infos[Ware_MinigameMode][2]
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
@@ -88,7 +86,7 @@ function OnUpdate()
 			Ware_PassPlayer(player, true)
 	}
 	
-	if (mode == 5)
+	if (Ware_MinigameMode == MODE_SHORTCIRCUIT)
 	{
 		local dead_orbs = {}
 		foreach (orb, data in orbs)
@@ -136,7 +134,7 @@ function OnUpdate()
 
 function OnEnd()
 {
-	if (mode == 3)
+	if (Ware_MinigameMode == MODE_SENTRY)
 	{
 		foreach (player in Ware_MinigamePlayers)
 		{
@@ -148,19 +146,7 @@ function OnEnd()
 	}
 }
 
-if (mode == 0)
-{
-	function OnPlayerAttack(player)
-	{
-		local dir = player.EyeAngles().Forward()
-		dir.Norm()
-		
-		local dot = dir.Dot(Vector(0, 0, -1.0))
-		if (dot > 0.707) // cos(45)
-			player.SetAbsVelocity(player.GetAbsVelocity() - dir * 88.0 * dot)
-	}
-}
-else if (mode == 3)
+if (Ware_MinigameMode == MODE_SENTRY)
 {
 	function OnTakeDamage(params)
 	{
@@ -180,7 +166,7 @@ else if (mode == 3)
 		SetPropInt(building, "m_nDefaultUpgradeLevel", 2)
 	}	
 }
-else if (mode == 5)
+else if (Ware_MinigameMode == MODE_SHORTCIRCUIT)
 {
 	function OnTakeDamage(params)
 	{
