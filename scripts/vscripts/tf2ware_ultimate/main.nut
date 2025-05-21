@@ -1369,12 +1369,19 @@ function Ware_ReloadMinigameRotation(is_boss)
 			Ware_Error("Minigame rotation is empty")
 			
 		// Weight moded minigames more in rotation
-		foreach(minigame in Ware_Minigames)
+		foreach( minigame in Ware_Minigames)
 		{
-			local modes = Ware_MinigameCache[minigame].modes
-			local weight = Ware_MaxMinigameWeight == 0 ? modes : Min(modes, Ware_MaxMinigameWeight)
-			for(local i = 0; i < weight; i++)
+			if (minigame in Ware_MinigameCache)
+			{
+				local modes = Ware_MinigameCache[minigame].modes
+				local weight = Ware_MaxMinigameWeight == 0 ? modes : Min(modes, Ware_MaxMinigameWeight)
+				for (local i = 0; i < weight; i++)
+					Ware_MinigameRotation.append(minigame)
+			}
+			else
+			{
 				Ware_MinigameRotation.append(minigame)
+			}
 		}
 		
 		return Ware_MinigameRotation
