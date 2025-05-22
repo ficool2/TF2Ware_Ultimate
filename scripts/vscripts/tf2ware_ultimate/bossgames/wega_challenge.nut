@@ -135,6 +135,8 @@ function OnStart()
 
 	EntFire("wega_challenge_start", "Enable")
 	EntFire("wega_fall", "Enable")
+	
+	ScreenFade(null, 0, 0, 0, 255, 2.0, 2.5, 17) 
 }
 
 function OnUpdate()
