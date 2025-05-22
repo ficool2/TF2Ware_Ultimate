@@ -6,6 +6,7 @@ avoid_props
 avoid_trains
 backstab
 basketball
+beam
 bombs
 boxing
 break_barrel

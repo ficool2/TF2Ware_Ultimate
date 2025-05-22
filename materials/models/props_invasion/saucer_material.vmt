@@ -1,0 +1,29 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\props_invasion\saucer"
+	//"$bumpmap" "models\props_invasion\saucer_norm"
+	
+	"$basemapalphaphongmask" "1"
+	
+    "$phong" "1"
+    "$phongexponent" "5"
+    "$phongboost" "1.5"
+	
+    //"$lightwarptexture" "models/props_vehicles/pickup_lightwarp"
+	//"$lightwarptexture" "models\lightwarps\weapon_lightwarp"
+	"$lightwarptexture" "models\lightwarps\robot_lightwarp" //pretty good but still a bit plastic like
+	
+	//"$lightwarptexture" "models\buildables\sentry3\sentry3_lightwarp"
+	
+	
+	//"$lightwarptexture" "models\player\items\mvm_loot\all_class\fob_lightwarp" //shit
+	
+	//"$lightwarptexture" "models\weapons\c_items\c_ambassador_lightwarp" //good for the glass bubble
+	
+    "$phongfresnelranges"    "[1 1 5]"
+	
+	"$phongtint" "[0.7 1 0.92]"
+	
+	
+	"$selfillum" "1"
+}

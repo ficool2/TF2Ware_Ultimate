@@ -2,4 +2,5 @@
 {
 	"file" "!particles/tf2ware_ultimate.pcf"
 	"file" "!particles/mariokart.pcf"
+	"file" "!particles/alien_egan_fx.pcf"
 }
