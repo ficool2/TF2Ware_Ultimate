@@ -85,12 +85,13 @@ function OnStart()
 {
     fog = Ware_SpawnEntity("env_fog_controller",
 	{
-		fogenable = true,
-		fogcolor = "0 0 0",
-		fogcolor2 = "0 0 0",
-		fogstart = 0,
-		fogend = 1250.0,
-		fogmaxdensity = 1.0,
+		fogenable     = true
+		fogcolor      = "0 0 0"
+		fogcolor2     = "0 0 0"
+		fogstart      = 0
+		fogend        = 1250.0
+		fogmaxdensity = 1.0
+		fogRadial     = true
 	})
 
     Generate()
