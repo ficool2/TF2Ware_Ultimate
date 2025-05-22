@@ -3,8 +3,15 @@
 //May god have mercy on your soul whoever reads those lines, this has been ported as-it-is from the original map
 //Script by Alex Turtle
 
-Mask_Wega <- 69257 // HIDEHUD_WEAPONSELECTION | HIDEHUD_FLASHLIGHT | HIDEHUD_HEALTH | HIDEHUD_MISCSTATUS | HIDEHUD_CROSSHAIR | HIDEHUD_BONUS_PROGRESS | HIDEHUD_TARGET_ID
-
+Mask_Wega <- HIDEHUD_WEAPONSELECTION 
+			| HIDEHUD_FLASHLIGHT
+			| HIDEHUD_HEALTH 
+			| HIDEHUD_MISCSTATUS
+			| HIDEHUD_CROSSHAIR
+			| HIDEHUD_BONUS_PROGRESS 
+			| HIDEHUD_TARGET_ID
+			| HIDEHUD_MATCH_STATUS
+			
 TriggerEnding <- true
 
 SpawnCenter <- Vector(-32, -13280, -12608)
