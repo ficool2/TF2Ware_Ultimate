@@ -3,42 +3,8 @@
 //May god have mercy on your soul whoever reads those lines, this has been ported as-it-is from the original map
 //Script by Alex Turtle
 
-Mask_Wega <- HIDEHUD_WEAPONSELECTION 
-			| HIDEHUD_FLASHLIGHT
-			| HIDEHUD_HEALTH 
-			| HIDEHUD_MISCSTATUS
-			| HIDEHUD_CROSSHAIR
-			| HIDEHUD_BONUS_PROGRESS 
-			| HIDEHUD_TARGET_ID
-			| HIDEHUD_MATCH_STATUS
-			
-TriggerEnding <- true
-
-SpawnCenter <- Vector(-32, -13280, -12608)
-
-WegaArray <- array(0)
-WegaTargetArray <- array(0)
-
-AggroClosest <- false
-AntiStall <- false
-
-PlayersCount <- 1
-
 music_wega <- "wexecution"
 music_urio <- "wexecution_urio_theme"
-
-model_hands <- "models/wega/hands.mdl"
-model_wega_doll <- "models/wega/wega.mdl"
-
-sound_collect <- "tf2ware_ultimate/baseball_hit.mp3"
-sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
-sound_wega_scream <- "tf2ware_ultimate/wega_scream.wav"
-
-overlay_counter <- "wega/wega_counter.vmt"
-overlay_wega_jumpscare <- "wega/wega_jumpscare.vtf"
-overlay_urio_jumpscare <- "wega/uario_jumpscare.vtf"
-
-material_wega <- "wega/wega.vmt"
 
 //This is the TF2Ware part, the only part I will keep clean
 minigame <- Ware_MinigameData
@@ -64,6 +30,42 @@ minigame <- Ware_MinigameData
 	}
 })
 
+Mask_Wega <- HIDEHUD_WEAPONSELECTION 
+			| HIDEHUD_FLASHLIGHT
+			| HIDEHUD_HEALTH 
+			| HIDEHUD_MISCSTATUS
+			| HIDEHUD_CROSSHAIR
+			| HIDEHUD_BONUS_PROGRESS 
+			| HIDEHUD_TARGET_ID
+			| HIDEHUD_MATCH_STATUS
+			
+TriggerEnding <- true
+
+SpawnCenter <- Vector(-32, -13280, -12608)
+
+WegaArray <- array(0)
+WegaTargetArray <- array(0)
+
+AggroClosest <- false
+AntiStall <- false
+
+PlayersCount <- 1
+
+model_hands <- "models/wega/hands.mdl"
+model_wega_doll <- "models/wega/wega.mdl"
+
+sound_collect <- "tf2ware_ultimate/baseball_hit.mp3"
+sound_stalker_scream <- "npc/stalker/go_alert2a.wav"
+sound_wega_scream <- "tf2ware_ultimate/wega_scream.wav"
+
+overlay_counter <- "wega/wega_counter.vmt"
+overlay_wega_jumpscare <- "wega/wega_jumpscare.vtf"
+overlay_urio_jumpscare <- "wega/uario_jumpscare.vtf"
+
+material_wega <- "wega/wega.vmt"
+
+fog <- null
+
 function OnPrecache()
 {
 	PrecacheModel(model_hands)
@@ -78,8 +80,6 @@ function OnPrecache()
 	Ware_PrecacheMinigameMusic(music_wega, true)
 	Ware_PrecacheMinigameMusic(music_urio, true)
 }
-
-fog <- null
 
 function OnStart()
 {
