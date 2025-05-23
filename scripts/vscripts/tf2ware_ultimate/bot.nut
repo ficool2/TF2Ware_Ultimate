@@ -26,6 +26,9 @@ SetConvarValue("tf_bot_keep_class_after_death", 1)
 Ware_BotMinigameBehaviors <- 
 {
 	type_word = {}
+	catch_cubes = {}
+	basketball = {}
+	jump_rope = {}
 }
 
 Ware_BotMinigameBehavior <- null
