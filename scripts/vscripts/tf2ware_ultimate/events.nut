@@ -329,29 +329,17 @@ function OnGameEvent_recalculate_truce(params)
 	}
 }
 
-::Ware_PlayerInit <- function()
+::Ware_PlayerInitWrapper <- function()
 {
-	local player = self
-	MarkForPurge(player)
-	
-	// don't include SourceTV because it's not a real player
-	if (IsPlayerSourceTV(player))
-		return
-		
-	player.ValidateScriptScope()
-	local scope = player.GetScriptScope()
-	scope.ware_data <- Ware_PlayerData(player)
-	scope.ware_minidata <- {}
-	scope.ware_specialdata <- {}
-	Ware_Players.append(player)
-	Ware_PlayersData.append(scope.ware_data)
-	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
-		Ware_SpecialRound.cb_on_player_connect(player)		
+	Ware_PlayerInit(self)
 }
 
 ::Ware_PlayerPostSpawn <- function()
 {
 	Ware_UpdatePlayerVoicePitch(self)
+	
+	if (self.IsBotOfType(TF_BOT_TYPE))
+		Ware_BotSetup(self)
 
 	local melee = ware_data.special_melee
 	if (melee == null)
@@ -382,7 +370,7 @@ function OnGameEvent_recalculate_truce(params)
 	}
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_postspawn.IsValid())
-		Ware_SpecialRound.cb_on_player_postspawn(self)
+		Ware_SpecialRound.cb_on_player_postspawn(self)	
 }
 
 function OnGameEvent_player_spawn(params)
@@ -393,8 +381,15 @@ function OnGameEvent_player_spawn(params)
 	
 	if (params.team == TEAM_UNASSIGNED)
 	{
-		// delay this to end of frame as SourceTV won't be registered here yet
-		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerInit", 0.0)
+		if (player.IsBotOfType(TF_BOT_TYPE))
+		{
+			Ware_PlayerInit(player)
+		}
+		else
+		{
+			// delay this to end of frame as SourceTV won't be registered here yet
+			EntityEntFire(player, "CallScriptFunction", "Ware_PlayerInitWrapper", 0.0)
+		}
 		return
 	}
 	
@@ -529,11 +524,19 @@ function OnGameEvent_player_disconnect(params)
 		
 	idx = Ware_Players.find(player)
 	if (idx != null)
+	{
 		Ware_Players.remove(idx)
-		
-	idx = Ware_PlayersData.find(data)
-	if (idx != null)
 		Ware_PlayersData.remove(idx)
+	}
+	
+	if (player.IsBotOfType(TF_BOT_TYPE))
+	{
+		Ware_BotDestroy(player)
+		
+		idx = Ware_Bots.find(player)
+		if (idx != null)
+			Ware_Bots.remove(idx)
+	}
 		
 	if (Ware_Minigame == null)
 		return
