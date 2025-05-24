@@ -2,7 +2,7 @@
 const WARE_MINIGAME_VERSION     = 4
 const WARE_BOSSGAME_VERSION     = 1
 const WARE_SPECIALROUND_VERSION = 5
-const WARE_THEME_VERSION        = 3
+const WARE_THEME_VERSION        = 4
 
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
@@ -326,6 +326,9 @@ function Ware_LoadConfigThemes()
 					WriteTheme("mw_starlight")
 					WriteTheme("switch_moveit_cricket")
 					WriteTheme("switch_moveit_jimmyt")
+					break
+				case 4:
+					WriteTheme("mw")
 					break
 			}
 		}
