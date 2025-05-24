@@ -28,15 +28,15 @@ function OnStart()
 			local weapon = null
 			if (gun == 0)
 			{
-				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1})
+				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1, "damage bonus": 1.66})
 				weapon.SetClip1(69)
 			}
 			else
 			{
-				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1})
+				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1, "damage bonus": 1.66})
 			}
 		}
-		player.SetHealth(1100)
+		player.SetHealth(1850)
 		player.SetRageMeter(0)
 	}
 }
