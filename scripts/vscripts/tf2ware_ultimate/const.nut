@@ -145,6 +145,8 @@ const PFX_WARE_FIREWORKS = "mvm_pow_gold_seq_firework_mid"
 const PFX_WARE_PASS_RED  = "teleportedin_red"
 const PFX_WARE_PASS_BLUE = "teleportedin_blue"
 
+const SPRITE_WINNER	= "tf2ware/tf2ware_points99.vmt"
+
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
 TF_CLASS_ARMS <-
@@ -213,6 +215,8 @@ PrecacheModel("models/props_halloween/bumpercar_cage.mdl")
 PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_FIREWORKS })
 PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_PASS_RED })
 PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = PFX_WARE_PASS_BLUE })
+
+PrecacheModel(SPRITE_WINNER)
 
 KART_SOUNDS <-
 [

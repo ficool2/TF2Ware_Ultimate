@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	music           = "question"
 	custom_overlay  = "type_answer"
 	custom_overlay2 = "../chalkboard"
+	modes           = 4
 	suicide_on_end  = true
 })
 
@@ -20,8 +21,7 @@ first <- true
 
 function OnStart()
 {
-	local mode = RandomInt(0, 3)
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		if (RandomInt(0, 49) == 0)
 		{
@@ -37,14 +37,14 @@ function OnStart()
 		answer = a + b
 		operator = "+"
 	}
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 	{
 		a = RandomInt(3, 15)
 		b = RandomInt(3, 15)
 		answer = a - b
 		operator = "-"
 	}
-	else if (mode == 2)
+	else if (Ware_MinigameMode == 2)
 	{
 		a = RandomInt(2, 12)
 		b = RandomInt(2, 12)
@@ -55,7 +55,7 @@ function OnStart()
 		answer = a * b
 		operator = "*"
 	}
-	else if (mode == 3)
+	else if (Ware_MinigameMode == 3)
 	{
 		// always leaves no remainder
 		b = RandomInt(2, 10)

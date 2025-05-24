@@ -574,11 +574,17 @@ function PrecacheOverlay(overlay)
 	return true
 }
 
-// Precache a particle
+// Precache a particle and returns index
 function PrecacheParticle(name)
 {
-	PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
-	return true
+	local particle = SpawnEntityFromTableSafe("info_particle_system", 
+	{
+		effect_name  = name
+		start_active = false
+	})
+	local index = GetPropInt(particle, "m_iEffectIndex")
+	particle.Destroy()
+	return index
 }
 
 // Create an entity that doesn't leak the stringtable

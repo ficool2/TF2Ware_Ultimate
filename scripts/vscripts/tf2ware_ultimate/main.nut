@@ -159,6 +159,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- ""
 	Ware_DebugNextSpecialRound2 <- []
+	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
 Ware_DebugOldTheme        <- ""
@@ -169,6 +170,7 @@ Ware_ParticleSpawner      <- null
 
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
+Ware_NavSpawnAreas		  <- []
 
 Ware_MinigameRotation     <- []
 if (!("Ware_BossgameRotation" in this))
@@ -176,6 +178,8 @@ if (!("Ware_BossgameRotation" in this))
 if (!("Ware_SpecialRoundRotation" in this))
 	Ware_SpecialRoundRotation <- []
 
+Ware_MinigameMode         <- 0
+Ware_MinigamePlayedModes  <- {}
 Ware_MinigameSavedConvars <- {}
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
@@ -280,6 +284,7 @@ function Ware_SetupMap()
 	local areas = {}
 	NavMesh.GetAllAreas(areas)
 	Ware_NavAreas = areas.values()
+	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
 	
 	if (MAX_CLIENTS >= 64)
 	{
@@ -295,8 +300,7 @@ function Ware_SetupMap()
 
 function Ware_UpdateNav()
 {
-	// HACK this is not efficient, but the map only has 3 nav areas currently
-	foreach (area in Ware_NavAreas)
+	foreach (area in Ware_NavSpawnAreas)
 	{
 		// must remove this or skeleton pathfinding breaks
 		area.ClearAttributeTF(TF_NAV_SPAWN_ROOM_RED|TF_NAV_SPAWN_ROOM_BLUE)
@@ -333,79 +337,82 @@ function Ware_PrecacheNext()
 
 	local PrecacheFile = function(folder, name)
 	{
+		local scope = {}	
 		local path = format("tf2ware_ultimate/%s/%s", folder, name)
 		try
 		{
-			local scope = {}
 			IncludeScript(path, scope)
-			if ("OnPrecache" in scope)
-				scope.OnPrecache()
-				
-			if ("minigame" in scope)
-			{
-				local minigame = scope.minigame
-				
-				local overlays = [], overlays2 = []
-				if (minigame.custom_overlay == null)
-					overlays = ["hud/tf2ware_ultimate/minigames/" + name]
-				else
-					overlays = Ware_GetOverlays(minigame.custom_overlay)
-				
-				if (minigame.custom_overlay2 != null)
-					overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
-				
-				foreach (overlay in overlays)
-				{
-					if (overlay)
-						PrecacheOverlay(overlay)
-				}
-				foreach (overlay in overlays2)
-				{
-					if (overlay)
-						PrecacheOverlay(overlay)
-				}
-				
-				AddAuthor(minigame.author, folder)
-				
-				if (minigame.music)
-				{
-					if (folder == "bossgames")
-						music_bossgame[minigame.music] <- true
-					else
-						music_minigame[minigame.music] <- true
-				}
-				
-				local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
-				cache[name] <-
-				{
-					min_players = minigame.min_players
-					max_players = minigame.max_players
-				}					
-			}
-			else if ("special_round" in scope)
-			{
-				if ("category" in scope.special_round)
-				{
-					local category = scope.special_round.category
-					if (category == "")
-						category = "none"
-					if (!(category in Ware_SpecialRoundCategories))
-						Ware_SpecialRoundCategories[category] <- []
-					Ware_SpecialRoundCategories[category].append(name)
-				}
-				else
-				{
-					Ware_Error("Special round '%s' has no category entry", name)
-				}
-				
-				AddAuthor(scope.special_round.author, folder)
-			}
 		}
 		catch (e)
 		{
 			Ware_Error("Failed to precache '%s.nut'. Missing from disk or syntax error", path)
+			return true
+		}		
+			
+		if ("OnPrecache" in scope)
+			scope.OnPrecache()
+			
+		if ("minigame" in scope)
+		{
+			local minigame = scope.minigame
+			
+			local overlays = [], overlays2 = []
+			if (minigame.custom_overlay == null)
+				overlays = ["hud/tf2ware_ultimate/minigames/" + name]
+			else
+				overlays = Ware_GetOverlays(minigame.custom_overlay)
+			
+			if (minigame.custom_overlay2 != null)
+				overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
+			
+			foreach (overlay in overlays)
+			{
+				if (overlay)
+					PrecacheOverlay(overlay)
+			}
+			foreach (overlay in overlays2)
+			{
+				if (overlay)
+					PrecacheOverlay(overlay)
+			}
+			
+			AddAuthor(minigame.author, folder)
+			
+			if (minigame.music)
+			{
+				if (folder == "bossgames")
+					music_bossgame[minigame.music] <- true
+				else
+					music_minigame[minigame.music] <- true
+			}
+			
+			local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
+			cache[name] <-
+			{
+				min_players = minigame.min_players
+				max_players = minigame.max_players
+				modes       = minigame.modes
+			}					
 		}
-		
+		else if ("special_round" in scope)
+		{
+			if ("category" in scope.special_round)
+			{
+				local category = scope.special_round.category
+				if (category == "")
+					category = "none"
+				if (!(category in Ware_SpecialRoundCategories))
+					Ware_SpecialRoundCategories[category] <- []
+				Ware_SpecialRoundCategories[category].append(name)
+			}
+			else
+			{
+				Ware_Error("Special round '%s' has no category entry", name)
+			}
+			
+			AddAuthor(scope.special_round.author, folder)
+		}
+
 		return true
 	}
 	
@@ -1170,6 +1177,8 @@ function Ware_SetupMinigameCallbacks()
 	minigame.cb_on_player_voiceline		= Ware_Callback(scope, "OnPlayerVoiceline")
 	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
 	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
+	minigame.cb_on_player_inventory		= Ware_Callback(scope, "OnPlayerInventory")
+	
 }
 
 function Ware_BeginIntermissionInternal(is_boss)
@@ -1363,8 +1372,24 @@ function Ware_ReloadMinigameRotation(is_boss)
 	else
 	{
 		if (Ware_Minigames.len() == 0)
-			Ware_Error("Minigame rotation is empty")			
-		Ware_MinigameRotation = clone(Ware_Minigames)
+			Ware_Error("Minigame rotation is empty")
+			
+		// Weight moded minigames more in rotation
+		foreach (minigame in Ware_Minigames)
+		{
+			if (minigame in Ware_MinigameCache)
+			{
+				local modes = Ware_MinigameCache[minigame].modes
+				local weight = Ware_MaxMinigameWeight == 0 ? modes : Min(modes, Ware_MaxMinigameWeight)
+				for (local i = 0; i < weight; i++)
+					Ware_MinigameRotation.append(minigame)
+			}
+			else
+			{
+				Ware_MinigameRotation.append(minigame)
+			}
+		}
+		
 		return Ware_MinigameRotation
 	}	
 }
@@ -1482,6 +1507,53 @@ function Ware_StartMinigameInternal(is_boss)
 			}
 		}
 		
+		// Set mode before scope is assigned in case any params depend on it
+		local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
+		local modes = minigame in cache ? cache[minigame].modes : 1
+		if (Ware_DebugForceMode != null)
+		{
+			// disallow modes above max mode
+			Ware_MinigameMode = Min(Ware_DebugForceMode, modes - 1)
+			if (modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
+			{
+				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", 
+					Ware_DebugForceMode, Ware_MinigameMode)
+			}
+		}
+		else if (modes > 1)
+		{
+			// don't pick the same mode
+			local mode
+			if (minigame in Ware_MinigamePlayedModes)
+			{
+				local played_modes = Ware_MinigamePlayedModes[minigame]
+				local pick_modes = FillArray(0, modes - 1).filter(@(i, v) !(v in played_modes))
+				if (pick_modes.len() > 0)
+				{
+					mode = RandomElement(pick_modes)
+				}
+				else
+				{
+					// played all modes.. reset the list
+					played_modes.clear()
+				}
+			}
+			else
+			{
+				Ware_MinigamePlayedModes[minigame] <- {}
+			}
+
+			if (mode == null)
+				mode = RandomInt(0, modes - 1)
+				
+			Ware_MinigameMode = mode
+			Ware_MinigamePlayedModes[minigame][mode] <- true
+		}
+		else
+		{
+			Ware_MinigameMode = 0	
+		}
+		
 		Ware_MinigameScope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (Ware_MinigameScope)
 		{		
@@ -1510,7 +1582,10 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_MinigameStartTime = time
 	
-	printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
+	if (Ware_Minigame.modes > 1)
+		printf("[TF2Ware] Starting %s '%s' with mode %d\n", is_boss ? "bossgame" : "minigame", minigame, Ware_MinigameMode)
+	else
+		printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
 	
 	local player_indices_valid = ""
 	foreach (player in valid_players)
@@ -1600,12 +1675,13 @@ function Ware_StartMinigameInternal(is_boss)
 	Ware_SetupMinigameCallbacks()	
 	
 	// late precache if new minigames are added at runtime
-	if (developer() > 0 && "OnPrecache" in Ware_MinigameScope)
+	if (developer() > 0)
 	{
 		if (Ware_Minigame.music)
 			Ware_PrecacheMinigameMusic(Ware_Minigame.music, is_boss)
-	
-		Ware_MinigameScope.OnPrecache()
+
+		if("OnPrecache" in Ware_MinigameScope)
+			Ware_MinigameScope.OnPrecache()
 	}
 	
 	if (custom_teleport)
@@ -1926,11 +2002,13 @@ function Ware_FinishMinigameInternal()
 	local top_players = Ware_MinigameTopScorers
 	top_players.clear()	
 	
+	local calc_topscorers = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_topscorers.IsValid())
 	{
-		Ware_SpecialRound.cb_on_calculate_topscorers(top_players)
+		calc_topscorers = Ware_SpecialRound.cb_on_calculate_topscorers(top_players) == false
 	}
-	else
+	
+	if (calc_topscorers == true)
 	{
 		local top_score = 1
 		foreach (data in Ware_MinigamePlayersData)
@@ -2134,11 +2212,13 @@ function Ware_GameOverInternal()
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
 	
+	local declare_winners = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
 	{
-		Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count)
+		declare_winners = Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count) == false
 	}
-	else
+	
+	if (declare_winners == true)
 	{
 		if (winner_count > 1)
 		{
@@ -2155,6 +2235,32 @@ function Ware_GameOverInternal()
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
+	
+	local sprite_offset = Vector(0, 0, 125.0)
+	foreach (player in top_players)
+	{
+		local sprite = SpawnEntityFromTableSafe("env_glow",
+		{
+			model       = SPRITE_WINNER
+			origin      = player.GetOrigin() + sprite_offset
+			scale       = 0.5
+			rendermode  = kRenderTransColor
+		})
+		sprite.SetOwner(player)
+		sprite.ValidateScriptScope()
+		sprite.GetScriptScope().offset <- sprite_offset
+		AddThinkToEnt(sprite, "Ware_UpdateWinnerSprite")
+	}
+}
+
+function Ware_UpdateWinnerSprite()
+{
+	local owner = self.GetOwner()
+	if (owner && owner.IsAlive())
+		self.KeyValueFromVector("origin", owner.GetOrigin() + offset)
+	else
+		self.Kill()
+	return -1
 }
 
 function Ware_OnUpdate()

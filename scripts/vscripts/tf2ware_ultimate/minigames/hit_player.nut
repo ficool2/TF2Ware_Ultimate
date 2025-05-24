@@ -56,8 +56,13 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
-	if (params.attacker != null && params.const_entity != params.attacker)
+	local victim = params.const_entity
+	local attacker = params.attacker
+	if (victim.IsPlayer()
+		&& attacker && attacker != victim && attacker.IsPlayer())
+	{
 		params.damage *= 100.0
+	}
 }
 
 function OnPlayerDeath(player, attacker, params)

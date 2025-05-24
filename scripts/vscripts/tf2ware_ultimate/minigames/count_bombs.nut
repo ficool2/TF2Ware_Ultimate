@@ -70,7 +70,10 @@ function OnPlayerSay(player, text)
 	if (num != count)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
-			Ware_SuicidePlayer(player)
+		{
+			// servers may display player as dead, so delay to end of frame
+			Ware_CreateTimer(@() Ware_SuicidePlayer(player), 0.0)
+		}
 	}
 	else
 	{

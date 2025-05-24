@@ -94,6 +94,28 @@ Ware_DevCommands <-
 		}
 		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
 	}
+	"forcemode": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+		{
+			local mode = StringToInteger(args[0])
+			if (mode != null && mode >= 0)
+			{
+				Ware_DebugForceMode = mode
+				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
+			}
+			else
+			{
+				Ware_ChatPrint(player, "Arguments: <mode>, where mode >= 0")
+			}
+		}
+		else
+		{
+			Ware_DebugForceMode = null
+			Ware_ChatPrint(null, "{str} cleared forced mode for moded minigames", Ware_DevCommandTitle(player))
+		}	
+	}
 	"shownext": function(player, text)
 	{
 		local vars = [
@@ -207,11 +229,18 @@ Ware_DevCommands <-
 				target = Ware_FindPlayerByName(args[arg++])
 			if (target)
 			{
-				local points = args[arg].tointeger()
-				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
-				if (target != player)
-					Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
-				Ware_GetPlayerData(target).score += points
+				local points = StringToInteger(args[arg])
+				if (points != null)
+				{
+					Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
+					if (target != player)
+						Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
+					Ware_GetPlayerData(target).score += points
+				}
+				else
+				{
+					Ware_ChatPrint(player, "Invalid score")
+				}
 			}
 			else
 			{

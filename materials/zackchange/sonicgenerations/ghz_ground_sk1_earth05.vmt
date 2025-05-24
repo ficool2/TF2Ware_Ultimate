@@ -4,4 +4,5 @@
 	"$surfaceprop" "rock"
 	"%keywords" "sonic"
 	"$bumpmap" "zackchange/sonicgenerations/ghz_ground_sk1_earth05_nrm"
+	"$reflectivity" "[.3 .3 .3]"
 }

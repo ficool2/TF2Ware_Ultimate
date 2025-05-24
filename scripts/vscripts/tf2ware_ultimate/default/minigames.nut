@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 3
+buffer<-@"VERSION 4
 airblast
 airshot
 avoid_props
@@ -10,10 +10,12 @@ bombs
 boxing
 break_barrel
 break_box
+buff
 build_this
 bullseye
 bumpers
 caber_king
+cap
 catch_cubes
 catch_money
 change_class
@@ -23,21 +25,23 @@ disguise
 dodge_laser
 dont_touch
 double_jump
+dove
 eat_plate
 extinguish
 flipper_ball
 flood
+floppy
 ghost
 goomba
 grapple_cutout
 grapple_player
 halloween_fight
 headshot
-heavy_medic
 hit_balls
 hit_player
 hoop
 hot_potato
+intel
 jarate
 kamikaze
 kart
@@ -49,6 +53,7 @@ melee_arena
 merasmus
 most_bombs
 move
+needle_jump
 parachute
 pickup_can
 piggyback
@@ -74,6 +79,7 @@ stun
 sumo
 swim_up
 taunt_kill
+time_jump
 touch_sky
 treasure_hunt
 trivia
@@ -81,6 +87,8 @@ type_color
 type_map
 type_time
 type_word
+uber
+upgrade
 vacc
 wanted
 watch_fall

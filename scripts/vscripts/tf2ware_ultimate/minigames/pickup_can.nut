@@ -58,7 +58,14 @@ function OnStart()
 			SpawnTrashcan(pos + Vector(0, 0, 20))
 			SpawnTriggerMultiple(pos)
 			SpawnTriggerPush(pos)
+
+			foreach (player in Ware_MinigamePlayers)
+			{
+				if(VectorDistance(player.GetOrigin(), pos) < 100)
+					player.SetOrigin(player.GetOrigin() + Vector(0,0,150))
+			}
 		}
+		
 	}, 0.3)
 
 	SpawnCans()
@@ -112,6 +119,8 @@ function OnUpdate()
 						can.SetOwner(player)
 						can_scope.LastHolder <- player
 						can_scope.GraceHolderTime <- time + canGracePeriod
+						//No need to precache
+						player.EmitSound("common/wpn_select.wav")						
 						break
 					}
 				}

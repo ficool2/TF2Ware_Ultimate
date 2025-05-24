@@ -70,7 +70,7 @@ function OnStart()
 	
 	local lighting_origin = Ware_SpawnEntity("info_teleport_destination", 
 	{ 
-		origin = Ware_MinigameLocation.center + Vector(0, 500, 256)
+		origin = Ware_MinigameLocation.center + Vector(0, -200, 256)
 	})
 	
 	local box_angles = 

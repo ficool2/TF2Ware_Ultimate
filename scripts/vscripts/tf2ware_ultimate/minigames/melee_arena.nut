@@ -1,4 +1,3 @@
-mode <- RandomInt(0, 4)
 
 minigame <- Ware_MinigameData
 ({
@@ -11,6 +10,7 @@ minigame <- Ware_MinigameData
 	music          = "keepitup"
 	custom_overlay = "survive"
 	min_players    = 2
+	modes          = 5
 	// small players fly into the air and i have no idea why - pokepasta
 	max_scale      = 1.0
 	start_pass     = true
@@ -29,15 +29,15 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	local attributes = { "mod see enemy health" : 1.0 }
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_MEDIC, null, attributes)
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, null, attributes)
-	else if (mode == 2)
+	else if (Ware_MinigameMode == 2)
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Hot Hand", attributes)
-	else if (mode == 3)
+	else if (Ware_MinigameMode == 3)
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, null, attributes)
-	else if (mode == 4)
+	else if (Ware_MinigameMode == 4)
 		Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, "Gunslinger", attributes)
 }
 

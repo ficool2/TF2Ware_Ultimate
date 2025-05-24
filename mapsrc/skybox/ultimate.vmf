@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "8868"
-	"mapversion" "1"
+	"editorbuild" "8869"
+	"mapversion" "2"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -13,6 +13,12 @@ visgroups
 		"name" "Propper"
 		"visgroupid" "11"
 		"color" "112 97 118"
+	}
+	visgroup
+	{
+		"name" "clouds"
+		"visgroupid" "22"
+		"color" "236 189 162"
 	}
 }
 viewsettings
@@ -95,7 +101,7 @@ bgimages_plus
 world
 {
 	"id" "1"
-	"mapversion" "1"
+	"mapversion" "2"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -1621,24 +1627,28 @@ entity
 		"logicalpos" "[1500 -12268]"
 	}
 }
-entity
+hidden
 {
-	"id" "198"
-	"classname" "prop_static"
-	"angles" "0 0 0"
-	"fademindist" "-1"
-	"fadescale" "1"
-	"lightmapresolutionx" "32"
-	"lightmapresolutiony" "32"
-	"model" "models/props_skybox_dome_dark.mdl"
-	"solid" "6"
-	"origin" "378.816 166.781 665.231"
-	editor
+	entity
 	{
-		"color" "255 255 0"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 0]"
+		"id" "198"
+		"classname" "prop_static"
+		"angles" "0 0 0"
+		"fademindist" "-1"
+		"fadescale" "1"
+		"lightmapresolutionx" "32"
+		"lightmapresolutiony" "32"
+		"model" "models/props_skybox_dome_dark.mdl"
+		"solid" "6"
+		"origin" "378.816 166.781 665.231"
+		editor
+		{
+			"color" "255 255 0"
+			"visgroupid" "22"
+			"visgroupshown" "0"
+			"visgroupautoshown" "1"
+			"logicalpos" "[0 0]"
+		}
 	}
 }
 cameras

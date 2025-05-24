@@ -45,6 +45,14 @@ TFPlayer.MedicChargedDeath
 	wave		player/medic_charged_death.wav
 }
 
+Medic.AutoCallerAnnounce
+{
+	channel		CHAN_VOICE
+	volume		0.6
+	soundlevel	SNDLVL_60dB
+	wave		)ui/medic_alert.wav
+}
+
 Weapon_RocketPack.BoostersExtend
 {
 	channel			CHAN_WEAPON

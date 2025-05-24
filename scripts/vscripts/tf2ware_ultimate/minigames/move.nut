@@ -1,15 +1,15 @@
-mode <- RandomInt(0, 1)
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Move"
 	author         = ["Mecha the Slag", "ficool2"]
-	description    = mode == 0 ? "Move!" : "Don't Move!"
+	modes          = 2
+	description    = Ware_MinigameMode == 0 ? "Move!" : "Don't Move!"
 	duration       = 4.0
 	music          = "actioninsilence"
 	start_pass     = true
 	fail_on_death  = true
-	custom_overlay = mode == 0 ? "move" : "dont_move"
+	custom_overlay = Ware_MinigameMode == 0 ? "move" : "dont_move"
 })
 
 function OnPrecache()
@@ -28,12 +28,12 @@ function OnUpdate()
 		if (!player.IsAlive())
 			continue
 		
-		if (mode == 0)
+		if (Ware_MinigameMode == 0)
 		{
 			if (player.GetAbsVelocity().Length() < 75.0)
 				Ware_SuicidePlayer(player)
 		}
-		else if (mode == 1)
+		else if (Ware_MinigameMode == 1)
 		{
 			if (player.GetAbsVelocity().Length() > 5.0)
 				Ware_SuicidePlayer(player);	

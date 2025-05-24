@@ -460,7 +460,7 @@ Ware_Location.beepblockskyway_ultimate <-
 
 Ware_Location.warehouse <-
 {
-	center = Vector(1000, 11200, -4159)
+	center = Vector(1000, 11900, -4159)
 	mins   = Vector(480, 11664, -4160)
 	maxs   = Vector(1560, 12592, -3648)
 	cameras = ["warehouse_camera"]	
@@ -760,5 +760,15 @@ Ware_Location.waluigi_pinball <-
 			flipper.SetSize(flipper.GetBoundingMinsOriented(), flipper.GetBoundingMaxsOriented())
 			flipper.KeyValueFromString("classname", "pinball_flipper")
 		}
+	}
+}
+
+Ware_Location.wega_challenge <-
+{
+	start   = Vector(-32, -13280, -12580)
+	cameras  = ["wega_camera"]
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, start, ang_zero, 192, 32, 32)
 	}
 }

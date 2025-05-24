@@ -108,8 +108,9 @@ function OnStart()
 		fogcolor = "0 0 0",
 		fogcolor2 = "20 20 20",
 		fogstart = 100,
-		fogend = 384,
-		fogmaxdensity = 1.0,
+		fogend = 484,
+		fogmaxdensity = 0.999,
+		fogRadial = true,
 	})
 	
 	foreach (player in Ware_MinigamePlayers)

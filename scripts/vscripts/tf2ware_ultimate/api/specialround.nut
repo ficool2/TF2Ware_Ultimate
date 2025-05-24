@@ -140,9 +140,11 @@ class Ware_SpecialRoundData
 	// OnCalculateTopScorers(top_players) - Replaces assignment to Ware_MinigameTopScorers, which is used for assigning top scorer particle effects
 	//                              and determining the winner at the end of the game. 
 	//                            - top_players is a reference to Ware_MinigameTopScorers, so append players to the passed array.
+	//							  - If false is returned, the default calculation will be used.
 	cb_on_calculate_topscorers = null
 	// OnDeclareWinners(top_players, top_score, winner_count) - Replaces winner declaration in Ware_GameOver. 
 	//                            - Passes some relevant information that might be used for replacement info.
+	//							  - If false is returned, the default declaration is used.
 	cb_on_declare_winners      = null
 	// OnPlayerConnect(player)    - Called by OnGameEvent_player_spawn during late spawn setup, and passes the player
 	cb_on_player_connect       = null

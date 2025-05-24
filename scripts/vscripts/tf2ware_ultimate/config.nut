@@ -1,11 +1,12 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 3
-const WARE_BOSSGAME_VERSION     = 0
-const WARE_SPECIALROUND_VERSION = 4
-const WARE_THEME_VERSION        = 2
+const WARE_MINIGAME_VERSION     = 4
+const WARE_BOSSGAME_VERSION     = 1
+const WARE_SPECIALROUND_VERSION = 5
+const WARE_THEME_VERSION        = 3
 
 // everytime music is changed AND the map is *publicly* updated
 // this must be incremented to prevent caching errors
+// deprecated: this is bumped automatically when uploading to workshop
 const WARE_MUSIC_VERSION = 3
 
 // keep in sync with sourcemod plugin
@@ -50,6 +51,7 @@ function Ware_LoadConfigSettings()
 	Ware_PointsMinigame       <- 1
 	Ware_PointsBossgame       <- 5
 	Ware_BonusPoints          <- 0
+	Ware_MaxMinigameWeight    <- 0
 		
 	local settings_map = 
 	{
@@ -61,6 +63,7 @@ function Ware_LoadConfigSettings()
 		points_minigame        = "Ware_PointsMinigame"
 		points_bossgame        = "Ware_PointsBossgame"
 		bonus_points           = "Ware_BonusPoints"
+		max_miniweight         = "Ware_MaxMinigameWeight"
 	}
 	
 	local file = Ware_LoadConfigFile("settings")
@@ -129,6 +132,18 @@ function Ware_LoadConfigMinigames()
 					AppendElementIfUnique(lines, "wanted")
 					AppendElementIfUnique(lines, "pickup_can")
 					break
+				case 4:
+					RemoveElementIfFound(lines, "heavy_medic")
+					AppendElementIfUnique(lines, "buff")
+					AppendElementIfUnique(lines, "cap")
+					AppendElementIfUnique(lines, "dove")
+					AppendElementIfUnique(lines, "floppy")
+					AppendElementIfUnique(lines, "intel")
+					AppendElementIfUnique(lines, "needle_jump")
+					AppendElementIfUnique(lines, "time_jump")		
+					AppendElementIfUnique(lines, "uber")
+					AppendElementIfUnique(lines, "upgrade")			
+					break
 			}
 		}
 	})
@@ -142,7 +157,13 @@ function Ware_LoadConfigBossgames()
 	{
 		for (local v = version + 1; v <= latest_version; v++)
 		{
-			// nothing yet...
+			switch (v)
+			{
+				case 1:
+					// we winga
+					AppendElementIfUnique(lines, "wega_challenge")
+					break
+			}
 		}
 	})
 }
@@ -176,7 +197,13 @@ function Ware_LoadConfigSpecialRounds()
 					AppendElementIfUnique(lines, "cramped_quarters")
 					// v3 had the wrong name
 					local idx = lines.find("speed_run")
-					if (idx != null) lines[idx] = "speedrun"		
+					if (idx != null) lines[idx] = "speedrun"
+					break
+				case 5:
+					AppendElementIfUnique(lines, "hunger_update")
+					AppendElementIfUnique(lines, "merasmus")
+					AppendElementIfUnique(lines, "singleplayer")
+					AppendElementIfUnique(lines, "swap_madness")
 					break
 			}
 		}
@@ -293,6 +320,12 @@ function Ware_LoadConfigThemes()
 					WriteTheme("ds_diy_microgame")
 					WriteTheme("wii_tinywario")
 					WriteTheme("switch_moveit_wario")
+					break
+				case 3:
+					WriteTheme("mw_pandora")
+					WriteTheme("mw_starlight")
+					WriteTheme("switch_moveit_cricket")
+					WriteTheme("switch_moveit_jimmyt")
 					break
 			}
 		}

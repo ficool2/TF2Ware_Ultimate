@@ -12,4 +12,6 @@ points_minigame       = 1
 // points for winning a bossgame
 points_bossgame       = 5
 // whether or not bonus points will be awarded. If 0 this is still available as a special round.
-bonus_points          = 0"
+bonus_points          = 0
+// maximum weight a minigame can have in rotation. If 0, this is unrestricted.
+max_miniweight        = 0"

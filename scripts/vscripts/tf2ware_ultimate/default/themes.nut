@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 2
+buffer<-@"VERSION 3
 {
 	theme_name = ""_default""
 	visual_name = ""TF2Ware Ultimate""
@@ -157,6 +157,30 @@ buffer<-@"VERSION 2
 	}
 },
 {
+	theme_name = ""mw_pandora""
+	visual_name = ""Pandora (MINDWAVE)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 1.5
+		""intro"":   1.9
+		""speedup"": 2.25
+		""victory"": 2.0
+	}
+},
+{
+	theme_name = ""mw_starlight""
+	visual_name = ""Starlight (MINDWAVE)""
+	author = ""tilderain""
+	sounds = 
+	{
+		""failure"": 2.0
+		""intro"":   1.947
+		""speedup"": 2.25
+		""victory"": 2.0
+	}
+},
+{
 	theme_name = ""wii_9volt""
 	visual_name = ""9-Volt (Wii)""
 	sounds = 
@@ -226,19 +250,51 @@ buffer<-@"VERSION 2
 	}
 },
 {
+	theme_name = ""switch_moveit_cricket""
+	visual_name = ""Young Cricket & Master Mantis (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.011
+		""failure"":   2.012
+		""gameclear"": 4.526
+		""gameover"":  2.341
+		""intro"":     4.142
+		""results"":   0.0
+		""speedup"":   4.143
+		""victory"":   2.012
+	}
+},
+{
+	theme_name = ""switch_moveit_jimmyt""
+	visual_name = ""Jimmy T. (Switch - Move It!)""
+	author = ""Trobby""
+	sounds = 
+	{
+		""boss"":      4.064
+		""failure"":   2.052
+		""gameclear"": 4.097
+		""gameover"":  2.641
+		""intro"":     4.099
+		""results"":   0.0
+		""speedup"":   4.069
+		""victory"":   2.071
+	}
+},
+{
 	theme_name = ""switch_moveit_wario""
 	visual_name = ""Wario (Switch - Move It!)""
 	author = ""GeeNoVoid""
 	sounds = 
 	{
-		""boss"":     4.005
-		""failure"":  1.997
+		""boss"":      4.005
+		""failure"":   1.997
 		""gameclear"": 4.554
-		""gameover"": 3.36
-		""intro"":    4.146
-		""results"":  0.0
-		""speedup"":  4.016
-		""victory"":  2.03
+		""gameover"":  3.36
+		""intro"":     4.146
+		""results"":   0.0
+		""speedup"":   4.016
+		""victory"":   2.03
 	}
 },
 // these aren't rolled and should never be set as Ware_Theme, but rather Ware_SetupThemeSounds() checks for them
@@ -266,5 +322,15 @@ buffer<-@"VERSION 2
 		""gameover"":  3.684
 		""results"":   0.0
 		""speedup"":   4.388
+	}
+},
+{
+	theme_name = ""mw""
+	visual_name = ""MINDWAVE""
+	internal = 1
+	sounds = 
+	{
+		""boss"":      5.664
+		""results"":   0.0
 	}
 },"

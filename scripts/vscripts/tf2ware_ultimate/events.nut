@@ -122,8 +122,9 @@ function OnScriptHook_OnTakeDamage(params)
 					local viewmodel = GetPropEntity(attacker, "m_hViewModel")
 					if (viewmodel)
 						viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"))
-						
-					params.damage       = victim.GetHealth() * 2.0
+					
+					if(victim.GetClassname() != "merasmus")
+						params.damage       = victim.GetHealth() * 2.0
 					params.damage_stats = TF_DMG_CUSTOM_BACKSTAB
 					params.damage_type  = params.damage_type | DMG_CRIT
 				}			
@@ -227,8 +228,7 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_ToggleTruce(true)
 
 	Ware_MinigameRotation.clear()
-	foreach (minigame in Ware_Minigames)
-		Ware_MinigameRotation.append(minigame)
+	Ware_ReloadMinigameRotation(false)
 	
 	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
@@ -399,16 +399,7 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	local data = player.GetScriptScope().ware_data
-
-	// this is to fix persisting attributes if restarting mid-minigame
-	local melee = data.melee
-	if (melee && melee.IsValid())
-	{
-		foreach (attribute, value in data.melee_attributes)
-			melee.RemoveAttribute(attribute)
-	}
 	data.attributes.clear()
-	data.melee_attributes.clear()
 	
 	if (params.team & TF_TEAM_MASK)
 	{
@@ -421,10 +412,6 @@ function OnGameEvent_player_spawn(params)
 		if (!data.start_sound)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 1.0)
 		
-		local melee = Ware_ParseLoadout(player)		
-		if (melee && !Ware_Finished)
-			Ware_ModifyMeleeAttributes(melee)
-			
 		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
@@ -452,7 +439,24 @@ function OnGameEvent_post_inventory_application(params)
 	local player = GetPlayerFromUserID(params.userid)
 	if (player == null)
 		return
-	
+		
+	// this is to fix persisting attributes if restarting mid-minigame
+	local data = player.GetScriptScope().ware_data
+	local melee = data.melee
+	if (melee && melee.IsValid())
+	{
+		foreach (attribute, value in data.melee_attributes)
+			melee.RemoveAttribute(attribute)
+	}
+	data.melee_attributes.clear()	
+		
+	local melee = Ware_ParseLoadout(player)		
+	if (melee && !Ware_Finished)
+		Ware_ModifyMeleeAttributes(melee)
+					
+	if (Ware_Minigame != null)
+		Ware_Minigame.cb_on_player_inventory(player)
+		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_player_inventory(player)
 }

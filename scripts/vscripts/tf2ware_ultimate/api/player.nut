@@ -133,7 +133,7 @@ function Ware_IsPlayerPassed(player)
 	return player.GetScriptScope().ware_data.passed
 }
 
-// Awards bonus points for certain objectives in minigames (first, fastest, etc.)
+// Give bonus points for certain objectives in minigames (first, fastest, etc.)
 // This only functions if Ware_BonusPoints is true, or in the bonus points special round, otherwise it does nothing.
 // If multiple players are to be awarded please pass an array of players, to avoid spamming the chat.
 function Ware_GiveBonusPoints(target, points = 1)
@@ -141,7 +141,16 @@ function Ware_GiveBonusPoints(target, points = 1)
 	local award = true
 	if (!Ware_BonusPoints && !(Ware_SpecialRound && Ware_SpecialRound.bonus_points))
 		award = false
-	
+		
+	local name = Ware_Minigame ? Ware_Minigame.name : ""
+	local file_name = Ware_Minigame ? Ware_Minigame.file_name : ""
+	Ware_AwardBonusPoints(target, points, award, name, file_name)
+}
+
+// Direct version of awarding bonus points
+// Intended for usage when awarding points outside of a minigame
+function Ware_AwardBonusPoints(target, points, award, name, file_name)
+{
 	// even if there's no award, this is still tracked for the event	
 	local player_indices_awarded = ""
 	local awarded = target
@@ -168,7 +177,7 @@ function Ware_GiveBonusPoints(target, points = 1)
 		else
 		{
 			local text = ""
-			local params = [this, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
+			local params = [this, null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
 			foreach (player in target)
 			{
 				local data = player.GetScriptScope().ware_data
@@ -181,8 +190,7 @@ function Ware_GiveBonusPoints(target, points = 1)
 				params.append(TF_COLOR_RED)
 			}
 			text += "{color}!"
-			params += TF_COLOR_DEFAULT
-			params[1] = text
+			params[2] = text
 			
 			Ware_ChatPrint.acall(params)
 		}
@@ -190,8 +198,8 @@ function Ware_GiveBonusPoints(target, points = 1)
 	
 	Ware_EventCallback("bonus_points", 
 	{
-		minigame_name      = Ware_Minigame ? Ware_Minigame.name : ""
-		minigame_file_name = Ware_Minigame ? Ware_Minigame.file_name : ""
+		minigame_name      = name
+		minigame_file_name = file_name
 		players_awarded    = player_indices_awarded
 	})
 }
@@ -673,6 +681,9 @@ function Ware_TogglePlayerWearables(player, toggle)
 {
 	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 	{
+        if (wearable.GetClassname() == "tf_viewmodel")
+            continue
+		
 		MarkForPurge(wearable)
 		Ware_ToggleWearable(wearable, toggle)
 	}

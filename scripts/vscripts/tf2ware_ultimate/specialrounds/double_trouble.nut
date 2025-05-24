@@ -249,16 +249,22 @@ delegated_callbacks <-
 
 	function OnCalculateTopScorers(top_players)
 	{
-		DelegatedCall(scope_a, "OnCalculateTopScorers", top_players)
+		local ret = DelegatedCall(scope_a, "OnCalculateTopScorers", top_players)
+		if (call_failed || ret == false)
+			ret = DelegatedCall(scope_b, "OnCalculateTopScorers", top_players)	
 		if (call_failed)
-			DelegatedCall(scope_b, "OnCalculateTopScorers", top_players)	
+			ret = false	
+		return ret
 	}
 
 	function OnDeclareWinners(top_players, top_score, winner_count)
 	{
-		DelegatedCall(scope_a, "OnDeclareWinners", top_players, top_score, winner_count)
+		local ret = DelegatedCall(scope_a, "OnDeclareWinners", top_players, top_score, winner_count)
+		if (call_failed || ret == false)
+			ret = DelegatedCall(scope_b, "OnDeclareWinners", top_players, top_score, winner_count)	
 		if (call_failed)
-			DelegatedCall(scope_b, "OnDeclareWinners", top_players, top_score, winner_count)
+			ret = false	
+		return ret
 	}
 
 	function OnPlayerConnect(player)

@@ -1,5 +1,4 @@
 simon    <- RandomInt(0, 1)
-mode     <- RandomInt(0, 9)
 suffixes <- ["Taunt", "Jump", "Crouch", "Medic", "Eat", "Drink", "Inspect", "Horn", "Type", "Charge"]
 
 minigame <- Ware_MinigameData
@@ -9,9 +8,10 @@ minigame <- Ware_MinigameData
 	description    = "Simon says..."
 	duration       = 4.0
 	music          = "clumsy"
+	modes          = 10
 	start_pass     = simon == 0
-	custom_overlay = format("%s_says_%s", simon ? "simon" : "someone", suffixes[mode].tolower())
-	description    = format("%s says %s!", simon ? "Simon" : "Someone", suffixes[mode])
+	custom_overlay = format("%s_says_%s", simon ? "simon" : "someone", suffixes[Ware_MinigameMode].tolower())
+	description    = format("%s says %s!", simon ? "Simon" : "Someone", suffixes[Ware_MinigameMode])
 })
 
 function OnPrecache()
@@ -27,21 +27,21 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (mode == 4)
+	if (Ware_MinigameMode == 4)
 	{
 		local items = ["Sandvich", "Dalokohs Bar", "Fishcake", "Buffalo Steak Sandvich", "Second Banana"]
 		Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS, RandomElement(items))
 	}
-	else if (mode == 5)
+	else if (Ware_MinigameMode == 5)
 	{
 		local items = ["Bonk! Atomic Punch", "Crit-a-Cola"]
 		Ware_SetGlobalLoadout(TF_CLASS_SCOUT, RandomElement(items))
 	}
-	else if (mode == 7)
+	else if (Ware_MinigameMode == 7)
 	{
 		Ware_SetGlobalCondition(TF_COND_HALLOWEEN_KART)
 	}
-	else if (mode == 9)
+	else if (Ware_MinigameMode == 9)
 	{ 
 		foreach (player in Ware_MinigamePlayers)
 		{
@@ -59,7 +59,7 @@ function PassOrFailPlayer(player, pass)
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/minigames/simon_says_fail")
 }
 	
-if (mode == 3 || mode == 4 || mode == 5)
+if (Ware_MinigameMode == 3 || Ware_MinigameMode == 4 || Ware_MinigameMode == 5)
 {
 	function OnPlayerVoiceline(player, voiceline)
 	{
@@ -67,7 +67,7 @@ if (mode == 3 || mode == 4 || mode == 5)
 		if (Ware_IsPlayerPassed(player) != pass)
 			return
 			
-		if (mode == 5)
+		if (Ware_MinigameMode == 5)
 		{
 			if (voiceline.find("taunt04") != null)
 				PassOrFailPlayer(player, !pass)
@@ -76,12 +76,12 @@ if (mode == 3 || mode == 4 || mode == 5)
 		{
 			if (voiceline in VCD_MAP)
 			{
-				if (mode == 3)
+				if (Ware_MinigameMode == 3)
 				{				
 					if (VCD_MAP[voiceline].find(".Medic") != null)
 						PassOrFailPlayer(player, !pass)
 				}
-				else if (mode == 4)
+				else if (Ware_MinigameMode == 4)
 				{
 					if (VCD_MAP[voiceline] == "Heavy.SandwichEat")
 						PassOrFailPlayer(player, !pass)
@@ -90,7 +90,7 @@ if (mode == 3 || mode == 4 || mode == 5)
 		}
 	}
 }
-else if (mode == 7)
+else if (Ware_MinigameMode == 7)
 {
 	function OnPlayerHorn(player)
 	{
@@ -98,7 +98,7 @@ else if (mode == 7)
 		PassOrFailPlayer(player, !pass)
 	}
 }
-else if (mode == 8)
+else if (Ware_MinigameMode == 8)
 {
 	function OnPlayerSay(player, text)
 	{
@@ -106,7 +106,7 @@ else if (mode == 8)
 		PassOrFailPlayer(player, !pass)
 	}
 }
-else if (mode == 9)
+else if (Ware_MinigameMode == 9)
 {
 	// TODO: Prevent charge spam after initial charge
 	local pass = simon == 0
@@ -138,22 +138,22 @@ else
 			if (Ware_IsPlayerPassed(player) != pass)
 				continue
 				
-			if (mode == 0)
+			if (Ware_MinigameMode == 0)
 			{
 				if (player.IsTaunting())
 					PassOrFailPlayer(player, !pass)
 			}
-			else if (mode == 1)
+			else if (Ware_MinigameMode == 1)
 			{
 				if (GetPropBool(player, "m_Shared.m_bJumping"))
 					PassOrFailPlayer(player, !pass)
 			}
-			else if (mode == 2)
+			else if (Ware_MinigameMode == 2)
 			{
 				if (player.GetFlags() & FL_DUCKING)
 					PassOrFailPlayer(player, !pass)
 			}	
-			else if (mode == 6)
+			else if (Ware_MinigameMode == 6)
 			{
 				local weapon = player.GetActiveWeapon()
 				if (weapon && GetPropInt(weapon, "m_nInspectStage") >= 0)
@@ -165,7 +165,7 @@ else
 
 function OnEnd()
 {
-	if (mode == 4 || mode == 5)
+	if (Ware_MinigameMode == 4 || Ware_MinigameMode == 5)
 	{
 		foreach (player in Ware_MinigamePlayers)
 		{

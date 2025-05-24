@@ -1,14 +1,13 @@
-mode <- RandomInt(0, 1)
-
 minigame <- Ware_MinigameData
 ({
 	name            = "Type the Color"
 	author          = ["Mecha the Slag", "ficool2"]
-	description     = mode == 0 ? "Type the text below!" : "Type the color below!"
+	description     = Ware_MinigameMode == 0 ? "Type the text below!" : "Type the color below!"
+	modes           = 2
 	duration        = 4.0
 	end_delay       = 0.5
 	music           = "getready"
-	custom_overlay  = mode == 0 ? "type_text" : "type_color"
+	custom_overlay  = Ware_MinigameMode == 0 ? "type_text" : "type_color"
 	custom_overlay2 = "../chalkboard"
 	suicide_on_end  = true
 })
@@ -57,7 +56,7 @@ function OnStart()
 	// these spaces are to prevent localization
 	Ware_ShowMinigameText(null, format(" %s ", text_color), colors[visual_idx])
 	
-	answer = mode == 0 ? text_color : visual_color
+	answer = Ware_MinigameMode == 0 ? text_color : visual_color
 }
 
 function OnEnd()

@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/heal_survive
+	$basetexture hud/tf2ware_ultimate/minigames/time_jump
 	$basetexturetransform "center .5 .2 scale 1.5 14 rotate 0 translate 0 0"
 
     $translucent 1

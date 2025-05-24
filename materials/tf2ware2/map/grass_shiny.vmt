@@ -3,4 +3,5 @@
 	"$basetexture" "TF2Ware2/map/grass_shiny"
 	"%keywords" "tf,tf2ware"
 	"$surfaceprop" "grass"
+	"$reflectivity" "[.3 .3 .3]"
 }
