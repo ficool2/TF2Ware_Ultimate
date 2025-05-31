@@ -39,7 +39,7 @@ function OnStart()
 	bird = Ware_SpawnEntity("prop_dynamic",
 	{
 		model       = bird_model
-		origin      = Ware_MinigameLocation.center + Vector(RandomFloat(-200, 200), RandomFloat(-200, 200), 100)
+		origin      = Ware_MinigameLocation.center + Vector(RandomFloat(-200, 200), RandomFloat(-200, 200), 85)
 		defaultanim = "fly_cycle"
 		modelscale  = 5
 	})
@@ -47,7 +47,7 @@ function OnStart()
 
 	Ware_CreateTimer(function()
 	{
-		bird.SetAbsVelocity(Vector(0,0,300))
+		bird.SetAbsVelocity(Vector(0,0,265))
 		return 0.45
 	}, 0.0)
 }
