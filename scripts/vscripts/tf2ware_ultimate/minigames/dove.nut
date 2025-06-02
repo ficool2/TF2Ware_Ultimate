@@ -80,6 +80,7 @@ function SpawnDove()
 		angles      = QAngle(0, yaw, 0)
 		defaultanim = "fly_cycle"
 		health      = 9999
+		targetname  = "dovehuntdove"
 	})
 	dove.SetModelScale(RandomFloat(3.5, 4.5), 0.25)
 	EntityAcceptInput(dove, "Disable")

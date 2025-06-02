@@ -26,6 +26,32 @@ SetConvarValue("tf_bot_keep_class_after_death", 1)
 Ware_BotMinigameBehaviors <- 
 {
 	type_word = {}
+	catch_cubes = {}
+	basketball = {}
+	jump_rope = {}
+	boxing = {}
+	dove = {}
+	bullseye = {}
+	swim_up = {}
+	water_war = {}
+	type_color = {}
+	type_time = {}
+	type_map = {}
+	watch_fall = {}
+	wanted = {}
+	trivia = {}
+	treasure_hunt = {}
+	touch_sky = {}
+	time_jump = {}
+	taunt_kill = {}
+	sumo = {}
+	stun = {}
+	street_fighter = {}
+	stay_ground = {}
+	stand_near = {}
+	spycrab = {}
+	flipper_ball = {}
+	piggyback = {}
 }
 
 Ware_BotMinigameBehavior <- null
@@ -161,4 +187,126 @@ function Ware_BotTryWordTypo(bot, text, chance)
 	}
 
 	return chars
+}
+
+
+function BotLookAt(bot, target_pos, min_rate, max_rate)
+{
+    local cur_pos = bot.GetOrigin()
+    local cur_vel = bot.GetAbsVelocity()
+    local cur_speed = cur_vel.Length()
+    local cur_eye_pos = bot.EyePosition()
+    local cur_eye_ang = bot.EyeAngles()
+    local cur_eye_fwd = cur_eye_ang.Forward()
+
+    local dt = TICKDT
+    local dir = target_pos - cur_eye_pos
+    dir.Norm()
+    local dot = cur_eye_fwd.Dot(dir)
+    
+    local desired_angles = VectorAngles(dir)	
+    
+    local rate_x = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.x) - NormalizeAngle(desired_angles.x)), 0.0, 180.0, min_rate, max_rate)
+    local rate_y = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.y) - NormalizeAngle(desired_angles.y)), 0.0, 180.0, min_rate, max_rate)
+
+    if (dot > 0.7)
+    {
+        local t = RemapValClamped(dot, 0.7, 1.0, 1.0, 0.05)
+        local d = sin(1.57 * t) // pi/2
+        rate_x *= d
+        rate_y *= d
+    }
+
+    cur_eye_ang.x = NormalizeAngle(ApproachAngle(desired_angles.x, cur_eye_ang.x, rate_x * dt))
+    cur_eye_ang.y = NormalizeAngle(ApproachAngle(desired_angles.y, cur_eye_ang.y, rate_y * dt))
+        
+    bot.SnapEyeAngles(cur_eye_ang)
+}
+
+//AI generated, please improve (?)
+const GRAVITY = 800.0;
+
+function BotCalculateAimPosition(demomanOrigin, targetOrigin, targetVelocity, projectile_speed) {
+    // Initial time estimate (straight-line distance / speed)
+    local delta = targetOrigin - demomanOrigin;
+    local t = delta.Length() / projectile_speed;
+    local MAX_ITER = 15;
+    local TOLERANCE = 0.01;
+    
+    // Iterative prediction to account for target movement
+    for (local i = 0; i < MAX_ITER; i++) {
+        // Predict target position at current time
+        local predictedPos = targetOrigin + targetVelocity * t;
+        local toTarget = predictedPos - demomanOrigin;
+        
+        // Calculate horizontal distance and vertical difference
+        local horizontal = Vector(toTarget.x, toTarget.y, 0);
+        local horizontalDist = horizontal.Length();
+        local verticalDiff = toTarget.z;
+        
+        // FIXED: Proper vertical velocity calculation
+        // v0z = (verticalDiff - 0.5 * GRAVITY * t^2) / t
+        // This accounts for gravity pulling DOWN while we need to aim UP
+        local v0z = (verticalDiff - 0.5 * GRAVITY * t * t) / t;
+        local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
+        
+        // Calculate current total speed
+        local calculatedSpeed = sqrt(v0xy * v0xy + v0z * v0z);
+        
+        if (calculatedSpeed > 0) {
+            // Adjust time based on speed difference
+            local tNew = t * projectile_speed / calculatedSpeed;
+            
+            // Check for convergence
+            if (fabs(tNew - t) < TOLERANCE) {
+                t = tNew;
+                break;
+            }
+            t = tNew;
+        } else {
+            // Fallback: use straight-line time
+            t = horizontalDist / projectile_speed;
+            break;
+        }
+    }
+    
+    // Ensure minimum time value
+    t = Max(t, 0.001);
+    
+    // Final target prediction
+    local predictedPos = targetOrigin + targetVelocity * t;
+    local toTarget = predictedPos - demomanOrigin;
+    
+    // Calculate horizontal components
+    local horizontal = Vector(toTarget.x, toTarget.y, 0);
+    local horizontalDist = horizontal.Length();
+    local horizontalDir = Vector(0, 0, 0);
+    
+    if (horizontalDist > 0) {
+        // Correct vector normalization
+        horizontalDir = Vector(
+            horizontal.x / horizontalDist,
+            horizontal.y / horizontalDist,
+            0
+        );
+    }
+    
+    // FIXED: Correct vertical velocity calculation
+    // Use subtraction for gravity compensation
+    local v0z = (toTarget.z - 0.5 * GRAVITY * t * t) / t;
+    
+    // Calculate horizontal speed
+    local v0xy = (horizontalDist > 0) ? horizontalDist / t : 0;
+    
+    // Construct final launch vector
+    local launchVec = Vector(
+        horizontalDir.x * v0xy,
+        horizontalDir.y * v0xy,
+        v0z
+    );
+    
+    // Return point far along launch vector
+	    DebugDrawLine(demomanOrigin, demomanOrigin + launchVec * 10000, 0, 0, 255, true, 0.125)
+
+    return demomanOrigin + launchVec * 10000;
 }
