@@ -1,6 +1,6 @@
-// 33 hits per player at 0 players, ~20 hits per player at 12 players
-merasmus_health_per_player <- RemapValClamped(Ware_Players.len().tofloat(), 0.0, 12.0, 2500.0, 1250.0)
-merasmus_health_base <- 1500.0
+// ~42 hits per player
+merasmus_health_per_player <- 2750.0
+merasmus_health_base <- 2000.0
 merasmus_health <- merasmus_health_base + merasmus_health_per_player * Ware_Players.len()
 
 special_round <- Ware_SpecialRoundData
