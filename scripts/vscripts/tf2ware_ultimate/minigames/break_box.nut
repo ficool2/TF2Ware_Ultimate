@@ -156,7 +156,7 @@ function OnTakeDamage(params)
 					model  = gold_model
 					disableshadows = true
 					spawnflags   = SF_PHYSPROP_TOUCH
-					minhealthdmg = INT_MAX // don't destroy on touch
+					minhealthdmg = 99999 // don't destroy on touch
 				})		
 				local particle_gold = Ware_SpawnEntity("info_particle_system",
 				{
