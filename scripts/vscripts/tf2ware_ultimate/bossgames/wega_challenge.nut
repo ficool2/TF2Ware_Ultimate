@@ -6,6 +6,9 @@
 music_wega <- "wexecution"
 music_urio <- "wexecution_urio_theme"
 
+//How many chunks squared, do not put 10 or above or you will hit the entity limit with high player count
+MaxSize <- 9
+
 //This is the TF2Ware part, the only part I will keep clean
 minigame <- Ware_MinigameData
 ({
@@ -381,11 +384,11 @@ ChunkList <-
 	Chunk("models/wega/floor_1.mdl", [], [1, 3, 6, 7, 8, 9, 10], [], [1, 3, 6, 7, 9, 10], [6, 8, 16, 18])
 	Chunk("models/wega/floor_2.mdl", [3, 6, 8], [4, 6, 7, 8], [0, 3, 4, 6, 7, 8], [3, 6, 8], [0, 24, 35, 37, 45, 47])
 	Chunk("models/wega/floor_3.mdl", [0, 3, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [0, 3, 4, 6, 7, 8], [0, 1, 2, 4, 6, 7, 8, 9, 10], [1, 3, 21, 23, 61, 63])
-	Chunk("models/wega/floor_4.mdl", [0, 2, 3, 5, 6, 7, 8, 10, 11, 12], [2, 4, 6, 7, 8], [], [2, 4, 5, 6], [5, 6, 7, 10, 12, 15, 16, 17])
-	Chunk("models/wega/floor_5.mdl", [6, 7], [0, 3, 6, 7, 8], [0, 3, 4, 6, 7, 8], [0, 6, 7, 8], [0, 2, 10, 12, 14, 22, 24])
-	Chunk("models/wega/floor_6.mdl", [0, 2, 3, 5, 6, 7, 8], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 21, 22, 23,37])
+	Chunk("models/wega/floor_4.mdl", [0, 2, 3, 5, 6, 7, 8, 10, 11, 12], [2, 4, 6, 7, 8], [], [2, 4, 5, 6], [5, 6, 7, 10, 12, 15, 17])
+	Chunk("models/wega/floor_5.mdl", [6, 7], [0, 3, 6, 7, 8], [0, 3, 4, 6, 7, 8], [0, 6, 7, 8], [0, 2, 10, 14, 22, 24])
+	Chunk("models/wega/floor_6.mdl", [0, 2, 3, 5, 6, 7, 8], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [1, 2, 3, 21, 23, 37])
 	Chunk("models/wega/floor_7.mdl", [0, 2, 3, 6, 7, 8], [1, 3, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [22])
-	Chunk("models/wega/floor_8.mdl", [0, 2, 3, 6, 7, 8, 11, 12], [3, 5, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8, 11, 12], [2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 4, 10, 14, 20, 22, 24])
+	Chunk("models/wega/floor_8.mdl", [0, 2, 3, 6, 7, 8, 11, 12], [3, 5, 6, 7, 8, 9, 10], [0, 3, 4, 5, 6, 7, 8, 11, 12], [2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 2, 4, 10, 14, 20, 24])
 	Chunk("models/wega/floor_9.mdl", [], [1, 3, 6, 7, 8], [], [1, 3, 6, 7], [32, 37, 42])
 	Chunk("models/wega/floor_10.mdl", [], [1, 3, 6, 7, 8], [], [1, 3, 6, 7], [2, 7, 12, 17, 22])
 	Chunk("models/wega/floor_11.mdl", [0], [], [0, 4], [], [61, 62, 63])
@@ -395,7 +398,7 @@ ChunkList <-
 
 CellWidth <- 960
 
-Size <- 10
+Size <- MaxSize
 
 
 //Depth First implementation
@@ -413,6 +416,7 @@ function Generate()
 
 	CellArray[0][0] = 8
 	CellArray[Size-1][Size-1] = 8
+	CellArray[Size-1][0] = 5
 
 	// Phase 1 Connect to the other spawn first
 	local x = 1
@@ -651,9 +655,6 @@ function Generate()
 	CellArray[0][Size-1] = 8
 	CellArray[Size-1][Size-2] = 8
 
-	if (CellArray[Size-1][0] != null)
-		CellArray[Size-1][0] = 5
-
 	// Phase 6, spawn templates
 	x = 0
 	while (x <= Size-1)
@@ -730,8 +731,8 @@ function CalculateSize()
 		buffer = 4
 	}
 
-	if (buffer > 10)
-		buffer = 10
+	if (buffer > MaxSize)
+		buffer = MaxSize
 
 	Size = buffer
 }
