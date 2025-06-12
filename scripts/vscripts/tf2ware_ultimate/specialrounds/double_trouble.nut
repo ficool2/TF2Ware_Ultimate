@@ -267,6 +267,45 @@ delegated_callbacks <-
 		return ret
 	}
 
+	function OnShowChatText(player, fmt)
+	{
+		local ret = DelegatedCall(scope_a, "OnShowChatText", player, fmt)
+		if (!call_failed)
+			fmt = ret
+		
+		ret = DelegatedCall(scope_a, "OnShowChatText", player, fmt)
+		if (!call_failed)
+			fmt = ret
+		
+		return fmt
+	}
+
+	function OnShowGameText(players, channel, text)
+	{
+		local ret = DelegatedCall(scope_a, "OnShowGameText", players, channel, text)
+		if (!call_failed)
+			text = ret
+		
+		ret = DelegatedCall(scope_b, "OnShowGameText", players, channel, text)
+		if (!call_failed)
+			text = ret
+		
+		return text
+	}
+
+	function OnShowOverlay(players, overlay_name)
+	{
+		local ret = DelegatedCall(scope_a, "OnShowOverlay", players, overlay_name)
+		if (!call_failed)
+			overlay_name = ret
+		
+		ret = DelegatedCall(scope_b, "OnShowOverlay", players, overlay_name)
+		if (!call_failed)
+			overlay_name = ret
+		
+		return overlay_name
+	}
+
 	function OnPlayerConnect(player)
 	{
 		DelegatedCall(scope_a, "OnPlayerConnect", player)

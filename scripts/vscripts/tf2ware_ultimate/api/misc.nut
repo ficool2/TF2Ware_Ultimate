@@ -22,6 +22,12 @@ function Ware_ChatPrint(target, fmt, ...)
 	local reversed = Ware_SpecialRound && Ware_SpecialRound.reverse_text
 	local result
 	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_show_chat_text.IsValid())
+		fmt = Ware_SpecialRound.cb_on_show_chat_text(target, fmt)
+	
+	if (fmt == null)
+		return
+	
 	if (reversed)
 	{
 		result = ""
@@ -92,9 +98,15 @@ function Ware_ChatPrint(target, fmt, ...)
 // "players" can either be an array of players or a player handle
 function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", x = -1.0, y = 0.3)
 {
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_show_game_text.IsValid())
+		text = Ware_SpecialRound.cb_on_show_game_text(players, channel, text)
+	
+	if (text == null)
+		return
+	
 	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
 		text = ReverseString(text)
-		
+	
 	local is_array = typeof(players) == "array"
 	local spawnflags = 0
 	// optimization: if showing text to everyone on the server

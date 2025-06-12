@@ -1,13 +1,13 @@
 local charactersConst = [
-    "scout",    // 1
-    "sniper",   // 2
-    "soldier",  // 3
-    "demoman",  // 4
-    "medic",    // 5
-    "heavy",    // 6
-    "pyro",     // 7
-    "spy",      // 8
-    "engineer"  // 9
+    "Scout",    // 1
+    "Sniper",   // 2
+    "Soldier",  // 3
+    "Demoman",  // 4
+    "Medic",    // 5
+    "Heavy",    // 6
+    "Pyro",     // 7
+    "Spy",      // 8
+    "Engineer"  // 9
 ]
 characters <- clone(charactersConst)
 character_selected <- RemoveRandomElement(characters)
@@ -16,10 +16,10 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Wanted"
 	author         = ["PedritoGMG"]
-	description    = "Find the Character"
+	description    = format("Find %s!", character_selected)
 	duration       = 10.0
     location       = "dirtsquare"
-    custom_overlay = "wanted_"+character_selected
+    custom_overlay = "wanted_"+character_selected.tolower()
     music          = "wanted"
 })
 
@@ -40,7 +40,7 @@ function OnPrecache()
 {
 	PrecacheModel(prop_model)
 	foreach (character in charactersConst)
-		PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character.tolower())
 }
 
 function OnTeleport(players)

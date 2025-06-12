@@ -21,6 +21,7 @@ math_only
 merasmus
 mirrored_world
 no_movingback
+no_text
 non_stop
 nostalgia
 opposite_day

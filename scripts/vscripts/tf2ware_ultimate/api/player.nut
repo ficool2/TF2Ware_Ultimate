@@ -1015,6 +1015,10 @@ function Ware_ShowScreenOverlay(players, name)
 {
 	if (typeof(players) != "array")
 		players = [players]
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_show_overlay.IsValid())
+		name = Ware_SpecialRound.cb_on_show_overlay(players, name)
+	
 	foreach (player in players)
 		player.SetScriptOverlayMaterial(name ? name : "")
 }

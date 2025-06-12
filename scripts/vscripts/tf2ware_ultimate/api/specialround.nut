@@ -146,6 +146,15 @@ class Ware_SpecialRoundData
 	//                            - Passes some relevant information that might be used for replacement info.
 	//							  - If false is returned, the default declaration is used.
 	cb_on_declare_winners      = null
+	// OnShowChatText(player, fmt) - Called when chat text is about to be printed to player
+	//                            - Return format text to override text display, return null to prevent text being displayed
+	cb_on_show_chat_text       = null
+	// OnShowGameText(players, channel, text) - Called when game_text is about to be used to display
+	//                            - Return string text for overridden text to display, return null to prevent text being displayed
+	cb_on_show_game_text       = null
+	// OnShowOverlay(players, overlay_name) - Called when an overlay is about to be shown to players
+	//                            - Return overlay name path to override display, return null to prevent overlay being displayed
+	cb_on_show_overlay         = null
 	// OnPlayerConnect(player)    - Called by OnGameEvent_player_spawn during late spawn setup, and passes the player
 	cb_on_player_connect       = null
 	// OnPlayerDisconnect(player) - Called by OnGameEvent_player_disconnect, and passes the player.
