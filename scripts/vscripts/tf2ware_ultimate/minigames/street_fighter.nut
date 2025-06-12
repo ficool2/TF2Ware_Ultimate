@@ -85,7 +85,7 @@ function OnUpdate()
 			local target = player // squirrel needs this to be happy
 			Ware_CreateTimer(function() 
 			{
-				if (player.IsAlive())
+				if (target.IsAlive())
 					SpawnFireball(target)
 			}, attack_time - time)
 			player.ClearTauntAttack()
