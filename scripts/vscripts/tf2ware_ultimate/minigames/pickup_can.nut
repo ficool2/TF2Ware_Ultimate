@@ -10,6 +10,8 @@ minigame <- Ware_MinigameData
 trashcan_model <- "models/props_trainstation/trashcan_indoor001b.mdl"
 can_model <- "models/props_junk/popcan01a.mdl"
 
+pickup_vo <- "npc/metropolice/vo/pickupthecan1.wav"
+
 ////////////////////////// --- Settings --- ///////////////////////////////////////////
 
 local pickupDistance = 128.0 // Distance the player can pick up the prop from
@@ -29,6 +31,7 @@ function OnPrecache()
 {
 	PrecacheModel(can_model)
 	PrecacheModel(trashcan_model)
+	PrecacheSound(pickup_vo)
 }
 
 function OnStart()
@@ -72,6 +75,8 @@ function OnStart()
 
 	Ware_ChatPrint(null, "{color}TIP{color}: Pick up cans with left click!", 
 		COLOR_GREEN, TF_COLOR_DEFAULT)
+
+	Ware_PlaySoundOnAllClients(pickup_vo)
 }
 
 // Inspired by Prop Kill (https://github.com/Batfoxkid/TF2-Prop-Kill)
@@ -119,8 +124,8 @@ function OnUpdate()
 						can.SetOwner(player)
 						can_scope.LastHolder <- player
 						can_scope.GraceHolderTime <- time + canGracePeriod
-						//No need to precache
-						player.EmitSound("common/wpn_select.wav")						
+
+						player.EmitSound("common/wpn_select.wav")
 						break
 					}
 				}
