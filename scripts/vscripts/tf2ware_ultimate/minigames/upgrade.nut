@@ -13,7 +13,7 @@ minigame <- Ware_MinigameData
 		"Upgrade your firing speed!"
 	]
 	modes          = 3
-	duration	   = Ware_MinigameMode != 1 ? 6.5 : 8.5
+	duration	   = Ware_MinigameMode != 1 ? 7.5 : 10.5
 	location       = "warehouse"
 	music		   = Ware_MinigameMode != 1 ? "upgrademusic" : "upgraderesist"
 	custom_overlay = ["upgrade_damage", "upgrade_resist", "upgrade_rate"][Ware_MinigameMode]
@@ -121,8 +121,8 @@ function OnStart()
 		Ware_PlaySoundOnAllClients(snd_intro, 0.25)
 		Ware_PlaySoundOnAllClients(snd_loop, 0.20)
 		
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 5.5)
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 5.5)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 7.5)
+		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 7.5)
 
    		local bot = Ware_SpawnEntity("prop_dynamic_override",
    		{
@@ -139,8 +139,8 @@ function OnStart()
 		//bot.SetMoveType(MOVETYPE_NONE, 0)
 		bot.ValidateScriptScope()
 
-		Ware_CreateTimer(@() SetExplodeAnim(bot), 5.5)
-		Ware_CreateTimer(@() ExplodeBot(bot), 7.5)
+		Ware_CreateTimer(@() SetExplodeAnim(bot), 7.5)
+		Ware_CreateTimer(@() ExplodeBot(bot), 9.5)
 	}
 	
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
@@ -217,16 +217,15 @@ function OnEnd()
 	
 function OnCleanup()
 {
-	give_loadout = false
-	
 	// WARNING: the order of operations here is important or the server will CRASH
 	// upgrades must be removed first, then upgrades disabled, then loadouts re-enabled in that order
 	
 	foreach (player in Ware_MinigamePlayers)
 	{
-		player.GrantOrRemoveAllUpgrades(true, true)
+		player.GrantOrRemoveAllUpgrades(true, false)
 		player.SetCurrency(0)
 	}
+	give_loadout = false
 	
 	ForceEnableUpgrades(0)	
 	Ware_TogglePlayerLoadouts(false)
@@ -238,38 +237,28 @@ function OnPlayerInventory(player)
 {
 	if (!give_loadout)
 		return
+
+	if (!player.IsAlive())
+		return
 	
 	Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, "Original")
 	
 	if (Ware_MinigameMode != MISSION_RESIST)
 	{
-		foreach (player in Ware_MinigamePlayers)
+		local weapon = player.GetActiveWeapon()		
+		if (Ware_MinigameMode == MISSION_DAMAGE)
 		{
-			if (!player.IsAlive())
-				continue
-		
-			local weapon = player.GetActiveWeapon()		
-			if (Ware_MinigameMode == MISSION_DAMAGE)
+			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("damage bonus", 1.0) > 1.5)
 			{
-				if (player.InCond(TF_COND_CRITBOOSTED_USER_BUFF))
-				{
-					Ware_PassPlayer(player, true)
-				}
-				else
-				{
-					if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("damage bonus", 1.0) > 1.5)
-					{
-						Ware_PassPlayer(player, true)
-					}
-				}
+				Ware_PassPlayer(player, true)
 			}
-			else if (Ware_MinigameMode == MISSION_RATE)
+		}
+		else if (Ware_MinigameMode == MISSION_RATE)
+		{
+			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
 			{
-				if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
-				{
-					Ware_PassPlayer(player, true)
-				}				
-			}
+				Ware_PassPlayer(player, true)
+			}				
 		}
 	}
 }
