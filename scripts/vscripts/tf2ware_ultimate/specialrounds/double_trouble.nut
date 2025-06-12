@@ -135,6 +135,11 @@ function DelegatedCall(scope, name, ...)
 	call_failed = true
 }
 
+function CallExists(scope, name)
+{
+	return name in scope
+}
+
 delegated_callbacks <-
 {
 	function OnStart()
@@ -265,6 +270,39 @@ delegated_callbacks <-
 		if (call_failed)
 			ret = false	
 		return ret
+	}
+
+	function OnShowChatText(player, fmt)
+	{
+		if (CallExists(scope_a, "OnShowChatText"))
+			fmt = DelegatedCall(scope_a, "OnShowChatText", player, fmt)
+		
+		if (CallExists(scope_b, "OnShowChatText"))
+			fmt = DelegatedCall(scope_b, "OnShowChatText", player, fmt)
+		
+		return fmt
+	}
+
+	function OnShowGameText(players, channel, text)
+	{
+		if (CallExists(scope_a, "OnShowGameText"))
+			text = DelegatedCall(scope_a, "OnShowGameText", players, channel, text)
+		
+		if (CallExists(scope_b, "OnShowGameText"))
+			text = DelegatedCall(scope_b, "OnShowGameText", players, channel, text)
+		
+		return text
+	}
+
+	function OnShowOverlay(players, overlay_name)
+	{
+		if (CallExists(scope_a, "OnShowOverlay"))
+			overlay_name = DelegatedCall(scope_a, "OnShowOverlay", players, overlay_name)
+		
+		if (CallExists(scope_b, "OnShowOverlay"))
+			overlay_name = DelegatedCall(scope_b, "OnShowOverlay", players, overlay_name)
+		
+		return overlay_name
 	}
 
 	function OnPlayerConnect(player)
