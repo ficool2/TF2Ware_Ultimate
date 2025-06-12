@@ -1,25 +1,10 @@
-text_mgr <- null
-
 special_round <- Ware_SpecialRoundData
 ({
 	name = "No Text"
-	author = "42"
+	author = "FortyTwoFortyTwo"
 	description = "We refuse to elaborate what you need to do."
 	category = ""
 })
-
-function OnStart()
-{
-	// hack to prevent hud texts being shown
-	Ware_TextManager.KeyValueFromInt("effect", 2)
-	Ware_TextManager.KeyValueFromFloat("fxtime", 999999999.0)
-}
-
-function OnEnd()
-{
-	Ware_TextManager.KeyValueFromInt("effect", 0)
-	Ware_TextManager.KeyValueFromFloat("fxtime", 0.0)
-}
 
 function OnMinigameStart()
 {
@@ -30,14 +15,16 @@ function OnMinigameEnd()
 {
 	ClearTexts()
 	
+	local game = Ware_Minigame.boss ? "bossgame" : "minigame"
+	
 	if (typeof(Ware_Minigame.description) != "array")
 	{
-		Ware_ChatPrint(null, "The minigame was {color}{str}", COLOR_GREEN, Ware_Minigame.description)
+		Ware_ChatPrint(null, "The {str} was {color}{str}", game, COLOR_GREEN, Ware_Minigame.description)
 	}
 	else
 	{
 		foreach (player in Ware_MinigamePlayers)
-			Ware_ChatPrint(player, "The minigame was {color}{str}", COLOR_GREEN, Ware_Minigame.description[Ware_GetPlayerMission(player)])
+			Ware_ChatPrint(player, "The {str} was {color}{str}", game, COLOR_GREEN, Ware_Minigame.description[Ware_GetPlayerMission(player)])
 	}
 }
 
@@ -49,6 +36,34 @@ function OnSpeedup()
 function OnUpdate()
 {
 	ClearTexts()
+}
+
+function OnShowChatText(player, text)
+{
+	// Allow text if minigame isn't ongoing or it has just ended
+	if (!Ware_Minigame || Ware_MinigameEnded)
+		return text
+	
+	// If colour isn't used in text, then its likely one of the chat commands is being used, which we can allow
+	if (text.find("{color}") == null)
+		return text
+	
+	// Otherwise block every other texts
+	return null
+}
+
+function OnShowGameText(players, channel, text)
+{
+	// Allow special round text show as usual
+	if (channel == CHANNEL_SPECIALROUND)
+		return text
+	
+	// Allow "X" hitreg to show up
+	if (text == "x")
+		return text
+	
+	// Block everything else
+	return null
 }
 
 function ClearTexts()

@@ -6,12 +6,7 @@ minigame <- Ware_MinigameData
 ({
 	name		   = "Upgrade"
 	author		   = ["tilderain"]
-	description    =
-	[
-		"Upgrade your damage!"
-		"Upgrade and resist the damage!"
-		"Upgrade your firing speed!"
-	]
+	description    = ["Upgrade your damage!", "Upgrade and resist the damage!", "Upgrade your firing speed!"][Ware_MinigameMode]
 	modes          = 3
 	duration	   = Ware_MinigameMode != 1 ? 6.5 : 8.5
 	location       = "warehouse"

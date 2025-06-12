@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Shoot Target"
 	author         = ["Gemidyne", "ficool2"]
-	description    = format("Shoot the %s target!", mode == 0 ? "" : target_class)
+	description    = mode == 0 ? "Shoot the target!" : format("Shoot the %s target!", target_class)
 	location       = "targetrange"
 	duration       = 5.0
 	music          = mode == 0 ? "wildwest" : "cheerful"
