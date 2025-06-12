@@ -16,7 +16,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Wanted"
 	author         = ["PedritoGMG"]
-	description    = format("Shoot the %s target!", character_selected)
+	description    = format("Find %s!", character_selected)
 	duration       = 10.0
     location       = "dirtsquare"
     custom_overlay = "wanted_"+character_selected.tolower()
