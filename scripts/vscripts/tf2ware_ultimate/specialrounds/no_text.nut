@@ -28,11 +28,6 @@ function OnMinigameEnd()
 	}
 }
 
-function OnSpeedup()
-{
-	ClearTexts()
-}
-
 function OnUpdate()
 {
 	ClearTexts()
@@ -66,11 +61,13 @@ function OnShowGameText(players, channel, text)
 	return null
 }
 
+function OnShowOverlay(players, overlay_name)
+{
+	return null
+}
+
 function ClearTexts()
 {
-	foreach (player in Ware_MinigamePlayers)
-		player.SetScriptOverlayMaterial("")
-	
 	if (Ware_Minigame != null)
 	{
 		local annotations = Ware_Minigame.annotations
