@@ -1,5 +1,3 @@
-mode <- 0
-
 minigame <- Ware_MinigameData
 ({
 	name           = "Buff"
@@ -9,35 +7,45 @@ minigame <- Ware_MinigameData
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
-	fail_on_death  = true
+	modes          = 2
+	collisions 	   = true
+	location       = "boxingring"
 })
+
+local buffs = ["Buff Banner", "Concheror", "Battalion's Backup"]
 
 function OnStart()
 {
 	local gun =	RandomInt(0,1)
+	local buff = RandomElement(buffs)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.RemoveHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 		//Makes the flag apply if already soldier
 		player.Regenerate(true)
 		Ware_StripPlayer(player, false)
-		if (mode == 0)
+		if (Ware_MinigameMode == 0)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SOLDIER)
-			Ware_GivePlayerWeapon(player, "Buff Banner", {"deploy time increased": 1, "increase buff duration" : 0})
+			Ware_GivePlayerWeapon(player, buff, {"deploy time increased": 1, "increase buff duration" : 0.1})
 			local weapon = null
 			if (gun == 0)
 			{
-				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1})
+				weapon = Ware_GivePlayerWeapon(player, "Rocket Launcher", {"clip size bonus" : 100, "deploy time increased": 1, "damage bonus": 1.25})
 				weapon.SetClip1(69)
 			}
 			else
 			{
-				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1})
+				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1, "damage bonus": 1.25})
 			}
 		}
-		player.SetHealth(1100)
+		else if (Ware_MinigameMode == 1)
+		{
+			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
+			Ware_GivePlayerWeapon(player, "Phlogistinator")
+		}
 		player.SetRageMeter(0)
+		player.SetHealth(1850)
 	}
 }
 
