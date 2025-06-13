@@ -14,13 +14,13 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	local guns = ["Medi Gun", "Kritzkrieg"]
+	local guns = ["Medi Gun", "Kritzkrieg", "Quick-Fix"]
 	local gun = RandomElement(guns)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
 		Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
-		Ware_GivePlayerWeapon(player, gun, {"ubercharge rate bonus" : 16})
+		Ware_GivePlayerWeapon(player, gun, {"ubercharge rate bonus" : 20})
 		player.SetHealth(1)
 	}
 	Ware_ChatPrint(null, "{color}HINT:{color} Uber builds faster when healing someone with low health!", COLOR_GREEN, TF_COLOR_DEFAULT)
