@@ -30,6 +30,9 @@ function OnMinigameEnd()
 
 function OnUpdate()
 {
+	foreach (player in Ware_Players)
+		player.AddHudHideFlags(HIDEHUD_HEALTH|HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE|HIDEHUD_METAL|HIDEHUD_TARGET_ID)
+
 	ClearTexts()
 }
 
