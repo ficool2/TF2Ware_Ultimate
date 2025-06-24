@@ -90,7 +90,7 @@ function OnPrecache()
 
 function OnPick()
 {
-	return !(Ware_SpecialRound && Ware_SpecialRound.name == "no_text")
+	return !(Ware_SpecialRound && Ware_SpecialRound.name == "No Text")
 }
 
 function OnStart()
