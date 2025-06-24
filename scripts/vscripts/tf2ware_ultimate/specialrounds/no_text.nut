@@ -2,7 +2,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "No Text"
 	author = "FortyTwoFortyTwo"
-	description = "We refuse to elaborate what you need to do."
+	description = "__ ______ __ _________ ____ ___ ____ __ __"
 	category = ""
 })
 
