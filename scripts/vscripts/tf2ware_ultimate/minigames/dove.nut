@@ -2,7 +2,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Dove Hunt"
 	author         = ["tilderain"]
-	description    = "Kill the birds!"
+	description    = "Shoot 3 Doves!"
 	duration       = 18
 	end_delay      = 0.5
 	music          = "duckhunt"
