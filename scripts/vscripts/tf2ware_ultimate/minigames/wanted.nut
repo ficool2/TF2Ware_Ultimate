@@ -57,15 +57,24 @@ function CreateCharacter()
 	if (character_queue.len() == 0)
 		return CreateLastCharacter()
 
-	return CreateGenericCharacter(character_queue.remove(0), false)
+	return CreateGenericCharacter()
 }
 
 function CreateLastCharacter()
 {
-	return CreateGenericCharacter(character_selected, true)
+	local prop = CreateCharacterProp(character_selected)
+	prop.SetSolid(SOLID_BBOX)
+    prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
+	return null
+}
+function CreateGenericCharacter()
+{
+	local prop = CreateCharacterProp(character_queue.remove(0))
+	prop.SetSolid(SOLID_NONE)
+	return 0.01
 }
 
-function CreateGenericCharacter(name, isLast)
+function CreateCharacterProp(name)
 {
     yPos += 0.1
 	local pos = Ware_MinigameLocation.center * 1.0
@@ -91,14 +100,7 @@ function CreateGenericCharacter(name, isLast)
 	prop.SetAbsVelocity(vel)
 
 	props.append(prop)
-    if (!isLast) 
-	{
-        prop.SetSolid(SOLID_NONE)
-        return 0.01
-    }
-    prop.SetSolid(SOLID_BBOX)
-    prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
-    return null
+	return prop
 }
 
 
@@ -122,33 +124,33 @@ function OnStart()
 	Ware_CreateTimer(@() CreateCharacter(), 0.0)
 }
 
-function OnUpdate() 
+function OnUpdate()
 {
     local minigameLocation = Ware_MinigameLocation.center
     local margin = 0.1
 
-    foreach (prop in props) 
+    foreach (prop in props)
 	{
         local vel = prop.GetAbsVelocity()
         local pos = prop.GetOrigin()
 
-        if (pos.x - minigameLocation.x > xRange[1]) 
+        if (pos.x - minigameLocation.x > xRange[1])
 		{
             vel.x = -abs(vel.x)
 			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
         }
-		else if (pos.x - minigameLocation.x < xRange[0]) 
+		else if (pos.x - minigameLocation.x < xRange[0])
 		{
             vel.x = abs(vel.x)
 			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
         }
 
-        if (pos.z - minigameLocation.z > zRange[1]) 
+        if (pos.z - minigameLocation.z > zRange[1])
 		{
             vel.z = -abs(vel.z)
 			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
         }
-		else if (pos.z - minigameLocation.z < zRange[0]) 
+		else if (pos.z - minigameLocation.z < zRange[0])
 		{
             vel.z = abs(vel.z)
 			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
