@@ -77,6 +77,7 @@ function SpawnGift()
 	gift_scope.lag_record <- [origin]
 	gift_scope.mins <- gift.GetBoundingMins()
 	gift_scope.maxs <- gift.GetBoundingMaxs()
+	gift_scope.gift <- gift
 	gift_scope.GiftThink <- function()
 	{
 		lag_record.append(self.GetOrigin())

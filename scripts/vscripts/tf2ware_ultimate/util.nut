@@ -1207,3 +1207,25 @@ function DumpCallstack(levels = 16)
 		printf("\t%s (line %d) [%s]\n",  s.func, s.line, s.src)
 	}
 }
+
+function NormalizeAngle(target)
+{
+	target %= 360.0
+	if (target > 180.0)
+		target -= 360.0
+	else if (target < -180.0)
+		target += 360.0
+	return target
+}
+
+function ApproachAngle(target, value, speed)
+{
+	target = NormalizeAngle(target)
+	value = NormalizeAngle(value)
+	local delta = NormalizeAngle(target - value)
+	if (delta > speed)
+		return value + speed
+	else if (delta < -speed)
+		return value - speed
+	return target
+}
