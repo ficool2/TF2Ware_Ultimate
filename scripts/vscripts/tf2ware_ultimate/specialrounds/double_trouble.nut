@@ -273,7 +273,7 @@ delegated_callbacks <-
 		if (!call_failed)
 			fmt = ret
 		
-		ret = DelegatedCall(scope_a, "OnShowChatText", player, fmt)
+		ret = DelegatedCall(scope_b, "OnShowChatText", player, fmt)
 		if (!call_failed)
 			fmt = ret
 		

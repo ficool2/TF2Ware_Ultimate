@@ -43,7 +43,7 @@ function OnShowChatText(player, text)
 		return text
 	
 	// If colour isn't used in text, then its likely one of the chat commands is being used, which we can allow
-	if (text.find("{color}") == null)
+	if (text && text.find("{color}") == null)
 		return text
 	
 	// Otherwise block every other texts
