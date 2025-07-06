@@ -600,14 +600,13 @@ function Ware_BotAvoidProp(bot, prop, dist, look = true, attack = true)
         
         //Ware_ChatPrint(null, "{int} {int}", botOrigin, escapeDir)
 
+        local loco = bot.GetLocomotionInterface()
+		
 		if(look)
 		{
 			loco.FaceTowards(dest)
 			BotLookAt(bot, dest, 9999.0, 9999.0)
 		}
-
-        local loco = bot.GetLocomotionInterface()
-
 
         DebugDrawLine(botOrigin, dest, 0, 0, 255, true, 0.125)
 
