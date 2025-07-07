@@ -30,6 +30,8 @@ upgradestations <- []
 
 give_loadout <- true
 
+proj_times <- {}
+
 function OnPrecache()
 {
 	for (local i = 1; i <= 11; i++)
@@ -79,6 +81,27 @@ function OnTeleport(players)
 		500.0,
 		45.0, 50.0)
 }
+
+function OnUpdate()
+{
+	local classname = "tf_projectile_rocket"
+	
+	local projs = []
+	for (local proj; proj = FindByClassname(proj, classname);)
+		projs.append(proj)
+
+	local time = Time()
+	foreach (proj in projs)
+	{
+		// At 40 players people are spamming their guns and making the server crash
+		if (!(proj in proj_times))
+			proj_times[proj] <- time + 0.5
+		
+		if (proj_times[proj] < time || projs.len() > 5)
+			proj.Kill()
+	}
+}
+
 
 function OnStart()
 {
