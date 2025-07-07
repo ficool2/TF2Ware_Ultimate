@@ -3,7 +3,7 @@ minigame <- Ware_MinigameData
 	name           = "Buff"
 	author         = ["tilderain"]
 	description    = "Activate buff!"
-	duration       = 15
+	duration       = Ware_MinigameMode != 1 ? 15 : 8.5
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
