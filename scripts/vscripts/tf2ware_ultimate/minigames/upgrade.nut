@@ -44,17 +44,44 @@ give_loadout <- true
 
 proj_times <- {}
 
+prop <- null
+
+CLASS_PYRO <- 0
+CLASS_HEAVY <- 1
+
+class_names <- ["pyro","heavy"]
+class_idx <- RandomIndex(class_names)
+	
+team_idx <- TF_TEAM_BLUE
+
+minigun_particle <- "muzzle_minigun_constant_core"
+flamethrower_particle <- "flamethrower_crit_giant_mvm"
+
+fire_sound <- "MVM.GiantPyro_FlameStart"
+gun_sound <- "MVM.GiantHeavyGunFire"
+
+pyro_sound <- "vo/mvm/mght/pyro_mvm_m_BattleCry01.mp3"
+heavy_sound <- "vo/mvm/mght/taunts/heavy_mvm_m_Taunts02.mp3"
+
+entrance_sound <- "MVM.GiantHeavyEntrance"
+
+alarm_sound <- "mvm.cpoint_alarm"
+windup_sound <- "MVM.GiantHeavyGunWindUp"
+
 function OnPrecache()
 {
 	for (local i = 1; i <= 11; i++)
+	{
 		PrecacheSound(format("vo/mvm_get_to_upgrade%02d.mp3", i))
+		PrecacheSound(format("vo/mvm_wave_start%02d.mp3", i))
+	}
+
 
 	for (local i = 1; i <= 7; i++)
 		PrecacheSound(format( "vo/mvm_sentry_buster_alerts%02d.mp3", i))
 		
-	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_damage")
+	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade")
 	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_resist")
-	PrecacheOverlay("hud/tf2ware_ultimate/minigames/upgrade_rate")
 
 	PrecacheModel(buster_mdl)
 
@@ -67,6 +94,27 @@ function OnPrecache()
 
 	Ware_PrecacheMinigameMusic("upgrademusic", false)
 	Ware_PrecacheMinigameMusic("upgraderesist", false)
+
+	PrecacheSound(pyro_sound)
+	PrecacheSound(heavy_sound)
+	PrecacheScriptSound(entrance_sound)
+	PrecacheScriptSound(alarm_sound)
+
+	/*for (local i = 1; i <= 19; i++)
+	{
+		local name = "Heavy" + format(".M_MVM_Taunts%02d", i)
+		PrecacheScriptSound(name)
+	}
+	for (local i = 1; i <= 3; i++)
+	{
+		local name = "Pyro" + format(".M_MVM_BattleCry0%d", i)
+		PrecacheScriptSound(name)
+	}*/
+
+	PrecacheScriptSound(gun_sound)
+	PrecacheScriptSound(fire_sound)
+	PrecacheScriptSound(windup_sound)
+
 }
 
 function OnTeleport(players)
@@ -151,6 +199,9 @@ function OnStart()
 		currency += up[2] * amt
 	}
 
+	if (Ware_MinigameMode == MISSION_RESIST)
+		currency = 9999
+
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.GrantOrRemoveAllUpgrades(true, false)
@@ -160,39 +211,79 @@ function OnStart()
 		minidata.cur_hit <- -1
 	}
 
-	Ware_ShowMinigameText(Ware_Players, text)
 
 	if (Ware_MinigameMode == MISSION_DAMAGE)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_get_to_upgrade%02d.mp3", RandomInt(1,11)))
+		Ware_ShowMinigameText(Ware_Players, text)
 	}
 	else if (Ware_MinigameMode == MISSION_RESIST)
 	{
-		Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
-		Ware_PlaySoundOnAllClients(snd_intro, 0.25)
-		Ware_PlaySoundOnAllClients(snd_loop, 0.20)
-		
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 7.5)
-		CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 7.5)
+		local buster = (RandomInt(0,2) == 0)
+		if (buster)
+		{
+			Ware_PlaySoundOnAllClients(format("vo/mvm_sentry_buster_alerts%02d.mp3", RandomInt(1,3)))
+			Ware_PlaySoundOnAllClients(snd_intro, 0.25)
+			Ware_PlaySoundOnAllClients(snd_loop, 0.20)
 
-   		local bot = Ware_SpawnEntity("prop_dynamic_override",
-   		{
-			targetname  = "buster"
-   	  		origin      = Ware_MinigameLocation.center + Vector(0,0,150)
-			modelscale  = 2
-			health      = INT_MAX
-   		})
-		// set the model after spawning to avoid precaching gibs (don't need those)
-		bot.SetModelSimple(buster_mdl)
-		bot.SetSolid(SOLID_BBOX)
-		bot.SetSize(bot.GetBoundingMins(), bot.GetBoundingMaxs())
-		bot.AcceptInput("SetAnimation", "Stand_MELEE", null, null)
-		//bot.SetMoveType(MOVETYPE_NONE, 0)
-		bot.ValidateScriptScope()
+			CreateTimer(@() Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP), 7.5)
+			CreateTimer(@() Ware_PlaySoundOnAllClients(snd_spin, 0.35), 7.5)
 
-		Ware_CreateTimer(@() SetExplodeAnim(bot), 7.5)
-		Ware_CreateTimer(@() ExplodeBot(bot), 9.5)
+   			local bot = Ware_SpawnEntity("prop_dynamic_override",
+   			{
+				targetname  = "buster"
+   	  			origin      = Ware_MinigameLocation.center + Vector(0,0,150)
+				modelscale  = 2
+				health      = INT_MAX
+   			})
+			// set the model after spawning to avoid precaching gibs (don't need those)
+			bot.SetModelSimple(buster_mdl)
+			bot.SetSolid(SOLID_BBOX)
+			bot.SetSize(bot.GetBoundingMins(), bot.GetBoundingMaxs())
+			bot.AcceptInput("SetAnimation", "Stand_MELEE", null, null)
+			//bot.SetMoveType(MOVETYPE_NONE, 0)
+			bot.ValidateScriptScope()
+
+			Ware_CreateTimer(@() SetExplodeAnim(bot), 7.5)
+			Ware_CreateTimer(@() ExplodeBot(bot), 9.5)
+		}
+		else
+		{
+			
+			Ware_PlaySoundOnAllClients(format("vo/mvm_wave_start%02d.mp3", RandomInt(1,11)))
+			prop = Ware_SpawnEntity("prop_dynamic",
+			{
+				model       = format("models/bots/%s/bot_%s.mdl", class_names[class_idx], class_names[class_idx])
+				origin      = Ware_MinigameLocation.center + Vector(0,0,150)
+				skin        = team_idx - 2
+				modelscale  = 2
+				defaultanim = "Stand_PRIMARY"
+			})
+			
+			local name = heavy_sound
+
+			if(class_idx == CLASS_PYRO )
+				name = pyro_sound
+
+			prop.EmitSound(name)
+			prop.EmitSound(entrance_sound)
+
+			Ware_CreateTimer(@() prop.EmitSound(alarm_sound), 3.5)
+			Ware_CreateTimer(@() prop.EmitSound(alarm_sound), 6.5)
+
+			
+
+			if(class_idx == CLASS_PYRO)
+				Ware_CreateTimer(@() SpawnFires(), 9.5)
+			else
+			{
+				Ware_CreateTimer(@() prop.EmitSound(windup_sound), 8.5)
+				Ware_CreateTimer(@() SpawnGuns(), 9.5)
+			}
+
+		}
 	}
+
 	
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
@@ -254,6 +345,49 @@ function OnTakeDamage(params)
 	}
 }
 
+function SpawnHurt(type, kill_icon)
+{
+	local hurt = Ware_SpawnEntity("trigger_hurt",
+	{
+		classname  = kill_icon
+		origin     = Ware_MinigameLocation.center
+		damage     = 200
+		damagetype = type
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	hurt.SetSolid(SOLID_BBOX)
+	hurt.SetSize(Vector(-3000, -3000, -3000), Vector(3000, 3000, 3000))
+}
+
+function SpawnParticle(particle)
+{
+	local particle = Ware_SpawnEntity("info_particle_system",
+	{
+		origin       = Ware_MinigameLocation.center + Vector(0,0,240)
+		angles       = QAngle(1, 0, 0)
+		effect_name  = particle
+		start_active = true
+	})
+}
+
+function SpawnFires()
+{
+	SpawnParticle(flamethrower_particle)
+
+	prop.EmitSound(fire_sound)
+	SpawnHurt(DMG_BURN, "flamethrower")
+}
+
+function SpawnGuns()
+{
+	SpawnParticle(minigun_particle)
+
+	prop.EmitSound(gun_sound)
+
+	SpawnHurt(DMG_BULLET, "minigun")
+}
+
+
 function OnEnd()
 {
 	foreach (player in Ware_MinigamePlayers)
@@ -263,6 +397,12 @@ function OnEnd()
 			if (player.IsAlive())
 				Ware_PassPlayer(player, true)
 		}
+	}
+
+	if (prop)
+	{
+		prop.StopSound(gun_sound)
+		prop.StopSound(fire_sound)
 	}
 }
 	
