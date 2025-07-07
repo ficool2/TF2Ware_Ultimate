@@ -193,7 +193,14 @@ function OnStart()
 	foreach (up in upgrades)
 	{
 		local amt = 1
-		if (RandomInt(0, 3) == 0) amt += RandomInt(0,2)
+		local max = 2
+
+		//i dunno why 3 reloads don't work
+		if(up[1] == "faster reload rate")
+			max = 1
+
+		if (RandomInt(0, 3) == 0) amt += RandomInt(1,max)
+		
 		up.append(amt)
 		text += amt.tostring() + "x " + up[0] + "\n"
 		currency += up[2] * amt
