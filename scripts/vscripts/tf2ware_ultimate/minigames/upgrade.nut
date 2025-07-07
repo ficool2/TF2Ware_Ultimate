@@ -288,7 +288,7 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Original")
 
 	// prevent ui lingering
-	local end_delay = Ware_MinigameMode != 1 ? 0.25 : 1.5
+	local end_delay = 0.25
 	Ware_CreateTimer(function() 
 	{
 		foreach (station in upgradestations)
