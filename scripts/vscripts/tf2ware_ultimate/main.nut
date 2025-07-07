@@ -239,7 +239,6 @@ if (!("Ware_Precached" in this))
 		"PigeonVerde"      : ["TF2Ware v2 map"],
 		// authors from minigames and special rounds are added automatically
 	}
-	Ware_ExtraAuthors             <- {}
 
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
@@ -308,6 +307,7 @@ function Ware_UpdateNav()
 	}
 }
 
+local extra_authors = {}
 function Ware_AddAuthor(authors, folder)
 {
 	local list = authors
@@ -316,9 +316,9 @@ function Ware_AddAuthor(authors, folder)
 	
 	foreach (author in list)
 	{
-		if (!(author in Ware_ExtraAuthors))
+		if (!(author in extra_authors))
 		{
-			Ware_ExtraAuthors[author] <-
+			extra_authors[author] <-
 			{
 				minigames     = 0
 				bossgames     = 0
@@ -327,7 +327,7 @@ function Ware_AddAuthor(authors, folder)
 			}
 		}
 			
-		Ware_ExtraAuthors[author][folder]++
+		extra_authors[author][folder]++
 	}
 }
 
@@ -453,8 +453,7 @@ function Ware_PrecacheNext()
 foreach(theme in Ware_Themes)
 	Ware_AddAuthor(theme.author, "themes") // no null check, gonna assume themes have authors (add to all missing in later commit)
 
-// move all Ware_ExtraAuthors to Ware_Authors. should Ware_ExtraAuthors be deleted in some way after? maybe should be local in the first place
-foreach (author, credits in Ware_ExtraAuthors)
+foreach (author, credits in extra_authors)
 {
 	if (!(author in Ware_Authors))
 		Ware_Authors[author] <- []
