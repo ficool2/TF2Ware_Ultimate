@@ -207,7 +207,7 @@ function OnStart()
 	}
 
 	if (Ware_MinigameMode == MISSION_RESIST)
-		currency = 9999
+		currency = 1500
 
 	foreach (player in Ware_MinigamePlayers)
 	{
