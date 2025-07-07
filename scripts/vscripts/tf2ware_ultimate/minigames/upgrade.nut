@@ -1,19 +1,31 @@
 MISSION_DAMAGE <- 0
 MISSION_RESIST <- 1
-MISSION_RATE   <- 2
 
 minigame <- Ware_MinigameData
 ({
 	name		   = "Upgrade"
 	author		   = ["tilderain"]
-	description    = ["Upgrade your damage!", "Upgrade and resist the damage!", "Upgrade your firing speed!"][Ware_MinigameMode]
-	modes          = 3
-	duration	   = Ware_MinigameMode != 1 ? 7.5 : 10.5
+	description    = ["Upgrade!", "Upgrade and resist the damage!"][Ware_MinigameMode]
+	modes          = 2
+	duration	   = 10.5
 	location       = "warehouse"
 	music		   = Ware_MinigameMode != 1 ? "upgrademusic" : "upgraderesist"
-	custom_overlay = ["upgrade_damage", "upgrade_resist", "upgrade_rate"][Ware_MinigameMode]
+	custom_overlay = ["upgrade", "upgrade_resist"][Ware_MinigameMode]
 	fail_on_death  = true
 })
+
+upgrade_list <- [
+	//text                        name                          money   interval     add+1
+	["Damage",                    "damage bonus",               400,    0.25,        true],
+	["Clip Size",                 "clip size upgrade atomic",   400,    2,           false],
+	["Rocket Specialist",         "rocket specialist",          300,    1,           false],
+	["Ammo Capacity",             "maxammo primary increased",  250,    0.5,         true],
+	["Firing Speed",              "fire rate bonus",            200,    -0.1,		 true],
+	["Reload Speed",              "faster reload rate",         250,    -0.2,        true],
+	["Health On Kill",            "heal on kill",               200,    25,          false],
+ ]
+
+upgrades <- []
 
 killicon_dummy <- null
 
@@ -110,14 +122,6 @@ function OnStart()
 	Ware_TogglePlayerLoadouts(true)
 	
 	killicon_dummy = Ware_CreateEntity("handle_dummy")
-	foreach (player in Ware_MinigamePlayers)
-	{
-		player.GrantOrRemoveAllUpgrades(true, false)
-		player.SetCurrency(1500)
-		local minidata = Ware_GetPlayerMiniData(player)
-		minidata.last_hit <- -2
-		minidata.cur_hit <- -1
-	}
 
 	local x = Ware_MinigameLocation.center.x
 	local y = Ware_MinigameLocation.center.y
@@ -129,7 +133,36 @@ function OnStart()
 
 	SpawnFuncUpgrade(Ware_MinigameLocation.center)
 
-	if (Ware_MinigameMode == MISSION_DAMAGE || Ware_MinigameMode == MISSION_RATE)
+	local times = 2
+
+	if (RandomInt(0, 3) == 0) times += 1
+
+	for (local i = 0; i < times; i++)
+		upgrades.append(RemoveRandomElement(upgrade_list))
+
+	local currency = 0
+	local text = ""
+	foreach (up in upgrades)
+	{
+		local amt = 1
+		if (RandomInt(0, 3) == 0) amt += RandomInt(0,2)
+		up.append(amt)
+		text += amt.tostring() + "x " + up[0] + "\n"
+		currency += up[2] * amt
+	}
+
+	foreach (player in Ware_MinigamePlayers)
+	{
+		player.GrantOrRemoveAllUpgrades(true, false)
+		player.SetCurrency(currency)
+		local minidata = Ware_GetPlayerMiniData(player)
+		minidata.last_hit <- -2
+		minidata.cur_hit <- -1
+	}
+
+	Ware_ShowMinigameText(Ware_Players, text)
+
+	if (Ware_MinigameMode == MISSION_DAMAGE)
 	{
 		Ware_PlaySoundOnAllClients(format("vo/mvm_get_to_upgrade%02d.mp3", RandomInt(1,11)))
 	}
@@ -251,6 +284,15 @@ function OnCleanup()
 	Ware_PlaySoundOnAllClients(snd_loop, 1.0, 100, SND_STOP)
 }
 
+function fround(val, decimalPoints)
+{
+	local f = pow(10, decimalPoints) * 1.0;
+	local newVal = val * f;
+	newVal = floor(newVal + 0.5)
+	newVal = (newVal * 1.0) / f;
+	return newVal;
+}
+
 function OnPlayerInventory(player)
 {
 	if (!give_loadout)
@@ -263,20 +305,29 @@ function OnPlayerInventory(player)
 	
 	if (Ware_MinigameMode != MISSION_RESIST)
 	{
-		local weapon = player.GetActiveWeapon()		
+		local weapon = player.GetActiveWeapon()
+		if(!weapon) return
+
 		if (Ware_MinigameMode == MISSION_DAMAGE)
 		{
-			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("damage bonus", 1.0) > 1.5)
+			local hits = 0
+			foreach (up in upgrades)
 			{
-				Ware_PassPlayer(player, true)
+				local calc = fround(up[3] * up[5], 1)
+				local pass = false
+				local atrb = fround(weapon.GetAttribute(up[1], 0.0), 1)
+				if (up[4])
+					calc += 1
+				if (atrb == calc)
+				{
+					hits += 1
+					pass = true
+				}
+					
+				//Ware_ChatPrint(null, "{str}: actual: {int}  expected:{int} PASS:{int}", up[1], atrb, calc, pass)
 			}
-		}
-		else if (Ware_MinigameMode == MISSION_RATE)
-		{
-			if (weapon && weapon.GetSlot() == TF_SLOT_PRIMARY && weapon.GetAttribute("fire rate bonus", 1.0) < 0.7)
-			{
+			if(hits == upgrades.len())
 				Ware_PassPlayer(player, true)
-			}				
 		}
 	}
 }

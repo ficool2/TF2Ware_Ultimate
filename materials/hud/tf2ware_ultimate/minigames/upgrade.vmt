@@ -1,7 +1,7 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/upgrade_damage
-	$basetexturetransform "center .5 .2 scale 1.5 14 rotate 0 translate 0 0"
+	$basetexture hud/tf2ware_ultimate/minigames/upgrade
+	$basetexturetransform "center .5 .2 scale 3 14.0 rotate 0 translate 0 0"
 
     $translucent 1
     $frame 0
