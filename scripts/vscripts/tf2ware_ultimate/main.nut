@@ -239,6 +239,7 @@ if (!("Ware_Precached" in this))
 		"PigeonVerde"      : ["TF2Ware v2 map"],
 		// authors from minigames and special rounds are added automatically
 	}
+	Ware_ExtraAuthors             <- {}
 
 	// this shuts up incursion distance warnings from the nav mesh
 	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
@@ -307,33 +308,33 @@ function Ware_UpdateNav()
 	}
 }
 
+function Ware_AddAuthor(authors, folder)
+{
+	local list = authors
+	if (typeof(list) != "array")
+		list = [authors]
+	
+	foreach (author in list)
+	{
+		if (!(author in Ware_ExtraAuthors))
+		{
+			Ware_ExtraAuthors[author] <-
+			{
+				minigames     = 0
+				bossgames     = 0
+				specialrounds = 0
+				themes        = 0
+			}
+		}
+			
+		Ware_ExtraAuthors[author][folder]++
+	}
+}
+
 Ware_PrecacheGenerator <- null
 function Ware_PrecacheNext()
 {
-	local authors = {}
 	local music_minigame = {}, music_bossgame = {}
-	
-	local AddAuthor = function(author, folder)
-	{
-		local list = author
-		if (typeof(list) != "array")
-			list = [author]
-		
-		foreach (author in list)
-		{
-			if (!(author in authors))
-			{
-				authors[author] <-
-				{
-					minigames     = 0
-					bossgames     = 0
-					specialrounds = 0
-				}
-			}
-				
-			authors[author][folder]++
-		}
-	}
 
 	local PrecacheFile = function(folder, name)
 	{
@@ -376,7 +377,7 @@ function Ware_PrecacheNext()
 					PrecacheOverlay(overlay)
 			}
 			
-			AddAuthor(minigame.author, folder)
+			Ware_AddAuthor(minigame.author, folder)
 			
 			if (minigame.music)
 			{
@@ -410,7 +411,7 @@ function Ware_PrecacheNext()
 				Ware_Error("Special round '%s' has no category entry", name)
 			}
 			
-			AddAuthor(scope.special_round.author, folder)
+			Ware_AddAuthor(scope.special_round.author, folder)
 		}
 
 		return true
@@ -442,24 +443,30 @@ function Ware_PrecacheNext()
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
-
-	foreach (author, credits in authors)
-	{
-		if (!(author in Ware_Authors))
-			Ware_Authors[author] <- []
-		
-		if (credits.minigames > 0)
-			Ware_Authors[author].append(format("%d Minigame%s", credits.minigames, credits.minigames == 1 ? "" : "s"))
-		if (credits.bossgames > 0)
-			Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))		
-		if (credits.specialrounds > 0)
-			Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))			
-	}
 		
 	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
 
 	return null
+}
+
+foreach(theme in Ware_Themes)
+	Ware_AddAuthor(theme.author, "themes") // no null check, gonna assume themes have authors (add to all missing in later commit)
+
+// move all Ware_ExtraAuthors to Ware_Authors. should Ware_ExtraAuthors be deleted in some way after? maybe should be local in the first place
+foreach (author, credits in Ware_ExtraAuthors)
+{
+	if (!(author in Ware_Authors))
+		Ware_Authors[author] <- []
+	
+	if (credits.minigames > 0)
+		Ware_Authors[author].append(format("%d Minigame%s", credits.minigames, credits.minigames == 1 ? "" : "s"))
+	if (credits.bossgames > 0)
+		Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))		
+	if (credits.specialrounds > 0)
+		Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))
+	if (credits.themes > 0)
+		Ware_Authors[author].append(format("%d Theme%s", credits.themes, credits.themes == 1 ? "" : "s"))			
 }
 
 function Ware_PrecacheStep()
