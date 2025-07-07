@@ -196,11 +196,11 @@ function OnStart()
 		local max = 2
 
 		//i dunno why 3 reloads don't work
-		if(up[1] == "faster reload rate")
+		if (up[1] == "faster reload rate")
 			max = 1
 
 		if (RandomInt(0, 3) == 0) amt += RandomInt(1,max)
-		
+
 		up.append(amt)
 		text += amt.tostring() + "x " + up[0] + "\n"
 		currency += up[2] * amt
@@ -269,7 +269,7 @@ function OnStart()
 			
 			local name = heavy_sound
 
-			if(class_idx == CLASS_PYRO )
+			if (class_idx == CLASS_PYRO)
 				name = pyro_sound
 
 			prop.EmitSound(name)
@@ -280,7 +280,7 @@ function OnStart()
 
 			
 
-			if(class_idx == CLASS_PYRO)
+			if (class_idx == CLASS_PYRO)
 				Ware_CreateTimer(@() SpawnFires(), 9.5)
 			else
 			{
@@ -453,7 +453,7 @@ function OnPlayerInventory(player)
 	if (Ware_MinigameMode != MISSION_RESIST)
 	{
 		local weapon = player.GetActiveWeapon()
-		if(!weapon) return
+		if (!weapon) return
 
 		if (Ware_MinigameMode == MISSION_DAMAGE)
 		{
@@ -473,7 +473,7 @@ function OnPlayerInventory(player)
 					
 				//Ware_ChatPrint(null, "{str}: actual: {int}  expected:{int} PASS:{int}", up[1], atrb, calc, pass)
 			}
-			if(hits == upgrades.len())
+			if (hits == upgrades.len())
 				Ware_PassPlayer(player, true)
 		}
 	}
