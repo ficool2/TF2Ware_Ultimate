@@ -4,6 +4,7 @@ minigame <- Ware_MinigameData
 	author         = ["PedritoGMG"]
 	description    = "Hit the Jackpot!"
 	duration       = 10.0
+	max_players    = 64 	// 9 ents for each player | 576
     music          = "casino"
 })
 
@@ -26,11 +27,10 @@ centerPos <- Ware_MinigameLocation.center * 1.0
 cameraOrigin <- Vector(0, 0, 500) + centerPos
 cameraAngle <- QAngle(90, 90, 0)
 columnSize <- 3
+local centerToSlotOrigin = Vector(0, 27.5, 0)
 // More speed = Less Sync
-speedDefault <- 17.5
+speedDefault <- 32
 local separation = 30
-
-panelSize <- 125
 
 local columnCharacters = (function() {
     local chars = clone(charactersConst)
@@ -43,7 +43,10 @@ local columnCharacters = (function() {
 
 local model_head  = "models/mariokart/head.mdl"
 model_dispenser <- "models/buildables/dispenser_lvl3_light.mdl"
-overlay_fail <- "hud/tf2ware_ultimate/minigames/memorize_a_pair_fail"
+sound_dispenser <- "weapons/dispenser_idle.wav"
+sound_heal <- "weapons/dispenser_heal.wav"
+sound_ammo <- "weapons/dispenser_generate_metal.wav"
+overlay_fail <- "hud/tf2ware_ultimate/minigames/jackpot_fail"
 
 local AllSlotsIcons = []
 class ColumnSlot {
@@ -61,9 +64,10 @@ class ColumnSlot {
 		this.icons = []
 		this.origin = origin
 		this.angles = angles
+		local cloneCC = clone(columnCharacters)
 		for (local i = 0; i < size; i++) {
-			local icon = SpawnIconToPlayer(player, columnCharacters[i])
-			icon.SetOrigin(origin + Vector( 0, separation*i, 0))
+			local icon = SpawnIconToPlayer(RemoveRandomElement(cloneCC))
+			icon.SetOrigin(origin + Vector( 0, separation * i, 0))
 			icon.SetAbsAngles(angles)
 			icon.SetAbsVelocity(Vector(0, -speed, 0))
 			icon.ValidateScriptScope()
@@ -73,7 +77,7 @@ class ColumnSlot {
 		}
     }
 
-	function SpawnIconToPlayer(player, name)
+	function SpawnIconToPlayer(name)
 	{
 		local ent = Ware_CreateEntity("obj_teleporter")
 		ent.DispatchSpawn()
@@ -85,18 +89,34 @@ class ColumnSlot {
 		ent.SetMoveType(MOVETYPE_FLY, MOVECOLLIDE_FLY_BOUNCE)
 		SetPropBool(ent, "m_bPlacing", true)
 		SetPropInt(ent, "m_fObjectFlags", 2)
-		SetPropEntity(ent, "m_hBuilder", player)
+		SetPropEntity(ent, "m_hBuilder", this.player)
 		SetPropString(ent, "m_iName", "slot_icon")
 		return ent
 	}
 	function GetMiddleOne() {
-		this.OnGetMiddleOne()
-		return
+		return FindClosestEntity(this.icons, this.origin + centerToSlotOrigin)
 	}
-	function OnGetMiddleOne() {
+	function Stop() {
 		foreach (icon in this.icons) {
 			icon.SetMoveType(MOVETYPE_NONE, 0)
 		}
+	}
+
+	function FindClosestEntity(entities, targetOrigin) {
+		if (entities.len() == 0) return null
+
+		local closest = null
+		local minDist = null
+
+		foreach (ent in entities) {
+			local dist = VectorDistance(ent.GetOrigin(), targetOrigin)
+			if (closest == null || dist < minDist) {
+				minDist = dist
+				closest = ent
+			}
+		}
+
+		return closest
 	}
 }
 
@@ -104,12 +124,18 @@ function OnPrecache()
 {
 	PrecacheModel(model_head)
 	PrecacheModel(model_dispenser)
+	PrecacheSound(sound_dispenser)
+	PrecacheSound(sound_heal)
+	PrecacheSound(sound_ammo)
 	PrecacheOverlay(overlay_fail)
 }
 
 
 function OnStart()
 {
+	Ware_PlaySoundOnAllClients(sound_dispenser)
+	Ware_PlaySoundOnAllClients(sound_heal)
+
 	camera = Ware_SpawnEntity("point_viewcontrol",
 	{
 		origin     = cameraOrigin
@@ -124,67 +150,114 @@ function OnStart()
 		angles          = QAngle(-90, -90, 0)
 		model			= model_dispenser
 		modelscale      = 3.75
+		skin 			= RandomInt(0, 1)
 	})
-
 
 	foreach (player in Ware_MinigamePlayers) {
 		TogglePlayerViewcontrol(player, camera, true)
-		player.AddHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
-		player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
 
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.holding_attack <- 0
 		minidata.clicks <- 0
 		minidata.SlotMachine <- []
 		for (local i = 1; i <= columnSize; i++) {
-			local origin = cameraOrigin + Vector(-separation*2, 0, 0)
+			local origin = cameraOrigin + Vector(-separation*2, -20, -90) // Center to Left
 			minidata.SlotMachine.append(
-				ColumnSlot(player, speedDefault*i , columnSize, origin + Vector(separation*i, -25, -90), cameraAngle)
+				ColumnSlot(player, speedDefault*i , columnSize, origin + Vector(separation*i, 0, 0), cameraAngle)
 			)
 		}
+		minidata.SlotMachine
 	}
+
+	// Tesing | to see the places where straight icons are checked
+	/*
+	local minidata = Ware_GetPlayerMiniData(GetListenServerHost())
+	foreach (slot in minidata.SlotMachine) {
+		DebugDrawCircle(slot.origin + centerToSlotOrigin, Vector(0, 255, 0), 50, 10.0, true, 10.0)
+	}
+	*/
+
 }
 
 function OnEnd()
 {
-	foreach (player in Ware_MinigamePlayers) {
+	Ware_PlaySoundOnAllClients(sound_dispenser, 1.0, 100, SND_STOP)
+	Ware_PlaySoundOnAllClients(sound_heal, 1.0, 100, SND_STOP)
+	foreach (player in Ware_MinigamePlayers)
 		TogglePlayerViewcontrol(player, camera, false)
-		player.RemoveHudHideFlags(HIDEHUD_MISCSTATUS|HIDEHUD_HEALTH)
-		AddThinkToEnt(player, null)
-	}
 }
 
 function OnUpdate()
 {
     foreach (icon in AllSlotsIcons)
 	{
-		//less space = less sync | idk how to fix
+		// Less Space = Less Sync | idk how to fix
 		local limit = 22.5
+
 		local IconSlot = icon.GetScriptScope().ColumnSlot
         local origin = icon.GetOrigin()
 
-		if (IconSlot.origin.y - limit > origin.y)
-		{
-			icon.KeyValueFromVector("origin", (IconSlot.origin + Vector(0, limit*3, 0)))
+		if (IconSlot.origin.y - limit > origin.y) {
+			icon.KeyValueFromVector("origin", (IconSlot.origin + Vector(0, limit * 3, 0)))
+
+			//Fix for visible teleport
+			local currentIcon = icon // Local Copy
+			SetPropInt(icon, "m_nRenderMode", 10)
+			Ware_CreateTimer(@() SetPropInt(currentIcon, "m_nRenderMode", 0), 0.05)
 		}
     }
-	foreach (player in Ware_MinigamePlayers) {
+	foreach (player in Ware_MinigamePlayers)
+	{
 		local minidata = Ware_GetPlayerMiniData(player)
 		local buttons = GetPropInt(player, "m_nButtons")
+
 		if (buttons & IN_ATTACK && !minidata.holding_attack)
 		{
-			if (minidata.clicks < columnSize)
-				minidata.SlotMachine[minidata.clicks].GetMiddleOne()
+			if (minidata.clicks < columnSize) {
+				Ware_PlaySoundOnClient(player, sound_ammo)
+				minidata.SlotMachine[minidata.clicks].Stop()
+			}
+
+			if (minidata.clicks == columnSize-1) {
+				local iconsResult = []
+
+				for (local i = 0; i < columnSize; i++)
+					iconsResult.append(minidata.SlotMachine[i].GetMiddleOne())
+
+				if (allSameBodygroup(iconsResult, 0))
+				{
+					Ware_PassPlayer(player, true)
+					if (first)
+					{
+						Ware_ChatPrint(null, "{player} {color}was the first to hit the jackpot!", player, TF_COLOR_DEFAULT)
+						Ware_GiveBonusPoints(player)
+						first = false
+					}
+				} else {
+					Ware_ShowScreenOverlay(player, overlay_fail)
+				}
+
+			}
 			minidata.clicks++
-			printl(minidata.clicks)
 		}
-		if (buttons & IN_ATTACK)
-		{
-			minidata.holding_attack = true
-		}
-		else
-		{
-			minidata.holding_attack = false
-		}
+
+		minidata.holding_attack = (buttons & IN_ATTACK) != 0
 	}
+}
+
+function allSameBodygroup(entities, groupId) {
+    if (entities.len() == 0) return true;
+
+    local firstBg = entities[0].GetBodygroup(groupId);
+    foreach (ent in entities) {
+        if (ent.GetBodygroup(groupId) != firstBg) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function SetRenderModeAll(ents, mode) {
+	foreach (ent in ents)
+		SetPropInt(ents, "m_nRenderMode", mode)
 }
