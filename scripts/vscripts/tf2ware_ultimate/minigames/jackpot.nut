@@ -246,15 +246,15 @@ function OnUpdate()
 }
 
 function allSameBodygroup(entities, groupId) {
-    if (entities.len() == 0) return true;
+    if (entities.len() == 0) return true
 
-    local firstBg = entities[0].GetBodygroup(groupId);
+    local firstBg = entities[0].GetBodygroup(groupId)
     foreach (ent in entities) {
         if (ent.GetBodygroup(groupId) != firstBg) {
-            return false;
+            return false
         }
     }
-    return true;
+    return true
 }
 
 function SetRenderModeAll(ents, mode) {
