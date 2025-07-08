@@ -44,7 +44,7 @@ function OnPrecache()
 
 function OnTeleport(players)
 {
-	local center = Ware_MinigameLocation.center
+	local center = Ware_MinigameLocation.center * 1.0
 	center.y = 11200
 	
 	Ware_TeleportPlayersRow(players,
