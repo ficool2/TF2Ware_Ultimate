@@ -9,15 +9,15 @@ minigame <- Ware_MinigameData
 })
 
 local charactersConst = [
-    "Scout",    // 1
-    "Sniper",   // 2
-    "Soldier",  // 3
-    "Demoman",  // 4
-    "Medic",    // 5
-    "Heavy",    // 6
-    "Pyro",     // 7
-    "Spy",      // 8
-    "Engineer"  // 9
+    "scout",    // 1
+    "sniper",   // 2
+    "soldier",  // 3
+    "demoman",  // 4
+    "medic",    // 5
+    "heavy",    // 6
+    "pyro",     // 7
+    "spy",      // 8
+    "engineer"  // 9
 ]
 
 first <- true
