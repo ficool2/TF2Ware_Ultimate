@@ -27,10 +27,14 @@ centerPos <- Ware_MinigameLocation.center * 1.0
 cameraOrigin <- Vector(0, 0, 500) + centerPos
 cameraAngle <- QAngle(90, 90, 0)
 columnSize <- 3
+slotSize <- 3
 local centerToSlotOrigin = Vector(0, 27.5, 0)
+local centerToLeft = Vector(0, -20, -90)
 // More speed = Less Sync
 speedDefault <- 32
 local separation = 30
+// Less Space = Less Sync
+limit <- 22.5
 
 local columnCharacters = (function() {
     local chars = clone(charactersConst)
@@ -64,14 +68,11 @@ class ColumnSlot {
 		this.icons = []
 		this.origin = origin
 		this.angles = angles
+
 		local cloneCC = clone(columnCharacters)
 		for (local i = 0; i < size; i++) {
 			local icon = SpawnIconToPlayer(RemoveRandomElement(cloneCC))
 			icon.SetOrigin(origin + Vector( 0, separation * i, 0))
-			icon.SetAbsAngles(angles)
-			icon.SetAbsVelocity(Vector(0, -speed, 0))
-			icon.ValidateScriptScope()
-			icon.GetScriptScope().ColumnSlot <- this
 			this.icons.append(icon)
 			AllSlotsIcons.append(icon)
 		}
@@ -82,7 +83,6 @@ class ColumnSlot {
 		local ent = Ware_CreateEntity("obj_teleporter")
 		ent.DispatchSpawn()
 		ent.SetModel(model_head)
-		ent.SetModelScale(2.85, 0.0)
 		ent.SetBodygroup(0, charactersConst.find(name))
 		ent.AddEFlags(Constants.FEntityEFlags.EFL_NO_THINK_FUNCTION)
 		ent.SetSolid(SOLID_NONE)
@@ -91,15 +91,23 @@ class ColumnSlot {
 		SetPropInt(ent, "m_fObjectFlags", 2)
 		SetPropEntity(ent, "m_hBuilder", this.player)
 		SetPropString(ent, "m_iName", "slot_icon")
+
+		ent.SetModelScale(2.85, 0.0)
+		ent.SetAbsAngles(angles)
+		ent.SetAbsVelocity(Vector(0, -speed, 0))
+		ent.ValidateScriptScope()
+		ent.GetScriptScope().ColumnSlot <- this
+
 		return ent
 	}
+
 	function GetMiddleOne() {
 		return FindClosestEntity(this.icons, this.origin + centerToSlotOrigin)
 	}
+
 	function Stop() {
-		foreach (icon in this.icons) {
+		foreach (icon in this.icons)
 			icon.SetMoveType(MOVETYPE_NONE, 0)
-		}
 	}
 
 	function FindClosestEntity(entities, targetOrigin) {
@@ -160,13 +168,13 @@ function OnStart()
 		minidata.holding_attack <- 0
 		minidata.clicks <- 0
 		minidata.SlotMachine <- []
-		for (local i = 1; i <= columnSize; i++) {
-			local origin = cameraOrigin + Vector(-separation*2, -20, -90) // Center to Left
+		for (local i = 1; i <= slotSize; i++) {
+			local origin = cameraOrigin + centerToLeft
+			origin.x += -separation*2
 			minidata.SlotMachine.append(
 				ColumnSlot(player, speedDefault*i , columnSize, origin + Vector(separation*i, 0, 0), cameraAngle)
 			)
 		}
-		minidata.SlotMachine
 	}
 
 	// Tesing | to see the places where straight icons are checked
@@ -175,11 +183,11 @@ function OnStart()
 	foreach (slot in minidata.SlotMachine) {
 		DebugDrawCircle(slot.origin + centerToSlotOrigin, Vector(0, 255, 0), 50, 10.0, true, 10.0)
 	}
+	DebugDrawLine(minidata.SlotMachine[0].origin + centerToSlotOrigin, minidata.SlotMachine[slotSize-1].origin + centerToSlotOrigin, 0, 255, 0, true, 10)
 	*/
-
 }
 
-function OnEnd()
+function OnCleanup()
 {
 	Ware_PlaySoundOnAllClients(sound_dispenser, 1.0, 100, SND_STOP)
 	Ware_PlaySoundOnAllClients(sound_heal, 1.0, 100, SND_STOP)
@@ -191,9 +199,6 @@ function OnUpdate()
 {
     foreach (icon in AllSlotsIcons)
 	{
-		// Less Space = Less Sync | idk how to fix
-		local limit = 22.5
-
 		local IconSlot = icon.GetScriptScope().ColumnSlot
         local origin = icon.GetOrigin()
 
@@ -206,6 +211,7 @@ function OnUpdate()
 			Ware_CreateTimer(@() SetPropInt(currentIcon, "m_nRenderMode", 0), 0.05)
 		}
     }
+
 	foreach (player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
@@ -213,15 +219,15 @@ function OnUpdate()
 
 		if (buttons & IN_ATTACK && !minidata.holding_attack)
 		{
-			if (minidata.clicks < columnSize) {
+			if (minidata.clicks < slotSize) {
 				Ware_PlaySoundOnClient(player, sound_ammo)
 				minidata.SlotMachine[minidata.clicks].Stop()
 			}
 
-			if (minidata.clicks == columnSize-1) {
+			if (minidata.clicks == slotSize-1) {
 				local iconsResult = []
 
-				for (local i = 0; i < columnSize; i++)
+				for (local i = 0; i < slotSize; i++)
 					iconsResult.append(minidata.SlotMachine[i].GetMiddleOne())
 
 				if (allSameBodygroup(iconsResult, 0))
@@ -249,15 +255,8 @@ function allSameBodygroup(entities, groupId) {
     if (entities.len() == 0) return true
 
     local firstBg = entities[0].GetBodygroup(groupId)
-    foreach (ent in entities) {
-        if (ent.GetBodygroup(groupId) != firstBg) {
+    foreach (ent in entities)
+        if (ent.GetBodygroup(groupId) != firstBg)
             return false
-        }
-    }
     return true
-}
-
-function SetRenderModeAll(ents, mode) {
-	foreach (ent in ents)
-		SetPropInt(ents, "m_nRenderMode", mode)
 }
