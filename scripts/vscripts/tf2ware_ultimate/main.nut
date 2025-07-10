@@ -313,7 +313,7 @@ function Ware_PrecacheNext()
 	local authors = {}
 	local music_minigame = {}, music_bossgame = {}
 
-	local add_author = function(author, folder)
+	local AddAuthor = function(author, folder)
 	{
 		local list = author
 		if (typeof(list) != "array")
@@ -377,7 +377,7 @@ function Ware_PrecacheNext()
 					PrecacheOverlay(overlay)
 			}
 			
-			add_author(minigame.author, folder)
+			AddAuthor(minigame.author, folder)
 			
 			if (minigame.music)
 			{
@@ -411,7 +411,7 @@ function Ware_PrecacheNext()
 				Ware_Error("Special round '%s' has no category entry", name)
 			}
 			
-			add_author(scope.special_round.author, folder)
+			AddAuthor(scope.special_round.author, folder)
 		}
 
 		return true
@@ -435,7 +435,7 @@ function Ware_PrecacheNext()
 	
 	foreach (theme in Ware_Themes)
 	{
-		add_author(theme.author, "themes")
+		AddAuthor(theme.author, "themes")
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
