@@ -64,7 +64,7 @@ function OnGameEvent_player_builtobject(params)
 		}
 	}
 	
-	Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0);
+	Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 }
 
 function OnTakeDamage(params)
