@@ -19,7 +19,7 @@ function OnPrecache()
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Winger");	
+	Ware_SetGlobalLoadout(TF_CLASS_SCOUT, "Winger")
 	
 	local pos = Ware_MinigameLocation.center + Vector(0.0, 0.0, RandomFloat(200.0, 400.0))
 	local prop = Ware_SpawnEntity("prop_dynamic_override", 

@@ -407,11 +407,11 @@ function Generate()
 	CalculateSize()
 
 	local direction = null
-	local CellArray = array(Size);
+	local CellArray = array(Size)
 
 	for (local i = 0 ; i < Size ; i++) 
 	{
-		CellArray[i] = array(Size);
+		CellArray[i] = array(Size)
 	}
 
 	CellArray[0][0] = 8

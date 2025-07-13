@@ -86,7 +86,7 @@ function CreateMoney()
 		if (RandomInt(0, 5) == 0)
 		{
 			SetPropInt(cash, "m_nModelIndex", bomb_modelindex)
-			EntityEntFire(cash, "Kill", "", 7.0);
+			EntityEntFire(cash, "Kill", "", 7.0)
 		}
 		else
 		{
@@ -112,7 +112,7 @@ function OnTakeDamage(params)
 				attacker.AddEFlags(EFL_USER)
 				SetPropInt(attacker, "m_spawnflags", 0)				
 				// the kill must be postponed or it may crash because this damage runs from a physics callback
-				EntityEntFire(attacker, "Kill");
+				EntityEntFire(attacker, "Kill")
 					
 				if (GetPropInt(attacker, "m_nModelIndex") == bomb_modelindex)
 				{

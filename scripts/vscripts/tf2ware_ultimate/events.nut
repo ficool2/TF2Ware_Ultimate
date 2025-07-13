@@ -417,7 +417,7 @@ function OnGameEvent_player_spawn(params)
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")		
 		player.SetHealth(player.GetMaxHealth())	
-		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY);
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
 		
 		if (Ware_SpecialRound)

@@ -103,7 +103,7 @@ function OnStart()
 		{
 			origin     = origin
 			spawnflags = SF_TRIGGER_ALLOW_CLIENTS
-		});		
+		})	
 		trigger.SetSolid(SOLID_BBOX)
 		trigger.SetSize(prop.GetBoundingMins(), prop.GetBoundingMaxs())
 		trigger.ValidateScriptScope()

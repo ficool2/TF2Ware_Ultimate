@@ -99,7 +99,7 @@ function OnUpdate()
 		{
 			if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
 			{
-				Ware_ShowScreenOverlay(player, null);	
+				Ware_ShowScreenOverlay(player, null)
 				Ware_CreateTimer(function()
 				{
 					if (target.IsValid())

@@ -65,7 +65,7 @@ function OnTakeDamage(params)
 					if (++Ware_GetPlayerMiniData(victim).points >= 3)	
 						Ware_PassPlayer(victim, true)
 						
-					EntityEntFire(attacker, "Kill");
+					EntityEntFire(attacker, "Kill")
 					attacker.AddEFlags(EFL_USER) // prevent multiple touches on same frame
 				}
 				

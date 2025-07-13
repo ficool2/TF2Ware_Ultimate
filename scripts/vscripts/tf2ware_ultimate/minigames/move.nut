@@ -36,7 +36,7 @@ function OnUpdate()
 		else if (Ware_MinigameMode == 1)
 		{
 			if (player.GetAbsVelocity().Length() > 5.0)
-				Ware_SuicidePlayer(player);	
+				Ware_SuicidePlayer(player)
 		}				
 	}
 }
