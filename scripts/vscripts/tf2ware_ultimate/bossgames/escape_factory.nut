@@ -19,7 +19,11 @@ endzone <- FindByName(null, "plugin_Bossgame2_WinArea")
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER, null, { "active health degen" : -1.0 })
+	foreach(player in Ware_MinigamePlayers)
+	{
+		Ware_SetPlayerLoadout(player, TF_CLASS_ENGINEER, null, { "active health degen" : -1.0 })
+		Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
+	}
 	
 	endzone.ValidateScriptScope()
 	endzone.GetScriptScope().OnStartTouch <- OnEndzoneTouch
