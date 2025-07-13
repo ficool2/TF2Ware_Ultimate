@@ -6,11 +6,11 @@ local MODE_SHORTCIRCUIT = 4
 
 mode_infos <- 
 {
-	[MODE_ROCKET]       = [ "Rocket jump!",       "rocket_jump",        384.0],
-	[MODE_STICKY]       = [ "Sticky jump!",       "sticky_jump",        384.0],
-	[MODE_SENTRY]       = [ "Sentry jump!",       "sentry_jump",        384.0],
-	[MODE_FLARE]        = [ "Flare jump!",        "flare_jump",         400.0],
-	[MODE_SHORTCIRCUIT] = [ "Short Circuit jump!", "shortcircuit_jump", 384.0],
+	[MODE_ROCKET]       = [ "Rocket jump!",       "rocket_jump",        600.0],
+	[MODE_STICKY]       = [ "Sticky jump!",       "sticky_jump",        600.0],
+	[MODE_SENTRY]       = [ "Sentry jump!",       "sentry_jump",        600.0],
+	[MODE_FLARE]        = [ "Flare jump!",        "flare_jump",         450.0],
+	[MODE_SHORTCIRCUIT] = [ "Short Circuit jump!", "shortcircuit_jump", 600.0],
 }
 
 minigame <- Ware_MinigameData
@@ -77,12 +77,12 @@ function OnStart()
 
 function OnUpdate()
 {
-	local height = mode_infos[Ware_MinigameMode][2]
+	local velocity = mode_infos[Ware_MinigameMode][2]
 	foreach (player in Ware_MinigamePlayers)
 	{
 		if (!player.IsAlive())
 			continue
-		if (Ware_GetPlayerHeight(player) > height)
+		if (player.GetAbsVelocity().Length() > velocity)
 			Ware_PassPlayer(player, true)
 	}
 	
