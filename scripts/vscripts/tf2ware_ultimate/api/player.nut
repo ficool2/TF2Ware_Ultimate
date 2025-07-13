@@ -782,6 +782,49 @@ function Ware_GetSortedScorePlayers(reverse)
 	return players
 }
 
+function Ware_AssignTeamsByScore()
+{
+	local red_players = []
+	local blue_players = []
+	local red_score = 0
+	local blue_score = 0
+	
+	local sorted = Ware_GetSortedScorePlayers(true)
+	
+	foreach (player in sorted)
+	{
+		local score = Ware_GetPlayerData(player).score
+		
+		if (red_players.len() < blue_players.len()) 
+		{
+			red_players.append(player)
+			red_score += score
+		}
+		else if (blue_players.len() < red_players.len()) 
+		{
+			blue_players.append(player)
+			blue_score += score
+		}
+		else 
+		{
+			if (red_score <= blue_score) 
+			{
+				red_players.append(player)
+				red_score += score
+			}
+			else 
+			{
+				blue_players.append(player)
+				blue_score += score
+			}
+		}
+	}
+	foreach (player in red_players)
+		Ware_SetPlayerTeam(player, TF_TEAM_RED)
+	foreach (player in blue_players)
+		Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
+}
+
 // Adds an attribute to the player
 // Given attributes are removed automatically when the minigame ends
 function Ware_AddPlayerAttribute(player, name, value, duration)

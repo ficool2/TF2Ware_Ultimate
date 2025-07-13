@@ -1662,6 +1662,9 @@ function Ware_StartMinigameInternal(is_boss)
 				player.RemoveFlag(FL_ATCONTROLS)
 		}, Ware_Minigame.start_freeze)
 	}
+
+	if (Ware_Minigame.sort_teams)
+		Ware_AssignTeamsByScore()
 	
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope
 	if (location != Ware_MinigameLocation)
