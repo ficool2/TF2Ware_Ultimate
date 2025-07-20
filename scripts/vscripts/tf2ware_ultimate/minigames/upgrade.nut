@@ -193,11 +193,14 @@ function OnStart()
 	foreach (up in upgrades)
 	{
 		local amt = 1
-		local max = 2
+		local max = 3
 
 		//i dunno why 3 reloads don't work
 		if (up[1] == "faster reload rate")
 			max = 1
+
+		if (up[1] == "maxammo primary increased")
+			max = 2
 
 		if (RandomInt(0, 3) == 0) amt += RandomInt(1,max)
 
