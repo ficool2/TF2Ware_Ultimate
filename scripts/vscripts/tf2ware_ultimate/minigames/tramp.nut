@@ -6,7 +6,7 @@ minigame <- Ware_MinigameData
 	duration       = 15.5
 	end_delay      = 1.0
 	location       = "dirtsquare"
-	music          = "slide"
+	music          = "happyville"
 	thirdperson    = true
 	convars = {
 		sv_airaccelerate = 1000
