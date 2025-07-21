@@ -52,8 +52,7 @@ function OnStart()
 		minidata.attack2 <- false
 		SetPropBool(player, "m_Shared.m_bShieldEquipped", true)
 
-		//Doesn't work
-		SetPropFloat(player, "m_flChargeMeter", 0.1)
+		SetPropFloat(player, "m_Shared.m_flChargeMeter", 0.0)
 
 		player.SetMoveType(MOVETYPE_NONE, 0)
 	}
