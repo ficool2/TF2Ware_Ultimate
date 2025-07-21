@@ -20,10 +20,6 @@ hoop_sound <- "ui/hitsound_beepo.wav"
 
 hoops <- []
 
-point_a <- null
-point_b <- null
-point_c <- null
-
 local hoop_delay = 3.5
 
 function OnPrecache()
@@ -190,7 +186,7 @@ function OnUpdate()
 			    player.SetAbsVelocity(n * 1500)
 			}
 
-			
+			player.RemoveCond(TF_COND_SHIELD_CHARGE)
 								
 			Ware_PlaySoundOnClient(player, hoop_sound, 1.0, 90 + jumps * 10)
 		}
