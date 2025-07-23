@@ -7,11 +7,22 @@ minigame <- Ware_MinigameData
 	music         = "falling"
 	start_pass    = true
 	fail_on_death = true
+	allow_damage  = true
+	friendly_fire = true
 })
 
 function OnStart()
 {
-	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Launcher")
+	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Direct Hit", {"Projectile speed decreased": 0.06, "deploy time increased": 3.25, "fire rate penalty": 99})
+	foreach (player in Ware_MinigamePlayers)
+	{
+		local weapon = player.GetActiveWeapon()
+		if (weapon == null)
+			continue
+		
+		weapon.SetClip1(1)
+		Ware_SetPlayerAmmo(player, TF_AMMO_PRIMARY, 0)
+	}
 }
 
 function OnTakeDamage(params)
