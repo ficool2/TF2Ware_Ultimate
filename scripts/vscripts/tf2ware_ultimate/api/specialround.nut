@@ -20,6 +20,7 @@ class Ware_SpecialRoundData
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
 		pitch_override    = -1
+		home_location     = ""
 		
 		if (table)
 		{
@@ -74,6 +75,8 @@ class Ware_SpecialRoundData
 	speedup_threshold        = null
 	// Override player voice pitch if set
 	pitch_override           = null
+	// Changes the Minigame home location if set. Default empty string means it's not altered.
+	home_location            = null
 
 	// == Internal use only ==
 	file_name                = null

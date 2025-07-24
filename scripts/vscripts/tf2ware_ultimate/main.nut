@@ -533,6 +533,8 @@ function Ware_SetTheme(requested_theme)
 	}
 
 	Ware_SetupThemeSounds()
+	
+	return theme
 }
 
 function Ware_SetupThemeSounds()
@@ -864,6 +866,12 @@ function Ware_PlayStartSound()
 
 function Ware_CheckHomeLocation(player_count)
 {
+	if(Ware_SpecialRound && Ware_SpecialRound.home_location != "")
+	{
+		Ware_MinigameHomeLocation = Ware_Location[Ware_SpecialRound.home_location]
+		return
+	}
+	
 	local old_location = Ware_MinigameHomeLocation
 	local new_location = Ware_Location[player_count > 12 ? "home_big" : "home"]
 	Ware_MinigameHomeLocation = new_location
@@ -1112,6 +1120,9 @@ function Ware_BeginSpecialRoundInternal()
 					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
 					SetConvarValue(name, value)
 				}
+				
+				if(Ware_SpecialRound.home_location != "")
+					Ware_MinigameHomeLocation = Ware_Location[Ware_SpecialRound.home_location]
 				
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
@@ -1648,6 +1659,8 @@ function Ware_StartMinigameInternal(is_boss)
 	local location
 	if (player_count > 12 && ((Ware_Minigame.location + "_big") in Ware_Location))
 		location = Ware_Location[Ware_Minigame.location + "_big"]
+	else if (Ware_Minigame.location == "home" && Ware_SpecialRound && Ware_SpecialRound.home_location != "")
+		location = Ware_Location[Ware_SpecialRound.home_location] // TODO: this doesnt feel like the best way of doing this, but otherwise any "home" minigames go to normal home
 	else
 		location = Ware_Location[Ware_Minigame.location]
 		

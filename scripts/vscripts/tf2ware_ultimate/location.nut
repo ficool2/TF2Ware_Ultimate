@@ -68,6 +68,17 @@ Ware_Location.home_big <-
 	Teleport   = Ware_Location.home.Teleport
 }
 
+Ware_Location.home_micro <-
+{
+	center  = Vector(5080, -1520, -520)
+	cameras = ["MainRoom_Camera"]
+	spawns = []
+	spawn_name = "teamspawn_micro"
+	spawn_idx = 0
+	Init = Ware_Location.home.Init
+	Teleport = Ware_Location.home.Teleport
+}
+
 Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720)
