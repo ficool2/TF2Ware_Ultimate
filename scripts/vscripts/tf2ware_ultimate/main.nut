@@ -1017,7 +1017,7 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 	return null
 }
 
-function Ware_BeginSpecialRoundInternal()
+function Ware_RollSpecialRoundInternal()
 {
 	Ware_CriticalZone = true
 	
@@ -1069,7 +1069,18 @@ function Ware_BeginSpecialRoundInternal()
 		return false
 	}	
 	
-	printf("[TF2Ware] Starting special round '%s'\n", round)
+	Ware_CriticalZone = false
+	return true
+}
+
+function Ware_BeginSpecialRoundInternal()
+{
+	Ware_CriticalZone = true // TODO: do i need to add this here now? all the errors have been moved to roll function
+	
+	if(Ware_SpecialRoundScope.len() == 0)
+		return Ware_RollSpecialRound()
+	
+	printf("[TF2Ware] Starting special round '%s'\n", Ware_SpecialRoundScope.special_round.file_name)
 	
 	Ware_SpecialRoundPrevious = true
 	
@@ -1148,7 +1159,6 @@ function Ware_BeginSpecialRoundInternal()
 	}, 0.0)
 	
 	Ware_CriticalZone = false
-	return true
 }
 
 function Ware_EndSpecialRoundInternal()

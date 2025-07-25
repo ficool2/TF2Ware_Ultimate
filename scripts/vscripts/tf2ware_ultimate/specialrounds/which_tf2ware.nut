@@ -70,6 +70,7 @@ special_round <- Ware_SpecialRoundData
 	category = ""
 	
 	home_location = "home_micro"
+	theme = RandomElement(Ware.themes)
 })
 
 function OnStart()

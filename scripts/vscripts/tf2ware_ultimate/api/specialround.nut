@@ -21,6 +21,7 @@ class Ware_SpecialRoundData
 		speedup_threshold = Ware_SpeedUpThreshold
 		pitch_override    = -1
 		home_location     = ""
+		theme             = ""
 		
 		if (table)
 		{
@@ -77,6 +78,8 @@ class Ware_SpecialRoundData
 	pitch_override           = null
 	// Changes the Minigame home location if set. Default empty string means it's not altered.
 	home_location            = null
+	// Forces a specific theme. Default empty string means a theme is rolled as normal.
+	theme                    = null
 
 	// == Internal use only ==
 	file_name                = null
@@ -184,8 +187,14 @@ class Ware_SpecialRoundData
 	// NOTE: if you are adding callbacks, update the double_trouble special round (it forwards every callback!)
 }
 
-// Rolls and starts a special round
+// Rolls a special round
 // Returns true if a special round was successfully rolled
+function Ware_RollSpecialRound()
+{
+	return Ware_RollSpecialRoundInternal()
+}
+
+// Starts a special round
 function Ware_BeginSpecialRound()
 {
 	return Ware_BeginSpecialRoundInternal()
