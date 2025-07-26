@@ -1078,7 +1078,8 @@ function Ware_BeginSpecialRoundInternal()
 	Ware_CriticalZone = true // TODO: do i need to add this here now? all the errors have been moved to roll function
 	
 	if(Ware_SpecialRoundScope.len() == 0)
-		return Ware_RollSpecialRound()
+		if(!Ware_RollSpecialRound())
+			return false
 	
 	printf("[TF2Ware] Starting special round '%s'\n", Ware_SpecialRoundScope.special_round.file_name)
 	

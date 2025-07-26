@@ -195,11 +195,41 @@ function OnGameEvent_teamplay_round_start(params)
 		return
 	Ware_Started = true
 	
+	// -----
+	// Roll for Special Round first, then set theme (which might depend on the special round), then finally begin the special round.
+	// -----
+	
+	// special rounds always occur every N rounds
+	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
+	local begin_intermission = true
+	local specialround_theme = ""
+	
+	if (Ware_DebugNextSpecialRound.len() > 0 ||
+		Ware_SpecialRoundNext ||
+		(!Ware_SpecialRoundPrevious &&
+			(Ware_RoundsPlayed + 1) % Ware_SpecialRoundInterval == 0))
+	{
+		Ware_SpecialRoundNext = false
+		if (Ware_RollSpecialRound())
+		{
+			begin_intermission = false
+			specialround_theme = Ware_SpecialRoundScope.special_round.theme
+		}
+	}
+	else
+	{
+		Ware_SpecialRoundPrevious = false
+	}
+	
 	// check for next theme. otherwise first round always uses default theme
 	if (Ware_DebugNextTheme != "")
 	{
 		Ware_SetTheme(Ware_DebugNextTheme)
 		Ware_DebugNextTheme = ""
+	}
+	else if (specialround_theme != "")
+	{
+		Ware_SetTheme(specialround_theme)
 	}
 	else if (Ware_RoundsPlayed > 0 && Ware_Themes.len() > 1)
 	{
@@ -230,23 +260,8 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_MinigameRotation.clear()
 	Ware_ReloadMinigameRotation(false)
 	
-	// special rounds always occur every N rounds
-	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
-	local begin_intermission = true
-	
-	if (Ware_DebugNextSpecialRound.len() > 0 ||
-		Ware_SpecialRoundNext ||
-		(!Ware_SpecialRoundPrevious &&
-			(Ware_RoundsPlayed + 1) % Ware_SpecialRoundInterval == 0))
-	{
-		Ware_SpecialRoundNext = false
-		if (Ware_BeginSpecialRound())
-			begin_intermission = false
-	}
-	else
-	{
-		Ware_SpecialRoundPrevious = false
-	}
+	if(Ware_SpecialRoundScope.len() > 0)
+		Ware_BeginSpecialRound()
 	
 	// special rounds decide their own intermission delay
 	if (begin_intermission)
