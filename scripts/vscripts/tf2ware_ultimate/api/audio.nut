@@ -41,7 +41,13 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 	if (player)
 		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
+	{
+		// Temporary workaround to fix channel volume difference in RECIPIENT_FILTER_SINGLE_PLAYER vs RECIPIENT_FILTER_GLOBAL
+		foreach(target in Ware_Players)
+			Ware_PlaySoundOnClient(target, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
+			
+		// Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
+	}
 }
 
 // Plays minigame music to the target player
