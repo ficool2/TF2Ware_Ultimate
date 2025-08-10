@@ -16,6 +16,7 @@ minigame <- Ware_MinigameData
 		"pirate_red"
 		"pirate_blue"
 	]	
+	modes          = 2
 })
  
 ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"
@@ -34,54 +35,83 @@ function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Stickybomb Jumper")
 	
-	local mission = RandomInt(0,1)
-	foreach (player in Ware_MinigamePlayers)
+	if (Ware_MinigameMode == 0)
 	{
-		Ware_SetPlayerMission(player, mission)
+		foreach (player in Ware_MinigamePlayers)
+		{
+			local team = player.GetTeam()
+			if (team == TF_TEAM_RED)
+				Ware_SetPlayerMission(player, 0)
+			else if (team == TF_TEAM_BLUE)
+				Ware_SetPlayerMission(player, 1)	
+		}
+	
+		local swap = RandomBool()
+
+		red_ship = Ware_SpawnEntity("prop_dynamic_override",
+		{
+			origin      = Ware_MinigameLocation.center + Vector(2200, swap ? -500 : 300, -136),
+			model       = ship_model
+			rendercolor = "255 0 0",
+		})
+		blue_ship = Ware_SpawnEntity("prop_dynamic_override",
+		{
+			origin      = Ware_MinigameLocation.center + Vector(2200, swap ? 300 : -500, -136),
+			model       = ship_model
+			rendercolor = "0 255 255",
+		})
 	}
-
-	local x_off = 100
-
-	red_ship = Ware_SpawnEntity("prop_dynamic_override",
+	else
 	{
-		origin      = Ware_MinigameLocation.center + Vector(2200 + (mission == 0 ? x_off : 0), RandomFloat(-300,300), -136),
-		model       = ship_model
-		rendercolor = "255 0 0",
-	})
-	blue_ship = Ware_SpawnEntity("prop_dynamic_override",
-	{
-		origin      = Ware_MinigameLocation.center + Vector(2200 + (mission == 1 ? x_off : 0), RandomFloat(-300,300), -136),
-		model       = ship_model
-		rendercolor = "0 255 255",
-	})
+		local mission = RandomInt(0,1)
+		foreach (player in Ware_MinigamePlayers)
+		{
+			Ware_SetPlayerMission(player, mission)
+		}
 
-	ships <- [red_ship, blue_ship]
-	foreach (ship in ships)
-	{
-		ship.ValidateScriptScope()
-		local scope = ship.GetScriptScope()
+		local x_off = 100
+		red_ship = Ware_SpawnEntity("prop_dynamic_override",
+		{
+			origin      = Ware_MinigameLocation.center + Vector(2200 + (mission == 0 ? x_off : 0), RandomFloat(-300,300), -136),
+			model       = ship_model
+			rendercolor = "255 0 0",
+		})
+		blue_ship = Ware_SpawnEntity("prop_dynamic_override",
+		{
+			origin      = Ware_MinigameLocation.center + Vector(2200 + (mission == 1 ? x_off : 0), RandomFloat(-300,300), -136),
+			model       = ship_model
+			rendercolor = "0 255 255",
+		})
 
-		scope.speed <- RandomFloat(-20, 20)
-		if (abs(scope.speed) < 5) scope.speed = RandomBool() ? 10 : -10
-		scope.start_y <- ship.GetOrigin().y
+		ships <- [red_ship, blue_ship]
+		foreach (ship in ships)
+		{
+			ship.ValidateScriptScope()
+			local scope = ship.GetScriptScope()
+
+			scope.speed <- RandomFloat(-20, 20)
+			if (abs(scope.speed) < 5) scope.speed = RandomBool() ? 10 : -10
+			scope.start_y <- ship.GetOrigin().y
+		}
 	}
-
 }
 
 function OnUpdate()
 {
-
-	foreach (ship in ships)
+	if (Ware_MinigameMode == 1)
 	{
-		local scope = ship.GetScriptScope()
-		local origin = ship.GetOrigin()
+		foreach (ship in ships)
+		{
+			local scope = ship.GetScriptScope()
+			local origin = ship.GetOrigin()
 
-		if (origin.y > scope.start_y)
-			scope.speed -= 0.2
-		else
-			scope.speed += 0.2
+			if (origin.y > scope.start_y)
+				scope.speed -= 0.2
+			else
+				scope.speed += 0.2
 
-		ship.KeyValueFromVector("origin", origin + Vector(0, scope.speed, 0))
+			ship.KeyValueFromVector("origin", origin + Vector(0, scope.speed, 0))
+		}
 	}
 
 	local offset = Vector(0, 0, 300)
