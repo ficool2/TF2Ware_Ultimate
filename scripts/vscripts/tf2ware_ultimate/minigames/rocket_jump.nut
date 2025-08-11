@@ -85,5 +85,5 @@ function OnCleanup()
 
 function OnCheckEnd()
 {
-	return Ware_GetUnpassedPlayers(true).len() == 0
+	return Ware_GetUnpassedPlayers(false, true).len() == 0
 }

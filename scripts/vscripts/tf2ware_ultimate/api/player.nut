@@ -704,15 +704,15 @@ function Ware_GetTeamPlayers(team)
 	return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team)
 }
 
-// Gets a list of players that haven't been passed
-// Optionally it will only fetch alive unpassed players
-function Ware_GetUnpassedPlayers(alive_only = false)
+// Gets a list of players that have or haven't been passed
+// Optionally it will only fetch alive players
+function Ware_GetPassedPlayers(passed = true, alive_only = false)
 {
 	// Ware_MinigamePlayersData.filter(@(i, data) data.passed
 	local players = []
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		if (data.passed)
+		if (data.passed != passed)
 			continue
 		local player = data.player
 		if (alive_only && !player.IsAlive())

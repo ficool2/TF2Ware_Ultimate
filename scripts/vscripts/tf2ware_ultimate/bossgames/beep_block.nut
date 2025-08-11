@@ -292,5 +292,5 @@ function OnCheckEnd()
 
 function BeepBlock_CheckEnd()
 {
-	return Ware_GetUnpassedPlayers(true).len() == 0
+	return Ware_GetPassedPlayers(false, true).len() == 0
 }
