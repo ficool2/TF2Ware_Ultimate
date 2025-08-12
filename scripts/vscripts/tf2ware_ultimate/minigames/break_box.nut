@@ -156,6 +156,7 @@ function OnTakeDamage(params)
 		{
 			if (victim.IsEFlagSet(EFL_USER))
 			{			
+				Ware_PassPlayer(attacker, true)
 				Ware_GiveBonusPoints(attacker)
 				
 				DispatchParticleEffect(break_particle, victim.GetOrigin(), Vector(90, 0, 0))
