@@ -13,7 +13,7 @@ function OnPick()
 	return !Ware_BonusPoints
 }
 
-// TODO: probably move this to if bonus points special or config is on
+// TODO: probably make this work during config bonus points too
 function OnMinigameEnd()
 {
 	if(Ware_MinigamePlayers.len() > 1)
