@@ -13,6 +13,7 @@ mercenary_kart
 monoculus
 obstacle_course
 slender
+smash_arena
 typing
 wega_challenge
 wild_west
