@@ -543,6 +543,13 @@ Ware_Location.inventoryday <-
 	}
 }
 
+Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location, recommend collisions stay off
+{
+	center = Vector(3615, 2630, -11880)
+	radius = 300.0
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+}
+
 Ware_Location.abcdeathpit <-  // NOTE: Players can get stuck if collisions are on (they will still die though)
 {
 	center = Vector(128, 1160, -4000)
