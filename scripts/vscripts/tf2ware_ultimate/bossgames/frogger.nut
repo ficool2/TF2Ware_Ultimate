@@ -57,6 +57,23 @@ function OnStart()
 	})
 	EntityAcceptInput(timer, "Resume")
 
+	// no i dont know why these are named like that
+	local door2 = FindByName(null, "frogger_door2")
+	local door3 = FindByName(null, "frogger_door3")
+
+	foreach(door in [door2, door3])
+	{
+		door.ValidateScriptScope()
+
+		door.GetScriptScope().OnClose <- OnBoxClose
+		door.ConnectOutput("OnClose", "OnClose")
+
+		door.GetScriptScope().OnOpen <- OnBoxOpen
+		door.ConnectOutput("OnOpen", "OnOpen")
+	}
+	door2.GetScriptScope().hurt <- FindByName(null, "frogger_hurt2")
+	door3.GetScriptScope().hurt <- FindByName(null, "frogger_hurt3")
+
 	Ware_CreateTimer(@() OpenDoors(), 6.0)
 	SetupMap()
 }
@@ -208,6 +225,16 @@ function OnUpdate()
 			}
 		}
 	}
+}
+
+function OnBoxClose()
+{
+	EntityAcceptInput(hurt, "Enable")
+}
+
+function OnBoxOpen()
+{
+	EntityAcceptInput(hurt, "Disable")
 }
 
 function OnEnd()
