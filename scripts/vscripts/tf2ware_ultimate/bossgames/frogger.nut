@@ -57,7 +57,7 @@ function OnStart()
 	})
 	EntityAcceptInput(timer, "Resume")
 
-	// no i dont know why these are named like that
+	// TODO: Move these into setup/cleanup functions
 	local door2 = FindByName(null, "frogger_door2")
 	local door3 = FindByName(null, "frogger_door3")
 
@@ -240,6 +240,15 @@ function OnBoxOpen()
 function OnEnd()
 {
 	CleanupMap()
+
+	local door2 = FindByName(null, "frogger_door2")
+	local door3 = FindByName(null, "frogger_door3")
+	
+	foreach(door in [door2, door3])
+	{
+		door.DisconnectOutput("OnOpen", "OnOpen")
+		door.DisconnectOutput("OnClose", "OnClose")
+	}
 }
 
 function OnCleanup()
