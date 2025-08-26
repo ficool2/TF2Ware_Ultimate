@@ -57,23 +57,6 @@ function OnStart()
 	})
 	EntityAcceptInput(timer, "Resume")
 
-	// TODO: Move these into setup/cleanup functions
-	local door2 = FindByName(null, "frogger_door2")
-	local door3 = FindByName(null, "frogger_door3")
-
-	foreach(door in [door2, door3])
-	{
-		door.ValidateScriptScope()
-
-		door.GetScriptScope().OnClose <- OnBoxClose
-		door.ConnectOutput("OnClose", "OnClose")
-
-		door.GetScriptScope().OnOpen <- OnBoxOpen
-		door.ConnectOutput("OnOpen", "OnOpen")
-	}
-	door2.GetScriptScope().hurt <- FindByName(null, "frogger_hurt2")
-	door3.GetScriptScope().hurt <- FindByName(null, "frogger_hurt3")
-
 	Ware_CreateTimer(@() OpenDoors(), 6.0)
 	SetupMap()
 }
@@ -144,6 +127,20 @@ function SetupMap()
 	EntityOutputs.AddOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
 	EntityOutputs.AddOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100", 0.0, -1)
 	EntityOutputs.AddOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
+
+	foreach(box in [box1, box2])
+	{
+		box.ValidateScriptScope()
+
+		box.GetScriptScope().OnClose <- OnBoxClose
+		box.ConnectOutput("OnClose", "OnClose")
+
+		box.GetScriptScope().OnOpen <- OnBoxOpen
+		box.ConnectOutput("OnOpen", "OnOpen")
+	}
+	box1.GetScriptScope().hurt <- FindByName(null, "frogger_hurt2")
+	box2.GetScriptScope().hurt <- FindByName(null, "frogger_hurt3")
+
 	MarkForPurge(box1)
 	MarkForPurge(box2)
 }
@@ -186,6 +183,10 @@ function CleanupMap()
 	EntityOutputs.RemoveOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500")
 	EntityOutputs.RemoveOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100")
 	EntityOutputs.RemoveOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500")
+	box1.DisconnectOutput("OnOpen", "OnOpen")
+	box1.DisconnectOutput("OnClose", "OnClose")
+	box2.DisconnectOutput("OnOpen", "OnOpen")
+	box2.DisconnectOutput("OnClose", "OnClose")
 }
 
 function OpenDoors()
@@ -240,15 +241,6 @@ function OnBoxOpen()
 function OnEnd()
 {
 	CleanupMap()
-
-	local door2 = FindByName(null, "frogger_door2")
-	local door3 = FindByName(null, "frogger_door3")
-	
-	foreach(door in [door2, door3])
-	{
-		door.DisconnectOutput("OnOpen", "OnOpen")
-		door.DisconnectOutput("OnClose", "OnClose")
-	}
 }
 
 function OnCleanup()
