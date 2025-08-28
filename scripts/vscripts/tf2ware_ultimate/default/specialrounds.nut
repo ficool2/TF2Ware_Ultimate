@@ -12,6 +12,7 @@ collisions
 cramped_quarters
 double_trouble
 extended_round
+fog
 fov
 hale
 hunger_update
