@@ -26,7 +26,7 @@ function OnStart()
 		fogcolor2 = "0 0 0",
 		fogstart = 0,
 		fogend = 1,
-		fogmaxdensity = 0.9975,
+		fogmaxdensity = 0.9966,
 		fogRadial = true,
 	})
 	
@@ -38,9 +38,15 @@ function OnStart()
 	}
 	SetSkyboxTexture("sky_borealis01")
 
-	for (local prop; prop = FindByClassname(prop, "prop_dynamic");)
-		prop.Kill()
 	//can't kill the planet or mountains :(
+	for (local prop; prop = FindByClassname(prop, "prop_dynamic");)
+	{
+		local model = prop.GetModelName()
+		if (model == "models/tf2ware2/map/asteroids.mdl" || model == "models/tf2ware2/map/gangheavy.mdl")
+		{
+			prop.Kill()
+		}
+	}
 		
 }
 
