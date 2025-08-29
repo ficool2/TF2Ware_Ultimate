@@ -6,6 +6,7 @@ special_round <- Ware_SpecialRoundData
 	category         = ""
 })
 fog <- null
+sky_fog <- null
 sky_name <- ""
 
 function KillViewModel(player)
@@ -28,26 +29,35 @@ function OnStart()
 		fogend = 1,
 		fogmaxdensity = 0.9966,
 		fogRadial = true,
+		fogblend = true,
+
 	})
-	
-	foreach (player in Ware_MinigamePlayers)
+	CreateTimer(function()
 	{
-		SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
-		//I'm gonna assume there's no way to change the viewmodel lighting
-		KillViewModel(player)
-	}
+		foreach (player in Ware_MinigamePlayers)
+		{
+			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
+			//I'm gonna assume there's no way to change the viewmodel lighting
+			KillViewModel(player)
+		}
+	}, 0.3)
+	
+	sky_name = Convars.GetStr("sv_skyname")
 	SetSkyboxTexture("sky_borealis01")
 
-	//can't kill the planet or mountains :(
-	for (local prop; prop = FindByClassname(prop, "prop_dynamic");)
+	sky_fog = SpawnEntityFromTableSafe("sky_camera",
 	{
-		local model = prop.GetModelName()
-		if (model == "models/tf2ware2/map/asteroids.mdl" || model == "models/tf2ware2/map/gangheavy.mdl")
-		{
-			prop.Kill()
-		}
-	}
-		
+		fogenable = true,
+		fogcolor = "0 0 0",
+		fogcolor2 = "0 0 0",
+		fogstart = 0,
+		fogend = 1,
+		fogmaxdensity = 0.9966,
+		fogRadial = true,
+		fogblend = true,
+		origin = Vector(6909, -1374, 1632),
+		scale = 8
+	})
 }
 
 function OnPlayerSpawn(player)
@@ -58,4 +68,5 @@ function OnPlayerSpawn(player)
 function OnEnd()
 {
 	SetSkyboxTexture(sky_name)
+	sky_fog.Kill()
 }
