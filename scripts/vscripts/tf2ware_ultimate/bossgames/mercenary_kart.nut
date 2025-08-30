@@ -288,12 +288,13 @@ function OnPrecache()
 
 function OnPick()
 {
+	// cramped breaks this boss
+	if(Ware_IsSpecialRoundSet("cramped_quarters") || Ware_IsSpecialRoundSet("skull"))
+		return false
+	
 	// this lags large servers too hard with high timescale
 	if (Ware_Players.len() > 24)
 		return Ware_TimeScale <= 1.1
-	
-	// cramped breaks this boss
-	return !(Ware_IsSpecialRoundSet("cramped_quarters") || Ware_IsSpecialRoundSet("skull"))
 }
 
 function OnTeleport(players)
