@@ -293,7 +293,7 @@ function OnPick()
 		return Ware_TimeScale <= 1.1
 	
 	// cramped breaks this boss
-	return !Ware_IsSpecialRoundSet("cramped_quarters")
+	return !(Ware_IsSpecialRoundSet("cramped_quarters") || Ware_IsSpecialRoundSet("skull"))
 }
 
 function OnTeleport(players)
