@@ -295,6 +295,8 @@ function OnPick()
 	// this lags large servers too hard with high timescale
 	if (Ware_Players.len() > 24)
 		return Ware_TimeScale <= 1.1
+	
+	return true
 }
 
 function OnTeleport(players)
