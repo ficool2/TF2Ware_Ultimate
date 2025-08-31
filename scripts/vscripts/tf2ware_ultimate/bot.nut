@@ -120,6 +120,7 @@ Ware_BotMinigameBehaviors <-
 	pickup_can = {}
 	build_this = {}
 	typing = {}
+	floppy = {}
 }
 
 Ware_BotMinigameBehavior <- null
