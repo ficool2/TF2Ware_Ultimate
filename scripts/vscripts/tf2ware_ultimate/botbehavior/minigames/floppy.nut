@@ -62,7 +62,7 @@ function OnUpdate(bot)
     // No grace period, jump always active if conditions met
     if (botOrigin.z < gap_center_z)
     {
-        if (!("last_jump_time" in data) || Time() > data.last_jump_time + 0.4)
+        if (!("last_jump_time" in data) || Time() > data.last_jump_time + 0.2)
         {
             loco.Jump()
             data.last_jump_time <- Time()
