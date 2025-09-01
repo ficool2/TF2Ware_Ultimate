@@ -34,7 +34,7 @@ function OnStart()
 	})
 	CreateTimer(function()
 	{
-		foreach (player in Ware_MinigamePlayers)
+		foreach (player in Ware_Players)
 		{
 			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 			//I'm gonna assume there's no way to change the viewmodel lighting
