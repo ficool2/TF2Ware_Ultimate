@@ -1394,7 +1394,7 @@ function Ware_ReloadMinigameRotation(is_boss)
 			}
 		}
 		
-		return Ware_MinigameRotation
+		return Shuffle(Ware_MinigameRotation)
 	}	
 }
 
