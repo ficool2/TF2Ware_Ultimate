@@ -8,7 +8,7 @@ minigame <- Ware_MinigameData
 	music           = "question"
 	custom_overlay  = "type_answer"
 	custom_overlay2 = "../chalkboard"
-	modes           = 4
+	modes           = 5
 	suicide_on_end  = true
 })
 
@@ -63,13 +63,30 @@ function OnStart()
 		answer = a / b
 		operator = "/"		
 	}
+	else if (Ware_MinigameMode == 4)
+	{
+		if(RandomInt(0, 9) == 0)
+		{
+			a = "" // TODO: This causes an extra space on the chatprint at the end, but I think it'll need some weird refactoring to account for that. Deal with it.
+			answer = RandomInt(0, 12)
+			b = pow(answer, 2)
+			operator = "Square root of"
+		}
+		else
+		{
+			a = RandomInt(0, 12)
+			b = a < 4 ? RandomInt(0, 3) : RandomInt(0, 2)
+			answer = pow(a, b)
+			operator = "^"
+		}
+	}
 	
-	Ware_ShowMinigameText(null, format("%d %s %d = ?", a, operator, b))
+	Ware_ShowMinigameText(null, format("%s %s %d = ?", a.tostring(), operator, b))
 }
 
 function OnEnd()
 {
-	Ware_ChatPrint(null, "The correct answer was {int} {str} {int} = {color}{int}", a, operator, b, COLOR_LIME, answer)
+	Ware_ChatPrint(null, "The correct answer was {str} {str} {int} = {color}{int}", a.tostring(), operator, b, COLOR_LIME, answer)
 }
 
 function OnPlayerSay(player, text)
@@ -82,7 +99,7 @@ function OnPlayerSay(player, text)
 	{
 		if (player.IsAlive() && !Ware_IsPlayerPassed(player))
 		{
-			local text = format("%d %s %d = %s", a, operator, b, text)
+			local text = format("%s %s %d = %s", a.tostring(), operator, b, text)
 			Ware_ShowMinigameText(player, text)
 			Ware_SuicidePlayer(player)
 		}		
@@ -91,7 +108,7 @@ function OnPlayerSay(player, text)
 		
 	if (!Ware_IsPlayerPassed(player) && player.IsAlive())
 	{
-		local text = format("%d %s %d = %d", a, operator, b, num)
+		local text = format("%s %s %d = %d", a.tostring(), operator, b, num)
 		Ware_ShowMinigameText(player, text)
 		Ware_PassPlayer(player, true)
 		
