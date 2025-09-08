@@ -545,8 +545,9 @@ Ware_Location.inventoryday <-
 
 Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location, recommend collisions stay off
 {
-	center = Vector(3615, 2630, -11880)
-	radius = 300.0
+	center  = Vector(3615, 2630, -11880)
+	radius  = 300.0
+	cameras = ["FallingFloor_Camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
