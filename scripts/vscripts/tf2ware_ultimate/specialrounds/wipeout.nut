@@ -1,4 +1,8 @@
 
+// NEW REWORK IDEA!!
+// This will use the Smash Arena location as a home
+// and have a big TV with 4 sides showing live feed of the minigame (func_monitor)
+
 // TODO: More testing/fixes when players join or leave mid-round
 // TODO: Make spectators more interesting (use actual spectating stuff?)
 // TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging.
@@ -50,6 +54,12 @@ function OnPrecache()
 
 function OnStart()
 {
+	// some brush/ent stuff needed for smash arena idea
+	// might need to go in OnTeleport
+	local trigger = FindByName(null, "smasharena_trigger")
+	EntityAcceptInput(trigger, "EndTouch")
+	EntityAcceptInput(trigger, "Disable")
+	
 	foreach(player in Ware_Players)
 	{
 		local max_lives = 2 // TODO: Find a different fix to the long rounds then set this back to 3.
@@ -254,4 +264,9 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 	{
 		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 	}
+}
+
+function OnEnd()
+{
+	EntityAcceptInput(FindByName(null, "smasharena_trigger"), "Enable")
 }
