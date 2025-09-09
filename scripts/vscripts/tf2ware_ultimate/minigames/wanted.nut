@@ -36,6 +36,8 @@ boxSize <- 8
 
 prop_model  <- "models/mariokart/head.mdl"
 
+last_prop <- null
+
 function OnPrecache()
 {
 	PrecacheModel(prop_model)
@@ -96,6 +98,10 @@ function CreateGenericCharacter(name, isLast)
         prop.SetSolid(SOLID_NONE)
         return 0.01
     }
+	else
+	{
+		last_prop = prop
+	}
     prop.SetSolid(SOLID_BBOX)
     prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
     return null

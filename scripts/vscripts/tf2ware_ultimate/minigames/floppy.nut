@@ -46,6 +46,7 @@ function SpawnPipewall(org, skip)
 			
             local beam = Ware_SpawnEntity("prop_physics_override", 
             {
+                targetname   = "floppy_pipe"
                 origin       = org + Vector(-880,0,add + 200) + Vector(i*120, 0, 300 + j*180)
                 model        = pipe_model
                 spawnflags   = SF_PHYSPROP_TOUCH

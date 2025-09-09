@@ -80,6 +80,7 @@ function SpawnDove()
 		angles      = QAngle(0, yaw, 0)
 		defaultanim = "fly_cycle"
 		health      = 9999
+		targetname  = "dovehuntdove"
 	})
 	dove.SetModelScale(RandomFloat(3.5, 4.5), 0.25)
 	EntityAcceptInput(dove, "Disable")
@@ -91,6 +92,7 @@ function SpawnDove()
 	local dove_scope = dove.GetScriptScope()
 
 	dove_scope.move_dir <- vec_angle
+	dove.SetAbsVelocity(vec_angle * 300)
 	dove_scope.spawn_time <- Time()
 
 	dove_scope.DoveThink <- DoveThink.bindenv(dove_scope)

@@ -18,6 +18,8 @@ minigame <- Ware_MinigameData
 	}
 })
 
+correct_choice <- null
+
 choices <- [
 	{
 		name = "A"
@@ -101,7 +103,7 @@ function OnStart()
 
 	
 	question <- RandomElement(questions)
-	correct_choice <- RandomElement(choices)
+	correct_choice = RandomElement(choices)
 	
 	// show the question
 	Ware_ShowMinigameText(null, question.string)
