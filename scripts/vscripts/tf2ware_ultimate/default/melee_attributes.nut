@@ -2,7 +2,11 @@
 buffer<-@"// atomizer
 [450] = { ""air dash count"" : 0 },
 // sandman
-[44] = { ""max health additive penalty"" : 0 },
+[44] =
+{
+	""max health additive penalty"" : 0,
+	""mod bat launches balls"" : 0,
+},
 // candy cane
 [317] = 
 { 
