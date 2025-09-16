@@ -41,6 +41,7 @@ buffer<-@"// atomizer
 { 
 	""honorbound"" : 0
 	""restore health on kill"" : 0
+	""is_a_sword"" : 0
 },
 // equalizer
 [128] = 
@@ -60,26 +61,48 @@ buffer<-@"// atomizer
 // powerjack
 [214] = { ""move speed bonus"" : 1 },	
 // eyelander
-[132] = { ""max health additive penalty"" : 0 },
+[132] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // festive eyelander
-[1082] = { ""max health additive penalty"" : 0 },
+[1082] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // nessie's nine iron
-[482] = { ""max health additive penalty"" : 0 },
+[482] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // HHH axe
-[266] = { ""max health additive penalty"" : 0 },	
+[266] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},	
 // scotman's skullcutter
-[172] = { ""move speed penalty"" : 1 },	
+[172] = 
+{
+	""move speed penalty"" : 1,
+	""is_a_sword"" : 0
+},	
 // persian persuader
 [404] = 
 {
 	""maxammo primary reduced"" : 1,
 	""maxammo secondary reduced"" : 1,
+	""is_a_sword"" : 0
 },	
 // claidheamohmor
 [327] = 
 {
 	""dmg taken increased"" : 1,
 	""maxammo secondary reduced"" : 1,
+	""is_a_sword"" : 0
 },	
 // killing gloves of boxing
 [43] =
