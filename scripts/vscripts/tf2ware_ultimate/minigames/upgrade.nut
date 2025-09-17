@@ -219,6 +219,11 @@ function OnCleanup()
 	{
 		player.GrantOrRemoveAllUpgrades(true, false)
 		player.SetCurrency(0)
+		for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
+		{
+			if (wearable.GetClassname() == "tf_powerup_bottle")
+				EntityEntFire(wearable, "Kill") // if something breaks with this, set the m_usNumCharges netprop to 0 instead.
+		}
 	}
 	give_loadout = false
 	
