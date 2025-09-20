@@ -754,7 +754,7 @@ function Ware_ShowCredits(player, full)
 				if (i < last)
 					text += ", "
 			}
-			ClientPrint(player, HUD_PRINTCONSOLE, format("* %s - %s", author, text))
+			ClientPrint(player, HUD_PRINTCONSOLE, format("* %16s - %s", author, text))
 		}
 	}
 	else
