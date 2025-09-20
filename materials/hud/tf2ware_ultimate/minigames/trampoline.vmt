@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/tramp
+	$basetexture hud/tf2ware_ultimate/minigames/trampoline
 	$basetexturetransform "center .5 .2 scale 3 14.0 rotate 0 translate 0 0"
 
     $translucent 1
