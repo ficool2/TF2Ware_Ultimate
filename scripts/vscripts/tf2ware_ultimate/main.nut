@@ -312,7 +312,7 @@ function Ware_PrecacheNext()
 {
 	local authors = {}
 	local music_minigame = {}, music_bossgame = {}
-	
+
 	local AddAuthor = function(author, folder)
 	{
 		local list = author
@@ -328,13 +328,14 @@ function Ware_PrecacheNext()
 					minigames     = 0
 					bossgames     = 0
 					specialrounds = 0
+					themes        = 0
 				}
 			}
 				
 			authors[author][folder]++
 		}
 	}
-
+	
 	local PrecacheFile = function(folder, name)
 	{
 		local scope = {}	
@@ -434,6 +435,7 @@ function Ware_PrecacheNext()
 	
 	foreach (theme in Ware_Themes)
 	{
+		AddAuthor(theme.author, "themes")
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
@@ -442,7 +444,7 @@ function Ware_PrecacheNext()
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
-
+		
 	foreach (author, credits in authors)
 	{
 		if (!(author in Ware_Authors))
@@ -453,9 +455,11 @@ function Ware_PrecacheNext()
 		if (credits.bossgames > 0)
 			Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))		
 		if (credits.specialrounds > 0)
-			Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))			
+			Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))
+		if (credits.themes > 0)
+			Ware_Authors[author].append(format("%d Theme%s", credits.themes, credits.themes == 1 ? "" : "s"))			
 	}
-		
+	
 	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
 
