@@ -397,7 +397,7 @@ function Ware_PrecacheNext()
 		}
 		else if ("special_round" in scope)
 		{
-			if ("category" in scope.special_round)
+			if (scope.special_round.category != null)
 			{
 				local category = scope.special_round.category
 				if (category == "")

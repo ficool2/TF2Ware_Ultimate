@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name        = "Silent Hill"
 	author      = "ficool2"
 	description = "The fog is coming."
+	category    = ""
 })
 
 fog         <- null
