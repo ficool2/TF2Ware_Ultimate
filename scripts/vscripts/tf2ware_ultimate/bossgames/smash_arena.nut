@@ -57,7 +57,7 @@ function OnTakeDamage(params)
 			local kb = Min(data.sum_damage * kb_scale, 1000.0)
 			
 			Ware_SlapEntity(victim, kb)
-			params.damage = 0.0
+			params.damage = 1.0
 		}
 		else if (params.damage_type & DMG_FALL)
 		{
