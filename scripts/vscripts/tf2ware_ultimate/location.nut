@@ -548,6 +548,13 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 	center   = Vector(3615, 2630, -11880)
 	radius   = 300.0
 	cameras  = ["FallingFloor_Camera"]
+	respawns = 
+	[
+		Vector(4365, 2630, -11400)
+		Vector(2865, 2630, -11400)
+		Vector(3615, 3380, -11400)
+		Vector(3615, 1880, -11400)
+	]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 

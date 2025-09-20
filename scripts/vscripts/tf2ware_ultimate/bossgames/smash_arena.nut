@@ -1,14 +1,5 @@
-
 // TODO: Adjust knockback as needed
-
-center <- Ware_MinigameLocation.center * 1.0
-respawn_vectors <- [
-	Vector(4365, 2630, -11400)
-	Vector(2865, 2630, -11400)
-	Vector(3615, 3380, -11400)
-	Vector(3615, 1880, -11400)
-]
-alive_players <- clone(Ware_MinigamePlayers)
+alive_players <- []
 
 minigame <- Ware_MinigameData
 ({
@@ -35,10 +26,19 @@ function OnPick()
 
 function OnStart()
 {
-	foreach(player in Ware_MinigamePlayers)
+	alive_players = clone(Ware_MinigamePlayers)
+	
+	foreach (player in alive_players)
 	{
 		Ware_GetPlayerMiniData(player).sum_damage <- 175.0
 	}
+}
+
+function RemovePlayer(player)
+{
+	local idx = alive_players.find(player)
+	if (idx != null)
+		alive_players.remove(idx)
 }
 
 function OnTakeDamage(params)
@@ -47,6 +47,7 @@ function OnTakeDamage(params)
 	if(victim.IsPlayer())
 	{
 		local attacker = params.attacker
+		local inflictor = params.inflictor
 		if (attacker && attacker.IsPlayer())
 		{
 			local data = Ware_GetPlayerMiniData(victim)
@@ -58,24 +59,34 @@ function OnTakeDamage(params)
 			Ware_SlapEntity(victim, kb)
 			params.damage = 0.0
 		}
-		else if ((params.damage_type & DMG_FALL) && params.inflictor.GetClassname() != "trigger_hurt")
-			params.damage = 0.0
+		else if (params.damage_type & DMG_FALL)
+		{
+			if (!inflictor || inflictor.GetClassname() != "trigger_hurt")
+				params.damage = 0.0
+		}
 	}
 }
 
 function OnPlayerDeath(player, attacker, params)
 {
-	local idx = alive_players.find(player)
-	if(idx != null)
-		alive_players.remove(idx)
+	RemovePlayer(player)
 	
-	Ware_CreateTimer(function(){
-		player.ForceRegenerateAndRespawn()
-		Ware_TeleportPlayer(player, RandomElement(respawn_vectors), null, vec3_zero)
+	Ware_CreateTimer(function()
+	{
+		if (player.IsValid())
+		{
+			player.ForceRegenerateAndRespawn()
+			Ware_TeleportPlayer(player, RandomElement(Ware_MinigameLocation.respawns), null, vec3_zero)
+		}
 	}, 3.0)
+}
+
+function OnPlayerDisconnect(player)
+{
+	RemovePlayer(player)
 }
 
 function OnCheckEnd()
 {
-	return alive_players.len() < 2
+	return alive_players.len() <= 1
 }
