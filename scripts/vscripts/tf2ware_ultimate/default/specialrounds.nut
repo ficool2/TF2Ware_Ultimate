@@ -30,6 +30,7 @@ reversed_text
 simon
 singleplayer
 size_matters
+skates
 skull
 slow_mo
 speedrun
