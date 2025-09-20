@@ -6,6 +6,6 @@ special_round <- Ware_SpecialRoundData
 	category = ""
 	convars = 
 	{
-		sv_Friction = -64
+		sv_Friction = -0.25
 	}	
 })
