@@ -1,7 +1,7 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 4
-const WARE_BOSSGAME_VERSION     = 1
-const WARE_SPECIALROUND_VERSION = 6
+const WARE_MINIGAME_VERSION     = 5
+const WARE_BOSSGAME_VERSION     = 2
+const WARE_SPECIALROUND_VERSION = 7
 const WARE_THEME_VERSION        = 4
 
 // everytime any mp3 sound is changed AND the map is *publicly* updated
@@ -146,6 +146,10 @@ function Ware_LoadConfigMinigames()
 					AppendElementIfUnique(lines, "uber")
 					AppendElementIfUnique(lines, "upgrade")			
 					break
+				case 5:
+					AppendElementIfUnique(lines, "spectate")
+					AppendElementIfUnique(lines, "trampoline")
+					break
 			}
 		}
 	})
@@ -165,6 +169,9 @@ function Ware_LoadConfigBossgames()
 					// we winga
 					AppendElementIfUnique(lines, "wega_challenge")
 					break
+				case 2:
+					AppendElementIfUnique(lines, "smash_arena")
+					break			
 			}
 		}
 	})
@@ -210,6 +217,10 @@ function Ware_LoadConfigSpecialRounds()
 				case 6:
 					AppendElementIfUnique(lines, "no_text")
 					break
+				case 7:
+					AppendElementIfUnique(lines, "silent_hill")
+					AppendElementIfUnique(lines, "skates")
+					break					
 			}
 		}
 	})

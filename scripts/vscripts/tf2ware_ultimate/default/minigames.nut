@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 4
+buffer<-@"VERSION 5
 airblast
 airshot
 avoid_props
@@ -71,6 +71,7 @@ shoot_gifts
 shoot_target
 simon_says
 sniper_war
+spectate
 spycrab
 stand_near
 stay_ground
@@ -81,7 +82,7 @@ swim_up
 taunt_kill
 time_jump
 touch_sky
-tramp
+trampoline
 treasure_hunt
 trivia
 type_color

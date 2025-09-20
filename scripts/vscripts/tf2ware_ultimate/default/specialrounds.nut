@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 6
+buffer<-@"VERSION 7
 adrenaline_shot
 all_in
 barrels
@@ -32,6 +32,7 @@ singleplayer
 size_matters
 skates
 skull
+silent_hill
 slow_mo
 speedrun
 squid_game

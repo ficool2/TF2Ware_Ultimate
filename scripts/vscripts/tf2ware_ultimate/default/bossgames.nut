@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 1
+buffer<-@"VERSION 2
 beep_block
 cuddly_heavies
 escape_factory
