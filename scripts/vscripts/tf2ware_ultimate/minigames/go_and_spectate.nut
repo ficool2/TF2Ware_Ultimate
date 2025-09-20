@@ -1,4 +1,5 @@
-spots <- [
+spots <- 
+[
     {
         name = "Waluigi",
         origin = Vector(11491, 28, 8544),
@@ -160,8 +161,8 @@ spots <- [
         angles = QAngle(23, -104, 0)
     }
 ]
+
 selected_spot <- RandomElement(spots)
-spots = Shuffle(spots)
 
 minigame <- Ware_MinigameData
 ({
@@ -176,23 +177,30 @@ minigame <- Ware_MinigameData
 
 function OnStart()
 {
-	foreach (spot in spots)
-		Ware_SpawnEntity("info_observer_point",
+	foreach (spot in Shuffle(spots))
+	{
+		spot.camera <- Ware_SpawnEntity("info_observer_point",
 		{
 			origin = spot.origin
 			angles = spot.angles
+			fov    = 90
 		})
+	}
 
 	foreach (player in Ware_Players)
 		KillPlayerSilently(player)
 
 	//Fix | the text disappears when KillPlayerSilently
-	Ware_CreateTimer(@() Ware_ShowMinigameText(null, format(" %s ", selected_spot.name)), 0.1)
+	local spot_name = format(" %s ", selected_spot.name)
+	Ware_CreateTimer(@() Ware_ShowMinigameText(null, spot_name), 0.1)
 }
 
 function OnEnd()
 {
+	local spot_camera = selected_spot.camera
 	foreach (player in Ware_Players)
-		if (player.GetOrigin()+"" == selected_spot.origin+"")
+	{
+		if (GetPropEntity(player, "m_hObserverTarget") == spot_camera)
 			Ware_PassPlayer(player, true)
+	}
 }
