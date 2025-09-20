@@ -125,7 +125,8 @@ Ware_DevCommands <-
 			"Ware_DebugForceBossgameOnce",
 			"Ware_DebugNextTheme",
 			"Ware_DebugForceTheme",
-			"Ware_DebugNextSpecialRound"
+			"Ware_DebugNextSpecialRound",
+			"Ware_DebugForceMode"
 		]
 		foreach(var in vars)
 		{
