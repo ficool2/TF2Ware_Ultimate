@@ -3,11 +3,11 @@ minigame <- Ware_MinigameData
 	name           = "Buff"
 	author         = ["tilderain"]
 	description    = "Activate buff!"
-	duration       = 15
+	duration       = Ware_MinigameMode != 1 ? 15 : 8.5
 	music          = "woody"
 	min_players    = 2
 	allow_damage   = true
-	modes          = 2
+	modes          = 4
 	collisions 	   = true
 	location       = "boxingring"
 })
@@ -38,14 +38,27 @@ function OnStart()
 			{
 				weapon = Ware_GivePlayerWeapon(player, "Beggar's Bazooka", {"clip size bonus" : 100, "reload time decreased": 0.5, "deploy time increased": 1, "damage bonus": 1.25})
 			}
+			player.SetHealth(1850)
 		}
 		else if (Ware_MinigameMode == 1)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
 			Ware_GivePlayerWeapon(player, "Phlogistinator")
+			player.SetHealth(1250)
+		}
+		else if (Ware_MinigameMode == 2)
+		{
+			Ware_SetPlayerClass(player, TF_CLASS_SNIPER)
+			Ware_GivePlayerWeapon(player, "Cleaner's Carbine")
+			player.SetHealth(1250)
+		}
+		else if (Ware_MinigameMode == 3)
+		{
+			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
+			Ware_GivePlayerWeapon(player, "Soda Popper")
+			player.SetHealth(1250)
 		}
 		player.SetRageMeter(0)
-		player.SetHealth(1850)
 	}
 }
 
@@ -53,7 +66,7 @@ function OnUpdate()
 {
 	foreach (player in Ware_MinigamePlayers)
 	{
-		if (player.IsRageDraining() && player.IsAlive())
+		if (player.IsRageDraining() || player.InCond(TF_COND_ENERGY_BUFF) || player.InCond(TF_COND_SODAPOPPER_HYPE))
 			Ware_PassPlayer(player, true)
 	}
 }
@@ -63,6 +76,8 @@ function OnCleanup()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.SetRageMeter(0)
+		player.RemoveCond(TF_COND_ENERGY_BUFF)
+		player.RemoveCond(TF_COND_SODAPOPPER_HYPE)
 		SetPropBool(player, "m_Shared.m_bRageDraining", false)
 		player.AddHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 	}
