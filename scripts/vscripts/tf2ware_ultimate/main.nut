@@ -2375,6 +2375,7 @@ function Ware_OnPlayerSay(player, text)
 	{
 		local len = text.find(" ")
 		local cmd = len != null ? text.slice(6, len) : text.slice(6)
+		cmd = cmd.tolower()
 		if (cmd in Ware_DevCommands)
 		{
 			if (/*GetPlayerSteamID3(player) in DEVELOPER_STEAMID3 ||*/
