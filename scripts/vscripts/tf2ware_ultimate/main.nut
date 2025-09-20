@@ -1108,6 +1108,8 @@ function Ware_BeginSpecialRoundInternal()
 			
 			CreateTimer(function()
 			{	
+				Ware_CriticalZone = true
+				
 				Ware_SpecialRound = special_round
 					
 				Ware_SetupSpecialRoundCallbacks()	
@@ -1127,6 +1129,8 @@ function Ware_BeginSpecialRoundInternal()
 				
 				// TODO this doesn't work with double_trouble
 				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
+				
+				Ware_CriticalZone = false
 					
 				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
 				CreateTimer(function() 
