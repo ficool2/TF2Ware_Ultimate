@@ -435,7 +435,9 @@ function Ware_PrecacheNext()
 	
 	foreach (theme in Ware_Themes)
 	{
-		AddAuthor(theme.author, "themes")
+		if("author" in theme)
+			AddAuthor(theme.author, "themes")
+		
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
