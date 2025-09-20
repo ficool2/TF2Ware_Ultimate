@@ -76,6 +76,8 @@ function OnCleanup()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.SetRageMeter(0)
+		player.RemoveCond(TF_COND_ENERGY_BUFF)
+		player.RemoveCond(TF_COND_SODAPOPPER_HYPE)
 		SetPropBool(player, "m_Shared.m_bRageDraining", false)
 		player.AddHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 	}
