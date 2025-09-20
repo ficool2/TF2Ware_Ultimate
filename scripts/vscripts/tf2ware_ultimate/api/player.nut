@@ -784,45 +784,88 @@ function Ware_GetSortedScorePlayers(reverse)
 
 function Ware_AssignTeamsByScore()
 {
-	local red_players = []
-	local blue_players = []
-	local red_score = 0
-	local blue_score = 0
-	
-	local sorted = Ware_GetSortedScorePlayers(true)
-	
-	foreach (player in sorted)
-	{
-		local score = Ware_GetPlayerData(player).score
-		
-		if (red_players.len() < blue_players.len()) 
-		{
-			red_players.append(player)
-			red_score += score
-		}
-		else if (blue_players.len() < red_players.len()) 
-		{
-			blue_players.append(player)
-			blue_score += score
-		}
-		else 
-		{
-			if (red_score <= blue_score) 
-			{
-				red_players.append(player)
-				red_score += score
-			}
-			else 
-			{
-				blue_players.append(player)
-				blue_score += score
-			}
-		}
-	}
-	foreach (player in red_players)
-		Ware_SetPlayerTeam(player, TF_TEAM_RED)
-	foreach (player in blue_players)
-		Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
+    local red_players = []
+    local blue_players = []
+    local red_score = 0
+    local blue_score = 0
+    local red_zero_score_count = 0
+    local blue_zero_score_count = 0
+
+    local sorted_players = Ware_GetSortedScorePlayers(true) 
+
+    local scored_players = []
+    local zero_score_players = []
+    foreach (player in sorted_players)
+    {
+        local score = Ware_GetPlayerData(player).score
+        if (score == 0)
+        {
+            zero_score_players.append(player)
+        }
+        else
+        {
+            scored_players.append(player)
+        }
+    }
+
+    foreach (player in scored_players)
+    {
+        local score = Ware_GetPlayerData(player).score
+        if (red_score <= blue_score)
+        {
+            red_players.append(player)
+            red_score += score
+        }
+        else
+        {
+            blue_players.append(player)
+            blue_score += score
+        }
+    }
+
+    foreach (player in zero_score_players)
+    {
+        if (red_players.len() <= blue_players.len())
+        {
+            red_players.append(player)
+            red_zero_score_count += 1
+        }
+        else
+        {
+            blue_players.append(player)
+            blue_zero_score_count += 1
+        }
+    }
+
+    foreach (player in red_players)
+    {
+        Ware_SetPlayerTeam(player, TF_TEAM_RED)
+    }
+    foreach (player in blue_players)
+    {
+        Ware_SetPlayerTeam(player, TF_TEAM_BLUE)
+    }
+
+
+    //local all_player_scores_str = "All Player Scores (Sorted): ["
+    //local first_player = true
+    //foreach (player in sorted_players)
+    //{
+    //    if (!first_player)
+    //    {
+    //        all_player_scores_str += ", "
+    //    }
+    //    all_player_scores_str += Ware_GetPlayerData(player).score
+    //    first_player = false
+    //}
+    //all_player_scores_str += "]"
+    //Ware_ChatPrint(null, all_player_scores_str)
+
+    //Ware_ChatPrint(null, "RED Team - Players: " + red_players.len() + ", Total Score: " + red_score)
+    //Ware_ChatPrint(null, "BLUE Team - Players: " + blue_players.len() + ", Total Score: " + blue_score)
+
+    //Ware_ChatPrint(null, "RED Team Zero Score Players: " + red_zero_score_count)
+    //Ware_ChatPrint(null, "BLUE Team Zero Score Players: " + blue_zero_score_count)
 }
 
 // Adds an attribute to the player
