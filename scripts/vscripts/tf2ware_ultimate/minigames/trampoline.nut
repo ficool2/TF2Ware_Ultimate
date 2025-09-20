@@ -89,7 +89,7 @@ function SpawnHoop(origin, firsthoop)
 		disableshadows = true
 	})
 	
-	hoop_radius = 315.0 * scale
+	hoop_radius = 325.0 * scale
 }
 
 function OnUpdate()
