@@ -370,6 +370,7 @@ function Ware_LoadConfig()
 	Ware_SpecialRounds     <- []
 	Ware_FakeSpecialRounds <- []
 	Ware_GameOverlays      <- []
+	Ware_Skyboxes          <- []
 	
 	Ware_LoadConfigSettings()
 	Ware_LoadConfigMinigames()
@@ -377,6 +378,7 @@ function Ware_LoadConfig()
 	Ware_LoadConfigSpecialRounds()
 	Ware_LoadConfigList("fake_specialrounds", Ware_FakeSpecialRounds)	
 	Ware_LoadConfigList("overlays", Ware_GameOverlays)	
+	Ware_LoadConfigList("skyboxes", Ware_Skyboxes)
 	Ware_LoadConfigThemes()
 	Ware_LoadConfigMeleeAttributes()
 }

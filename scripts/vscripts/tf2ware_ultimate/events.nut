@@ -234,6 +234,8 @@ function OnGameEvent_teamplay_round_start(params)
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local begin_intermission = true
 	
+	local skybox = "tf2ware_sky"
+	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		Ware_SpecialRoundNext ||
 		(!Ware_SpecialRoundPrevious &&
@@ -242,11 +244,16 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SpecialRoundNext = false
 		if (Ware_BeginSpecialRound())
 			begin_intermission = false
+			
+		if (Ware_Skyboxes.len() > 0)
+			skybox = RandomElement(Ware_Skyboxes)
 	}
 	else
 	{
 		Ware_SpecialRoundPrevious = false
 	}
+	
+	SetSkyboxTexture(skybox)
 	
 	// special rounds decide their own intermission delay
 	if (begin_intermission)
