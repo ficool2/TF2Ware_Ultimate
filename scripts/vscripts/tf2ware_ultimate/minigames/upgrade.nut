@@ -1,3 +1,7 @@
+
+// NOTE: This minigame is disabled in default config due to edict issues from valve's shitty upgrade code
+// Re-enable at your own peril.
+
 MISSION_DAMAGE <- 0
 MISSION_RESIST <- 1
 MISSION_RATE   <- 2

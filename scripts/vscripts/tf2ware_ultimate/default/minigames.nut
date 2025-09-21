@@ -90,7 +90,6 @@ type_map
 type_time
 type_word
 uber
-upgrade
 vacc
 wanted
 watch_fall
