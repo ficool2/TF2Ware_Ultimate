@@ -148,6 +148,7 @@ function OnStart()
 	{
 		origin     = cameraOrigin
 		angles     = cameraAngle
+		fov		   = 90
 		spawnflags = 8
 	})
 	camera.SetMoveType(MOVETYPE_NONE, 0)
