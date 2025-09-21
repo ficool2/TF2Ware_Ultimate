@@ -89,9 +89,21 @@ function OnStart()
 			ship.ValidateScriptScope()
 			local scope = ship.GetScriptScope()
 
-			scope.speed <- RandomFloat(-20, 20)
-			if (abs(scope.speed) < 5) scope.speed = RandomBool() ? 10 : -10
-			scope.start_y <- ship.GetOrigin().y
+			scope.start_origin <- ship.GetOrigin()
+			scope.start_angles <- ship.GetAngles()
+
+			scope.bob_speed <- RandomFloat(1.5, 2.5)
+			scope.bob_amplitude <- RandomFloat(4.0, 9.0)
+			scope.bob_phase <- RandomFloat(0, 2 * PI)
+
+			scope.roll_speed <- RandomFloat(0.8, 1.2)
+			scope.roll_amplitude <- RandomFloat(2.5, 8.0)
+			scope.roll_phase <- RandomFloat(0, 2 * PI)
+
+			//Horizontal movement
+			scope.sway_speed <- RandomFloat(1, 1.5)
+			scope.sway_amplitude <- RandomFloat(0.0, 600.0) 
+			scope.sway_phase <- RandomFloat(0, 2 * PI)
 		}
 	}
 }
@@ -100,17 +112,22 @@ function OnUpdate()
 {
 	if (Ware_MinigameMode == 1)
 	{
+		local minigame_time = Ware_GetMinigameTime()
 		foreach (ship in ships)
 		{
 			local scope = ship.GetScriptScope()
-			local origin = ship.GetOrigin()
 
-			if (origin.y > scope.start_y)
-				scope.speed -= 0.2
-			else
-				scope.speed += 0.2
+			local bob_offset = sin(minigame_time * scope.bob_speed + scope.bob_phase) * scope.bob_amplitude
+			local sway_offset = sin(minigame_time * scope.sway_speed + scope.sway_phase) * scope.sway_amplitude
+			local roll_angle_offset = sin(minigame_time * scope.roll_speed + scope.roll_phase) * scope.roll_amplitude
 
-			ship.KeyValueFromVector("origin", origin + Vector(0, scope.speed, 0))
+			local new_origin = scope.start_origin + Vector(0, sway_offset, bob_offset)
+
+			local base_angles = scope.start_angles
+			local new_angles = QAngle(base_angles.x, base_angles.y, base_angles.z + roll_angle_offset)
+
+			ship.KeyValueFromVector("origin", new_origin)
+			ship.SetAbsAngles(new_angles)
 		}
 	}
 
