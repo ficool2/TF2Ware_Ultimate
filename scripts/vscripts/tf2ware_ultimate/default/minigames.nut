@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 5
+buffer<-@"VERSION 6
 airblast
 airshot
 avoid_props
