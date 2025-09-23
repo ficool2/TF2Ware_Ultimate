@@ -22,6 +22,7 @@ class Ware_MinigameData
 		boss		    = false
 		show_scores     = true
 		end_delay       = 0.0
+		sort_teams      = false
 		convars         = []
 		entities        = []
 		cleanup_names   = {}
@@ -90,6 +91,8 @@ class Ware_MinigameData
 	end_delay		= null
 	// Show player scores on scoreboard while minigame is active, default is true\
 	show_scores     = null
+	// Sort teams by score for fairness in team-based minigames
+	sort_teams      = null
 	// Custom text overlay to show rather than the default implied from name
 	// This can either be a string or an array of strings (when using missions)
 	custom_overlay	= null
