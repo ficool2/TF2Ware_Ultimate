@@ -188,7 +188,10 @@ function OnStart()
 	}
 
 	foreach (player in Ware_Players)
-		KillPlayerSilently(player)
+    {
+		Ware_ChatPrint(player, "{color}HINT:{color} Use MOUSE1 and MOUSE2 to cycle cameras!", COLOR_GREEN, TF_COLOR_DEFAULT)
+        KillPlayerSilently(player)
+    }
 
 	//Fix | the text disappears when KillPlayerSilently
 	local spot_name = format(" %s ", selected_spot.name)
