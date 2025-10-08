@@ -48,6 +48,7 @@ kart
 land_platform
 laugh
 limbo
+market_garden
 math
 melee_arena
 merasmus
