@@ -170,7 +170,12 @@ buffer<-@"// atomizer
 // eureka effect
 [589] = { ""alt fire teleport to spawn"" : 0 },
 // southern hospitality
-[155] = { ""dmg taken from fire increased"" : 1 },	
+[155] = {
+	""dmg taken from fire increased"" : 1,
+	""bleeding duration"": 0
+},	
+// jag
+[329] = { ""fire rate bonus"" : 1.0 },
 // amputator
 [304] =
 { 
