@@ -228,7 +228,7 @@ function Ware_GetPlayerMission(player)
 // For a list of item names, see items.nut
 // If items is null, the player is switched to their default melee
 // Item attributes is a list of attributes to apply to the given item, or default melee
-function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
+function Ware_SetPlayerLoadout(player, player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true, deploy_increase = true)
 {
 	if (player_class != TF_CLASS_UNDEFINED)
 		Ware_SetPlayerClass(player, player_class, false)
@@ -241,11 +241,11 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		{
 			local last_item = items[items.len() - 1]
 			foreach (item in items)
-				Ware_GivePlayerWeapon(player, item, {}, switch_weapon && item == last_item)
+				Ware_GivePlayerWeapon(player, item, {}, switch_weapon && item == last_item, deploy_increase)
 		}
 		else
 		{
-			Ware_GivePlayerWeapon(player, items, item_attributes, switch_weapon)
+			Ware_GivePlayerWeapon(player, items, item_attributes, switch_weapon, deploy_increase)
 		}
 	}
 	else
@@ -281,10 +281,10 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 
 // Sets a loadout for all players
 // See Ware_SetPlayerLoadout
-function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true)
+function Ware_SetGlobalLoadout(player_class, items = null, item_attributes = {}, keep_melee = false, switch_weapon = true, deploy_increase = true)
 {
 	foreach (player in Ware_MinigamePlayers)
-		Ware_SetPlayerLoadout(player, player_class, items, item_attributes, keep_melee, switch_weapon)		
+		Ware_SetPlayerLoadout(player, player_class, items, item_attributes, keep_melee, switch_weapon, deploy_increase)		
 }
 
 // Strips all items/weapons from a player
@@ -368,7 +368,8 @@ function Ware_StripPlayer(player, give_default_melee)
 // For a list of item names, see items.nut
 // "attributes" is a table of attributes that will be applied on the weapon
 // If "switch_weapon" is true, the player is automatically switched to the new weapon
-function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true)
+// If "deploy_increase" is true, there is increased weapon deploy time. This is to give players more time to react.
+function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon = true, deploy_increase = true)
 {
 	local item = ITEM_MAP[item_name]
 	local item_id = item.id
@@ -437,7 +438,8 @@ function Ware_GivePlayerWeapon(player, item_name, attributes = {}, switch_weapon
 		weapon.AddAttribute("projectile penetration", 1, -1)
 		
 	// this is to give people more time to react
-	weapon.AddAttribute("deploy time increased", 1.5, -1)
+	if(deploy_increase)
+		weapon.AddAttribute("deploy time increased", 1.5, -1)
 		
 	// prevent thriller taunt
 	weapon.AddAttribute("special taunt", 1, -1)
