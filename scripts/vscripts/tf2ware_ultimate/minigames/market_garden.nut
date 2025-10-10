@@ -14,7 +14,7 @@ function OnStart()
 {
 	foreach(player in Ware_MinigamePlayers)
 	{
-		Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, ["Rocket Jumper", "Market Gardener"], {}, false, false, false)
+		Ware_SetPlayerLoadout(player, TF_CLASS_SOLDIER, ["Market Gardener", "Rocket Jumper"], { "deploy time increased" : 1.0 })
 		player.SetHealth(195)
 	}
 }
@@ -22,7 +22,7 @@ function OnStart()
 function OnTakeDamage(params)
 {
 	local victim = params.const_entity
-	if(!victim.IsPlayer())
+	if (!victim.IsPlayer())
 		return
 		
 	local attacker = params.attacker
@@ -30,12 +30,12 @@ function OnTakeDamage(params)
 		return
 	
 	local weapon = params.weapon
-	if(weapon && weapon.GetName() == "tf_weapon_shovel" && !attacker.InCond(TF_COND_BLASTJUMPING))
+	if (weapon && weapon.GetName() == "tf_weapon_shovel" && !attacker.InCond(TF_COND_BLASTJUMPING))
 		params.damage = 0.0
 }
 
 function OnPlayerDeath(player, attacker, params)
 {
-	if(attacker && attacker.IsPlayer())
+	if (attacker && attacker.IsPlayer())
 		Ware_PassPlayer(attacker, true)
 }
