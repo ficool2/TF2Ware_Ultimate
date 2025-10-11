@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.3.0"
+#define PLUGIN_VERSION "1.3.1"
 
 // unused event repurposed for vscript <-> sourcemod communication
 #define PROXY_EVENT "tf_map_time_remaining"
@@ -201,7 +201,10 @@ void Enable()
 	sv_cheats = FindConVar("sv_cheats");
 	sm_flood_time = FindConVar("sm_flood_time");
 	
+	// incase a faulty plugin removes replicated flag, make sure to restore it
+	host_timescale.Flags = host_timescale.Flags | FCVAR_REPLICATED;
 	host_timescale.SetFloat(1.0, true, false);
+	sv_cheats.Flags = sv_cheats.Flags | FCVAR_REPLICATED;
 	sv_cheats.SetInt(1, true, false);
 	
 	// bump this because loading minigames from disk frequently takes a few ms and clogs the log
