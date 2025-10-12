@@ -168,7 +168,7 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Go and Spectate"
 	author         = ["PedritoGMG"]
-	description    = format("Go and Stay the %s!", selected_spot.name)
+	description    = format("Change the Camera to %s!", selected_spot.name)
 	music          = "digging"
 	duration       = 11.0
 	end_delay      = 1.0
@@ -195,7 +195,7 @@ function OnStart()
 
 	//Fix | the text disappears when KillPlayerSilently
 	local spot_name = format(" %s ", selected_spot.name)
-	Ware_CreateTimer(@() Ware_ShowMinigameText(null, spot_name), 0.1)
+	Ware_CreateTimer(@() Ware_ShowMinigameText(null, spot_name, "255 255 0"), 0.1)
 }
 
 function OnEnd()
