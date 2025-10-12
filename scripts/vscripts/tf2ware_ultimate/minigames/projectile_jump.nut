@@ -72,7 +72,11 @@ function OnStart()
 		orbs <- {}
 	}
 	
-	Ware_SetGlobalLoadout(player_class, weapon)
+	foreach(player in Ware_MinigamePlayers)
+	{
+		Ware_SetPlayerLoadout(player, player_class, weapon)
+		Ware_GetPlayerMiniData(player).self_damage <- false
+	}
 }
 
 function OnUpdate()
@@ -82,7 +86,7 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
-		if (player.GetAbsVelocity().Length() > velocity)
+		if (player.GetAbsVelocity().Length() > velocity && (Ware_GetPlayerMiniData(player).self_damage || Ware_MinigameMode == MODE_SHORTCIRCUIT)) // TODO: see shortcircuit ontakedamage
 			Ware_PassPlayer(player, true)
 	}
 	
@@ -150,6 +154,7 @@ if (Ware_MinigameMode == MODE_SENTRY)
 {
 	function OnTakeDamage(params)
 	{
+		CheckSelfDamage(params)
 		if (params.const_entity.IsPlayer())
 		{
 			local minidata = Ware_GetPlayerMiniData(params.const_entity)
@@ -170,8 +175,25 @@ else if (Ware_MinigameMode == MODE_SHORTCIRCUIT)
 {
 	function OnTakeDamage(params)
 	{
+		CheckSelfDamage(params) // TODO: this mode doesnt work for damagecheck bcuz shortcircuit does no self damage
 		local weapon = params.weapon
 		if (weapon && weapon.GetName() == "tf_weapon_mechanical_arm")
 			params.damage = 0.0
+	}
+}
+else
+{
+	function OnTakeDamage(params)
+	{
+		CheckSelfDamage(params)
+	}
+}
+
+function CheckSelfDamage(params) // this way of organising these functions is jank
+{
+	local victim = params.const_entity
+	if(victim == params.attacker && Ware_MinigamePlayers.find(victim) != null)
+	{
+		Ware_GetPlayerMiniData(victim).self_damage = true
 	}
 }
