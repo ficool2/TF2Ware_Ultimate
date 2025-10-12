@@ -189,7 +189,7 @@ else
 	}
 }
 
-function CheckSelfDamage(params) // this way of organising these functions is jank
+function CheckSelfDamage(params) // this way of organising this function is jank
 {
 	local victim = params.const_entity
 	if(victim == params.attacker && Ware_MinigamePlayers.find(victim) != null)
