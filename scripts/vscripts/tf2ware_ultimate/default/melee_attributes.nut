@@ -105,7 +105,7 @@ buffer<-@"// atomizer
 	""is_a_sword"" : 0
 },	
 // caber
-[307] = { ""single wep deploy time increased"" : 0},
+[307] = { ""single wep deploy time increased"" : 1},
 // killing gloves of boxing
 [43] =
 { 
