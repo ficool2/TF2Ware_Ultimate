@@ -158,9 +158,7 @@ buffer<-@"// atomizer
 	""crit does no damage"" : 0,
 	""tickle enemies wielding same weapon"" : 0,
 	""crit forces victim to laugh"" : 0,
-},
-// HHH axe
-[266] = { ""max health additive penalty"" : 0 },		
+},	
 // gunslinger
 [142] = 
 { 
