@@ -2,14 +2,16 @@ UnlitGeneric
 {
     $basetexture models/tf2ware_ultimate/pinball/pin_dashj
 	$model 1
-	Proxies
-	{
-		TextureScroll
-		{
-			texturescrollvar $baseTextureTransform
-			texturescrollrate 0.5
-			texturescrollangle 90
-		}
-	}
+	
+	// disabled temporarily to figure out if this is causing crashes
+	//Proxies
+	//{
+	//	TextureScroll
+	//	{
+	//		texturescrollvar $baseTextureTransform
+	//		texturescrollrate 0.5
+	//		texturescrollangle 90
+	//	}
+	//}
 }
 
