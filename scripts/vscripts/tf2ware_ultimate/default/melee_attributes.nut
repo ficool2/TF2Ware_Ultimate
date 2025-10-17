@@ -104,6 +104,8 @@ buffer<-@"// atomizer
 	""maxammo secondary reduced"" : 1,
 	""is_a_sword"" : 0
 },	
+// caber
+[307] = { ""single wep deploy time increased"" : 0},
 // killing gloves of boxing
 [43] =
 { 
