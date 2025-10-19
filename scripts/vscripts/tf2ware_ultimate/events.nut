@@ -263,8 +263,9 @@ function OnGameEvent_teamplay_round_start(params)
 // called only on mp_restartgame
 function OnGameEvent_scorestats_accumulated_reset(params)
 {
-	// save current timelimit
+	// save current timelimit and rounds play
 	Ware_MapResetTimer = GetPropFloat(GameRules, "m_flMapResetTime")
+	Ware_MapRoundsPlayed = GetPropInt(GameRules, "m_nRoundsPlayed")
 }
 
 // called right before the map is reset for a new round
@@ -275,6 +276,13 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		// restore timelimit
 		SetPropFloat(GameRules, "m_flMapResetTime", Ware_MapResetTimer)
 		Ware_MapResetTimer = null
+	}
+	
+	if (Ware_MapRoundsPlayed != null)
+	{
+		// restore rounds played (for mp_maxrounds)
+		SetPropInt(GameRules, "m_nRoundsPlayed", Ware_MapRoundsPlayed)
+		Ware_MapRoundsPlayed = null		
 	}
 	
 	if (Ware_Minigame) // when restarted mid-minigame

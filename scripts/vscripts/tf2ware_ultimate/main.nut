@@ -209,6 +209,7 @@ if (!("Ware_Precached" in this))
 
 	Ware_RoundsPlayed             <- 0
 	Ware_MapResetTimer            <- null
+	Ware_MapRoundsPlayed		  <- null
 	
 	Ware_Theme              	  <- Ware_Themes[0]
 	Ware_CurrentThemeSounds 	  <- {}
