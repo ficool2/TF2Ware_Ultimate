@@ -257,14 +257,14 @@ function ShowScores(player, gj_passed)
 	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
 	
 	local text = scores[0] + " +" + floor(gj_passed).tostring()
-	Ware_ShowText(player, CHANNEL_MINIGAME, text, timer, scores[1], -1, -0.55)
+	Ware_ShowText(player, CHANNEL_MINIGAME, text, timer, scores[1], -1, -0.65)
 	
 	local minidata = Ware_GetPlayerMiniData(player)	
 	if (minidata.gj_combo > 1)
 	{
 		Ware_ShowText(player, CHANNEL_BACKUP,
 			minidata.gj_combo + " COMBO",
-			timer, scores[1], -1, -0.60)
+			timer, scores[1], -1, -0.7)
 	}
 }
 
