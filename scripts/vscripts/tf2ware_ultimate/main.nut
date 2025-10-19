@@ -2113,7 +2113,8 @@ function Ware_GameOverInternal()
 	if (winner_count > 0)
 		top_score = top_players[0].GetScriptScope().ware_data.score
 	
-	local delay = GetConvarValue("mp_bonusroundtime").tofloat()
+	local restart_delay = GetConvarValue("mp_bonusroundtime").tofloat()
+	
 	Ware_ToggleTruce(false)
 	Ware_ToggleRespawnRooms(false)
 	
@@ -2125,7 +2126,7 @@ function Ware_GameOverInternal()
 		local player = data.player
 		Ware_PlayGameSound(player, "gameover")
 		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
-		player.StunPlayer(delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
+		player.StunPlayer(restart_delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
 	}
 	
 	Ware_TogglePlayerLoadouts(true)
@@ -2136,7 +2137,7 @@ function Ware_GameOverInternal()
 		player_winner_indices += data.index.tochar()
 
 		player.Regenerate(true)
-		player.AddCondEx(TF_COND_CRITBOOSTED, delay, null)
+		player.AddCondEx(TF_COND_CRITBOOSTED, restart_delay, null)
 		Ware_PlayGameSound(player, "gameclear")
 		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
 		player.AcceptInput("SpeakResponseConcept", "TLK_PLAYER_BATTLECRY randomnum:100", null, null)
@@ -2177,28 +2178,7 @@ function Ware_GameOverInternal()
 		}, 1.0)
 	}
 
-	local win = SpawnEntityFromTableSafe("game_round_win", 
-	{
-		teamnum         = TEAM_UNASSIGNED
-		force_map_reset = true
-		switch_teams    = true
-	})
-	EntityAcceptInput(win, "RoundWin")
-	// prevent loser state on winners
-	SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
-	// hide win panel
-	SendGlobalGameEvent("tf_game_over", {})
-	// stop stalemate sound
-	for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
-	{
-		SendGlobalGameEvent("teamplay_broadcast_audio",
-		{
-			team             = team
-			sound            = "Game.Stalemate"
-			additional_flags = SND_STOP
-			player           = -1
-		})
-	}
+	Ware_ForceRoundWin(restart_delay)
 	
 	Ware_CriticalZone = false
 	
@@ -2267,6 +2247,50 @@ function Ware_GameOverInternal()
 		sprite.GetScriptScope().offset <- sprite_offset
 		AddThinkToEnt(sprite, "Ware_UpdateWinnerSprite")
 	}
+}
+
+function Ware_ForceRoundWin(restart_delay)
+{
+	local win = SpawnEntityFromTableSafe("game_round_win", 
+	{
+		teamnum         = TEAM_UNASSIGNED
+		force_map_reset = true
+		switch_teams    = true
+	})
+	EntityAcceptInput(win, "RoundWin")
+	
+	// prevent loser state on winners
+	SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
+	
+	// hide win panel
+	SendGlobalGameEvent("tf_game_over", {})
+	
+	// stop stalemate sound
+	for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
+	{
+		SendGlobalGameEvent("teamplay_broadcast_audio",
+		{
+			team             = team
+			sound            = "Game.Stalemate"
+			additional_flags = SND_STOP
+			player           = -1
+		})
+	}
+	
+	// changing the round state would cause instant intermission if roundlimit is hit
+	// spoof round limit and restore it later on
+	Ware_MapRoundsPlayed = GetPropInt(GameRules, "m_nRoundsPlayed")
+	SetPropInt(GameRules, "m_nRoundsPlayed", 0)
+	
+	CreateTimer(function()
+	{
+		if (Ware_MapRoundsPlayed != null)
+		{
+			// restore rounds played (for mp_maxrounds)
+			SetPropInt(GameRules, "m_nRoundsPlayed", Ware_MapRoundsPlayed)
+			Ware_MapRoundsPlayed = null		
+		}
+	}, restart_delay - 1.1) // gamerules checks round limit every second
 }
 
 function Ware_UpdateWinnerSprite()
