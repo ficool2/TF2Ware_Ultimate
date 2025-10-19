@@ -37,8 +37,8 @@ minigame <- Ware_MinigameData
 	name          = "Gioca Jouer"
 	author        = ["TonyBaretta", "pokemonPasta", "tilderain"]
 	description   = "Gioca Jouer!"
-	duration      = 140.0
-	end_delay     = 1.0
+	duration      = 135.0
+	end_delay     = 5.0
 	location      = "boxarena"
 	music         = "giocajouer"
 	start_pass    = false
