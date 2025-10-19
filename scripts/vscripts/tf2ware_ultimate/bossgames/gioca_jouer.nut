@@ -205,6 +205,7 @@ function GiocaJouer_Clock()
 	OnMicroStart()
 }
 
+// calculates score every tick in microgame
 function GiocaJouer_PassPlayer(player, pass)
 {
 	local minidata = Ware_GetPlayerMiniData(player)
@@ -216,6 +217,32 @@ function GiocaJouer_PassPlayer(player, pass)
 		//local text = pass ? "^" : "X"
 		//Ware_ShowText(player, CHANNEL_BACKUP, text, 0.25, "255 255 255", -1, -0.5)
 	}
+}
+
+// calculates score only once per microgame
+function GiocaJouer_PassPlayerWithSpeed(player)
+{
+	local minidata = Ware_GetPlayerMiniData(player)
+	if ("gj_passed" in minidata && "gj_is_pass" in minidata)
+	{
+		if (!minidata.gj_is_pass)
+		{
+			minidata.gj_is_pass = true
+			
+			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
+			local sub_time = (Time() - micro_time_start)
+			if (micro_second_phase) 
+				sub_time *= 2
+				
+			local score = (timer - sub_time) * 75
+			minidata.gj_passed += score
+			
+			ComboCheck(player)
+			
+			ShowScores(player, minidata.gj_passed)		
+		}
+	}
+
 }
 
 function GetScoreThreshhold(gj_passed)
@@ -290,30 +317,6 @@ function DisplayNextMicro(micro)
 		return
 	Ware_ShowText(Ware_Players, CHANNEL_MISC, "NEXT: " + microgame_info[micro][0], 4, "128 128 128", -1, -0.70)
 }
-
-function GiocaJouer_PassPlayerWithSpeed(player)
-{
-	local minidata = Ware_GetPlayerMiniData(player)
-	if ("gj_passed" in minidata && "gj_is_pass" in minidata)
-	{
-		if (!minidata.gj_is_pass)
-		{
-			minidata.gj_is_pass = true
-			
-			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
-			local sub_time = (Time() - micro_time_start)
-			if (micro_second_phase) 
-				sub_time *= 2
-			minidata.gj_passed += (timer - sub_time) * 75
-			
-			ComboCheck(player)
-			
-			ShowScores(player, minidata.gj_passed)		
-		}
-	}
-
-}
-
 
 function GiocaJouer_CheckTauntableMelee(player)
 {
