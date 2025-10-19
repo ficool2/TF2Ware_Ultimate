@@ -39,10 +39,58 @@ BaseCombatCharacter.AmmoPickup
 TFPlayer.MedicChargedDeath
 {
 	channel		CHAN_STATIC
-	volume		0.6
+	volume		0.5
 	soundlevel	SNDLVL_60dB
 	pitch		PITCH_NORM
 	wave		player/medic_charged_death.wav
+}
+
+Player.ResistanceLight
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90, 110
+
+	rndwave
+	{
+		wave	)player/resistance_light1.wav
+		wave	)player/resistance_light2.wav
+		wave	)player/resistance_light3.wav
+		wave	)player/resistance_light4.wav
+	}
+}
+
+Player.ResistanceMedium
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90, 110
+
+	rndwave
+	{
+		wave	)player/resistance_medium1.wav
+		wave	)player/resistance_medium2.wav
+		wave	)player/resistance_medium3.wav
+		wave	)player/resistance_medium4.wav
+	}
+}
+
+Player.ResistanceHeavy
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90, 110
+
+	rndwave
+	{
+		wave	)player/resistance_heavy1.wav
+		wave	)player/resistance_heavy2.wav
+		wave	)player/resistance_heavy3.wav
+		wave	)player/resistance_heavy4.wav
+	}
 }
 
 Medic.AutoCallerAnnounce
@@ -89,20 +137,44 @@ DisciplineDevice.PowerDown
 	wave		common/null.wav
 }
 
-WeaponMedigun_Vaccinator.Charged_tier_01
+WeaponMedigun.Charged
 {
 	channel		CHAN_STATIC
 	soundlevel	SNDLVL_60dB
 	volume		0.5
+	wave		weapons/medigun_charged.wav
+}
+
+WeaponMedigun_Vaccinator.Charged_tier_01
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_60dB
+	volume		0.3
 	wave		)weapons/vaccinator_charge_tier_01.wav
 }
 
 WeaponMedigun_Vaccinator.InvulnerableOn
 {
 	channel		CHAN_WEAPON
-	volume		0.6
+	volume		0.3
 	soundlevel 	SNDLVL_60dB
 	wave		)player/invuln_on_vaccinator.wav
+}
+
+WeaponMedigun_Vaccinator.InvulnerableOff
+{
+	channel		CHAN_WEAPON
+	volume		0.3
+	soundlevel  SNDLVL_60dB
+	wave		)player\invuln_off_vaccinator.wav
+}
+
+WeaponMedigun_Vaccinator.Toggle
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_60dB
+	wave		)weapons\vaccinator_toggle.wav
 }
 
 WeaponGrapplingHook.ImpactDefault
