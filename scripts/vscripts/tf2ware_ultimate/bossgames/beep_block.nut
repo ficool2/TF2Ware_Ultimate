@@ -13,7 +13,6 @@ minigame <- Ware_MinigameData
 	duration       = 130.0
 	end_delay      = 1.1
 	location       = RandomElement(arenas)
-	music          = "beepblockskyway"
 	fail_on_death  = true
 	start_freeze   = 0.5
 	convars =
@@ -29,10 +28,6 @@ beat             <- 0.0
 bgm_offset       <- 0.0
 interrupted      <- false
 interrupt_timer  <- FLT_MAX
-
-// audio
-if (RandomInt(0, 9) == 0)
-	minigame.music = "beepblockskyway-twelve"
 
 beep_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_beep.mp3")
 swap_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_door.mp3")
@@ -63,17 +58,6 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (minigame.music == "beepblockskyway")
-	{
-		BeepBlock_SetTempo(120.0)
-		bgm_offset = 0.028
-	}
-	else
-	{
-		BeepBlock_SetTempo(140.0)
-		bgm_offset = -0.097
-	}
-	
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
 	
 	// fixes tilting from fall damage on ramp near the end of _ultimate arena
@@ -108,6 +92,25 @@ function OnStart()
 	tele2.GetScriptScope().OnStartTouch <- OnTele2Touch
 	tele2.GetScriptScope().tele_sound <- tele_sound
 	tele2.ConnectOutput("OnStartTouch", "OnStartTouch")
+	
+	Ware_CreateTimer(function(){StartBlocks()}, 0.5)
+}
+
+function StartBlocks()
+{
+	if (RandomInt(0, 9) != 0)
+	{
+		minigame.music = "beepblockskyway"
+		BeepBlock_SetTempo(120.0)
+		bgm_offset = 0.028
+	}
+	else
+	{
+		minigame.music = "beepblockskyway-twelve"
+		BeepBlock_SetTempo(140.0)
+		bgm_offset = -0.097
+	}
+	Ware_PlayMinigameMusic(null, minigame.music)
 	
 	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
 	// instead, we create all the sequences at the start, offset every 2 bars using i
