@@ -2194,8 +2194,14 @@ function Ware_GameOverInternal()
 			bonus = ware_data.bonus
 		}
 		
-		player_scores += score.tochar()
-		player_bonuses += bonus.tochar()
+		player_scores += score.tostring()
+		player_bonuses += bonus.tostring()
+		
+		if (i < MAX_CLIENTS)
+		{
+			player_scores += " "
+			player_bonuses += " "
+		}
 	}
 	
 	Ware_EventCallback("game_over", 
