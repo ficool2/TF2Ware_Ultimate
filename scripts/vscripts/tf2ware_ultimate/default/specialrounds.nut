@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 7
+buffer<-@"VERSION 8
 adrenaline_shot
 all_in
 barrels
@@ -20,6 +20,7 @@ low_gravity
 math_only
 merasmus
 mirrored_world
+noclip
 no_movingback
 no_text
 non_stop
