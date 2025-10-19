@@ -47,8 +47,10 @@ The unused event `player_rematch_change` is repurposed to allow VScript -> Sourc
 
 `game_over`
 * `players_won`             : string with list of player indices that won the game. each byte is the player index
-* `players_score`           : string with a list of all player's score (sorted by their entity index). each byte is the player's score, including bonus. length is `MaxClients`
-* `players_bonus`           : same as above but each byte is the bonus score. length is `MaxClients`
+* `players_score`           : string with a list of all player's score, in entity index order. each score is a decimal number in string form, separated by a space. there is always `MaxClients` number of entries. e.g. for 3 players `12 0 25`. 
+* `players_bonus`           : same as above but each number is the bonus score
+
+**note**: the format of `players_score` and `players_bonus` was changed on 19/10/25, due to a SourceMod bug which terminated the string early if a player had 0 score. Previously, it was a byte list of scores
 * `max_possible_score`      : maximum possible score to achieve, not including bonuses
 * `special_round_name`      : english name of the special round (can change depending on submode), blank if no special round
 * `special_round_file_name` : internal special round file name (doesn't change), blank if no special round
