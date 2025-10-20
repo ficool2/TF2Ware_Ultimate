@@ -50,7 +50,7 @@ Player.ResistanceLight
 	channel		CHAN_STATIC
 	volume		0.5
 	soundlevel  SNDLVL_75dB	
-	pitch		90, 110
+	pitch		90,110
 
 	rndwave
 	{
@@ -66,7 +66,7 @@ Player.ResistanceMedium
 	channel		CHAN_STATIC
 	volume		0.5
 	soundlevel  SNDLVL_75dB	
-	pitch		90, 110
+	pitch		90,110
 
 	rndwave
 	{
@@ -82,7 +82,7 @@ Player.ResistanceHeavy
 	channel		CHAN_STATIC
 	volume		0.5
 	soundlevel  SNDLVL_75dB	
-	pitch		90, 110
+	pitch		90,110
 
 	rndwave
 	{
