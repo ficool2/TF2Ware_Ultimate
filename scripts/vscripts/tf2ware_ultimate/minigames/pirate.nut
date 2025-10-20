@@ -18,7 +18,7 @@ minigame <- Ware_MinigameData
 	]	
 })
  
-ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"
+ship_model <-  "models/tf2ware_ultimate/pirate_ship.mdl"
 
 red_ship  <- null
 blue_ship <- null
@@ -46,13 +46,15 @@ function OnStart()
 	{
 		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? -500 : 300, -136),
 		model       = ship_model
-		rendercolor = "255 0 0",
+		skin		= 0
+		modelscale  = 0.3
 	})
 	blue_ship = Ware_SpawnEntity("prop_dynamic_override",
 	{
 		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? 300 : -500, -136),
 		model       = ship_model
-		rendercolor = "0 255 255",
+		skin		= 1
+		modelscale  = 0.3
 	})
 }
 

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/tf2ware_ultimate/pirate_ship/bjshSS04"
+	"$halflambert" "1"
+}
