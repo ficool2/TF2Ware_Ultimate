@@ -60,6 +60,9 @@ function OnStart()
 		}
 		player.SetRageMeter(0)
 	}
+	
+	// forcefully updates the rage meter
+	SendGlobalGameEvent("localplayer_pickup_weapon", {})
 }
 
 function OnUpdate()
@@ -81,4 +84,13 @@ function OnCleanup()
 		SetPropBool(player, "m_Shared.m_bRageDraining", false)
 		player.AddHudHideFlags(HIDEHUD_CLOAK_AND_FEIGN)
 	}
+	
+	// forcefully updates the rage meter
+	SendGlobalGameEvent("localplayer_pickup_weapon", {})
+}
+
+function OnGameEvent_localplayer_pickup_weapon(params)
+{
+	// this event is clientside and server won't allow sending it.. usually
+	// workaround: define this listener
 }
