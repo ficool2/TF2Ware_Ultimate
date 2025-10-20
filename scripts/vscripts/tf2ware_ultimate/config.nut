@@ -1,5 +1,5 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 7
+const WARE_MINIGAME_VERSION     = 8
 const WARE_BOSSGAME_VERSION     = 2
 const WARE_SPECIALROUND_VERSION = 8
 const WARE_THEME_VERSION        = 4
@@ -158,6 +158,9 @@ function Ware_LoadConfigMinigames()
 				case 7:
 					AppendElementIfUnique(lines, "market_garden")
 					break
+				case 8:
+					AppendElementIfUnique(lines, "pirate_war")
+					break					
 			}
 		}
 	})
