@@ -103,6 +103,9 @@ function Ware_ShowText(players, channel, text, holdtime, color = "255 255 255", 
 	
 	if (text == null)
 		return
+		
+	if (channel == CHANNEL_BACKUP)
+		Ware_DelayRoundText = Max(holdtime, Ware_DelayRoundText)
 	
 	if (Ware_SpecialRound && Ware_SpecialRound.reverse_text)
 		text = ReverseString(text)

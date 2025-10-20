@@ -192,6 +192,11 @@ Ware_MinigamesPlayed	  <- 0
 Ware_BossgamesPlayed      <- 0
 Ware_PreviousMinigames    <- []
 
+// caching this because convar lookup is expensive
+Ware_MaxRounds			  <- Convars.GetInt("mp_maxrounds")
+Ware_CurrentMapRound      <- GetPropInt(GameRules, "m_nRoundsPlayed")
+Ware_DelayRoundText       <- 0.0
+
 // dunno where to put this
 Ware_RoundEndMusicTimer   <- null
 Ware_BlockPassEffects     <- false
@@ -911,6 +916,27 @@ function Ware_GetOverlays(overlays)
 		return overlays.map(@(name) FixupOverlay(name))
 	else
 		return [FixupOverlay(overlays)]
+}
+
+function Ware_ShowRoundCounter()
+{
+	if (Ware_MaxRounds <= 0)
+		return
+		
+	// don't show round text for a bit if something else more important wants it..
+	local delay = Ware_DelayRoundText
+	if (delay > 0.0)
+	{
+		Ware_DelayRoundText = 0.0
+		return delay
+	}
+	
+	local duration = 5.0
+	local text = format("Round: %d/%d", Min(Ware_CurrentMapRound + 1, Ware_MaxRounds), Ware_MaxRounds)
+	Ware_ShowText(Ware_Players, CHANNEL_BACKUP, text, duration + 0.2, "255 255 255", 0.9, 0.85)
+	Ware_DelayRoundText = 0.0
+	
+	return duration
 }
 
 function Ware_GetSpecialRoundName()
@@ -2178,6 +2204,10 @@ function Ware_GameOverInternal()
 		}, 1.0)
 	}
 
+	// force update round counter
+	Ware_DelayRoundText = 0.0
+	Ware_ShowRoundCounter()
+	
 	Ware_ForceRoundWin(restart_delay)
 	
 	Ware_CriticalZone = false

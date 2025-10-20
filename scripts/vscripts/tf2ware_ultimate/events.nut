@@ -258,6 +258,8 @@ function OnGameEvent_teamplay_round_start(params)
 	// special rounds decide their own intermission delay
 	if (begin_intermission)
 		CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+		
+	CreateTimer(Ware_ShowRoundCounter, 0.1)
 }
 
 // called only on mp_restartgame

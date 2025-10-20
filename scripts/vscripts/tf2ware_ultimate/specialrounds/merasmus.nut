@@ -126,7 +126,6 @@ function OnTakeDamage(params)
 			if(params.damage > 0)
 			{
 				special.damage += params.damage
-				//Ware_ShowText(attacker, CHANNEL_MISC, format("Total: %d", special.damage), 1)
 			}
 		}
 	}
