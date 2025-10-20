@@ -167,7 +167,8 @@ function PrintScorers(printyou)
 		if (topPlayers.find(player) == null)
 		{
 			local minidata = Ware_GetPlayerMiniData(player)
-			Ware_ChatPrint(player, "You achieved {int} points!", minidata.gj_score)
+			if ("gj_score" in minidata)
+				Ware_ChatPrint(player, "You achieved {int} points!", minidata.gj_score)
 		}
 	}
 }
