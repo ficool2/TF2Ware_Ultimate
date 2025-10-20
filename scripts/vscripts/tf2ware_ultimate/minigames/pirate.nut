@@ -7,7 +7,8 @@ minigame <- Ware_MinigameData
 		"Jump over the RED ship!"
 		"Jump over the BLUE ship!"
 	]
-	duration       = 12.0
+	duration       = 7.5
+	end_delay      = 0.5
 	max_scale      = 1.0
 	music          = "piper"
 	location       = "beach"
@@ -56,6 +57,14 @@ function OnStart()
 		skin		= 1
 		modelscale  = 0.3
 	})
+	
+	local hurt = Ware_SpawnEntity("func_croc",
+	{
+		origin     = Ware_MinigameLocation.center - Vector(0, 0, 88)
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	hurt.SetSolid(SOLID_BBOX)
+	hurt.SetSize(Vector(-4096, -2048, -256), Vector(4096, 2048, 0))
 }
 
 function OnUpdate()
@@ -68,12 +77,6 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
-		
-		if (player.GetFlags() & FL_INWATER)
-		{
-			Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
-			continue
-		}
 		
 		local target = player // squirrel needs this to be happy
 		local origin = player.GetOrigin()
@@ -117,4 +120,9 @@ function OnUpdate()
 			}			
 		}
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }
