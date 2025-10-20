@@ -44,7 +44,8 @@ minigame <- Ware_MinigameData
 	start_pass    = false
 	convars = 
 	{
-		tf_max_voice_speak_delay = -1
+		tf_max_voice_speak_delay   = -1
+		tf_avoidteammates_pushaway = 0	
 	}
 })
 
