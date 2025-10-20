@@ -14,7 +14,8 @@ minigame <- Ware_MinigameData
 	suicide_on_end = true
 	convars        = 
 	{
-		tf_avoidteammates = 0
+		tf_avoidteammates   = 0
+		mp_show_voice_icons = 0
 	}
 })
 
