@@ -194,7 +194,7 @@ Ware_PreviousMinigames    <- []
 
 // caching this because convar lookup is expensive
 Ware_MaxRounds			  <- Convars.GetInt("mp_maxrounds")
-Ware_CurrentMapRound      <- GetPropInt(GameRules, "m_nRoundsPlayed")
+Ware_CurrentMapRound      <- 0
 Ware_DelayRoundText       <- 0.0
 
 // dunno where to put this
@@ -291,6 +291,8 @@ function Ware_SetupMap()
 	NavMesh.GetAllAreas(areas)
 	Ware_NavAreas = areas.values()
 	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
+	
+	Ware_CurrentMapRound = GetPropInt(GameRules, "m_nRoundsPlayed")
 	
 	if (MAX_CLIENTS >= 64)
 	{
