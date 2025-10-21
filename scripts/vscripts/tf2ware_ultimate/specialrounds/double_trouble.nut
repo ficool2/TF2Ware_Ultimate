@@ -46,9 +46,18 @@ function OnPick()
 				if (category in categories)
 				{
 					if (category != "none")
+					{
 						delete categories[category]
+					}
 					else
-						RemoveElementIfFound(categories[category], file_name)
+					{
+						local file_names = categories[category]
+						RemoveElementIfFound(file_names, file_name)
+						
+						// make sure we don't have empty categories
+						if (file_names.len() == 0)
+							delete categories[category]
+					}
 				}
 			}
 		}
@@ -93,8 +102,12 @@ function OnPick()
 			scopes.append(scope)
 			
 			// don't try pick anything else from this category
-			if (pick_category != "none")
-				delete categories[pick_category]		
+			if (pick_category != "none" || file_names.len() == 0)
+				delete categories[pick_category]	
+		}
+		else if (file_names.len() == 0)
+		{
+			delete categories[pick_category]
 		}
 	}
 	
