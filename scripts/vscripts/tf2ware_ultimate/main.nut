@@ -1091,13 +1091,14 @@ function Ware_BeginSpecialRoundInternal()
 		}
 		
 		local scope = Ware_LoadSpecialRound(round, player_count, is_forced)
+						
+		Ware_DebugNextSpecialRound.clear()
+		
 		if (scope)
 		{
 			Ware_SpecialRoundScope = scope
 			break
 		}
-					
-		Ware_DebugNextSpecialRound.clear()
 	}
 		
 	if (Ware_SpecialRoundScope.len() == 0)
