@@ -157,8 +157,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceBossgame   	<- ""
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
-	Ware_DebugNextSpecialRound  <- ""
-	Ware_DebugNextSpecialRound2 <- []
+	Ware_DebugNextSpecialRound  <- []
 	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
@@ -1062,11 +1061,17 @@ function Ware_BeginSpecialRoundInternal()
 	{
 		round = null
 		
-		local is_forced = false
-		if (Ware_DebugNextSpecialRound.len() > 0)
+		local is_forced = false	
+		local debug_len = Ware_DebugNextSpecialRound.len()	
+		
+		if (debug_len >= 2)
 		{
-			round = Ware_DebugNextSpecialRound
-			Ware_DebugNextSpecialRound = ""
+			round = "double_trouble"
+			is_forced = true
+		}		
+		else if (debug_len == 1 && Ware_DebugNextSpecialRound[0] != "any")
+		{
+			round = Ware_DebugNextSpecialRound[0]
 			is_forced = true
 		}		
 		else
@@ -1085,9 +1090,14 @@ function Ware_BeginSpecialRoundInternal()
 			round = RemoveRandomElement(Ware_SpecialRoundRotation)
 		}
 		
-		Ware_SpecialRoundScope = Ware_LoadSpecialRound(round, player_count, is_forced)
-		if (Ware_SpecialRoundScope)
+		local scope = Ware_LoadSpecialRound(round, player_count, is_forced)
+		if (scope)
+		{
+			Ware_SpecialRoundScope = scope
 			break
+		}
+					
+		Ware_DebugNextSpecialRound.clear()
 	}
 		
 	if (Ware_SpecialRoundScope.len() == 0)
@@ -1225,6 +1235,8 @@ function Ware_SetupMinigameCallbacks()
 
 function Ware_BeginIntermissionInternal(is_boss)
 {
+	Ware_CriticalZone = true
+	
 	if (Ware_DebugStop)
 	{
 		// message
@@ -1264,6 +1276,8 @@ function Ware_BeginIntermissionInternal(is_boss)
 		
 		CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 	}
+	
+	Ware_CriticalZone = false
 }
 
 function Ware_SetTimeScaleInternal(timescale)

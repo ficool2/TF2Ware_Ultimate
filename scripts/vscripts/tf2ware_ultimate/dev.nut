@@ -72,28 +72,26 @@ Ware_DevCommands <-
 	"nextspecial": function(player, text)
 	{
 		local args = split(text, " ")
+		local text = ""
 		if (args.len() >= 1)
 		{
-			if (args.len() >= 2)
+			Ware_DebugNextSpecialRound = clone(args)
+			
+			local len = Ware_DebugNextSpecialRound.len()
+			for (local i = 0; i < len; i++)
 			{
-				Ware_DebugNextSpecialRound = "double_trouble"
-				Ware_DebugNextSpecialRound2 = [args[0], args[1]]
-			}
-			else if (args[0] == "any")
-			{
-				Ware_ForceSpecialRound()
-			}
-			else
-			{
-				Ware_DebugNextSpecialRound = args[0]
+				text += Ware_DebugNextSpecialRound[i]
+				if (i < len - 1)
+					text += " "
 			}
 		}
 		else
 		{
-			Ware_DebugNextSpecialRound = ""
+			Ware_DebugNextSpecialRound.clear()
 		}
-		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
+		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), text)
 	}
+	
 	"forcemode": function(player, text)
 	{
 		local args = split(text, " ")
@@ -148,8 +146,7 @@ Ware_DevCommands <-
 		Ware_DebugForceBossgame   	= ""
 		Ware_DebugForceMinigameOnce = false
 		Ware_DebugForceBossgameOnce = false
-		Ware_DebugNextSpecialRound  = ""
-		Ware_DebugNextSpecialRound2 = []
+		Ware_DebugNextSpecialRound  = []
 		Ware_DebugForceMode         = null
 		Ware_DebugNextTheme         = ""
 		Ware_DebugForceTheme        = ""
