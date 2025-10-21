@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	author         = ["PedritoGMG"]
 	description    = "Hit the Jackpot!"
 	duration       = 10.0
-	max_players    = 64 	// 9 ents for each player | 576
+	max_players    = 64 	// 10 ents for each player | 640
     music          = "casino"
 })
 
@@ -23,11 +23,11 @@ local charactersConst = [
 first <- true
 
 camera <- null
-centerPos <- Ware_MinigameLocation.center * 1.0
-cameraOrigin <- Vector(0, 0, 500) + centerPos
+cameraOrigin <- Vector(-5076, 3161, 385)
 cameraAngle <- QAngle(90, 90, 0)
 columnSize <- 3
 slotSize <- 3
+backgroundSize <- 640.0
 local centerToSlotOrigin = Vector(0, 27.5, 0)
 local centerToLeft = Vector(0, -20, -90)
 // More speed = Less Sync
@@ -51,6 +51,8 @@ sound_dispenser <- "weapons/dispenser_idle.wav"
 sound_heal <- "weapons/dispenser_heal.wav"
 sound_ammo <- "weapons/dispenser_generate_metal.wav"
 overlay_fail <- "hud/tf2ware_ultimate/minigames/jackpot_fail"
+material_transparency <- "dev/camera_transparency"
+material_tv <- "models/mariokart/hud/map"
 
 local AllSlotsIcons = []
 class ColumnSlot {
@@ -136,6 +138,8 @@ function OnPrecache()
 	PrecacheSound(sound_heal)
 	PrecacheSound(sound_ammo)
 	PrecacheOverlay(overlay_fail)
+	PrecacheMaterial(material_transparency)
+	PrecacheMaterial(material_tv)
 }
 
 
@@ -144,14 +148,23 @@ function OnStart()
 	Ware_PlaySoundOnAllClients(sound_dispenser)
 	Ware_PlaySoundOnAllClients(sound_heal)
 
-	camera = Ware_SpawnEntity("point_viewcontrol",
+	camera = Ware_SpawnEntity("point_camera",
 	{
 		origin     = cameraOrigin
 		angles     = cameraAngle
 		fov		   = 90
-		spawnflags = 8
 	})
-	camera.SetMoveType(MOVETYPE_NONE, 0)
+	camera.AcceptInput("SetOn", "", null, null)
+	// workaround for networking bug
+	SetPropInt(camera, "m_nTransmitStateOwnedCounter", 1)
+	// needed for camera to get networked for everyone
+	local network_dummy = Ware_SpawnEntity("handle_dummy",
+	{
+		origin = cameraOrigin
+	})
+	local camera_link = Ware_CreateEntity("info_camera_link")
+	SetPropEntity(camera_link, "m_hCamera", camera)
+	SetPropEntity(camera_link, "m_hTargetEntity", network_dummy)
 
 	local dispenser = Ware_SpawnEntity("prop_dynamic_override",
 	{
@@ -162,8 +175,20 @@ function OnStart()
 		skin 			= RandomInt(0, 1)
 	})
 
+	local background = Ware_SpawnEntity("vgui_screen",
+	{
+		origin          = cameraOrigin + Vector(backgroundSize/2, backgroundSize/2, -200)
+		angles          = QAngle(270, 270, 180)
+		panelname       = "pda_panel_spy_invis"
+		overlaymaterial = material_transparency
+		width           = backgroundSize
+		height          = backgroundSize
+	})
+
 	foreach (player in Ware_MinigamePlayers) {
-		TogglePlayerViewcontrol(player, camera, true)
+
+		player.AddCustomAttribute("no_attack", 1, -1)
+		SetJackpotViewModel(player)
 
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.holding_attack <- 0
@@ -192,8 +217,10 @@ function OnCleanup()
 {
 	Ware_PlaySoundOnAllClients(sound_dispenser, 1.0, 100, SND_STOP)
 	Ware_PlaySoundOnAllClients(sound_heal, 1.0, 100, SND_STOP)
-	foreach (player in Ware_MinigamePlayers)
-		TogglePlayerViewcontrol(player, camera, false)
+	foreach (player in Ware_MinigamePlayers) {
+		player.RemoveCustomAttribute("no_attack")
+		SetPropBool(player, "m_Local.m_bDrawViewmodel", true)
+	}
 }
 
 function OnUpdate()
@@ -249,6 +276,39 @@ function OnUpdate()
 		}
 
 		minidata.holding_attack = (buttons & IN_ATTACK) != 0
+	}
+}
+
+function SetJackpotViewModel(player) {
+	local viewmodel = GetPropEntity(player, "m_hViewModel")
+	if (viewmodel)
+	{
+		SetPropBool(player, "m_Local.m_bDrawViewmodel", false)
+
+		local pos = viewmodel.GetOrigin()
+		local ang = viewmodel.GetAbsAngles()
+		local screenSize = 24
+
+		local offset = ang.Forward() * 8.0
+		             - ang.Up() * (screenSize / 2.0)
+					 - ang.Left() * (screenSize / 2.0)
+		local angFacing = QAngle(-ang.Pitch(), ang.Yaw() + 180.0, ang.Roll())
+
+		local screen = Ware_SpawnEntity("vgui_screen",
+		{
+			origin          = pos + offset,
+			angles          = angFacing,
+			panelname       = "pda_panel_spy_invis",
+			overlaymaterial = material_tv,
+			width           = screenSize,
+			height          = screenSize
+		})
+
+		SetEntityParent(screen, viewmodel)
+	}
+	else
+	{
+		Ware_PassPlayer(player, true)
 	}
 }
 

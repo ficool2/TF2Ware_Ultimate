@@ -1,0 +1,5 @@
+UnlitGeneric
+{
+	$basetexture dev/camera_transparency
+	$nofog 1
+}
