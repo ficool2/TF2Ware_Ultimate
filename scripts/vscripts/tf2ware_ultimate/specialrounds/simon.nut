@@ -31,7 +31,8 @@ function OnBeginIntermission(is_boss)
 
 function OnMinigameStart()
 {
-	local text = (simon ? "Simon" : "Someone") + " Says:"
+	local someone = GetSomeone()
+	local text = (simon ? "Simon" : someone) + " Says:"
 	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.13)
 	
 	local description = Ware_Minigame.description
@@ -70,4 +71,31 @@ function OnCalculateScore(data)
 			description = description[Min(data.mission, description.len() - 1)]
 		Ware_ChatPrint(player, text, TF_COLOR_DEFAULT, TF_COLOR_RED, description, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 	}
+}
+
+function GetSomeone()
+{
+	if(RandomBool())
+		return "Someone"
+	
+	return RandomElement([
+		"Salmon"
+		"Samuel"
+		"Simothy"
+		"Samantha"
+		"Sam"
+		"Cerberus"
+		"Simone"
+		"Simeon"
+		"Samson"
+		"Sinéad"
+		"SCP-079"
+		"Silvester"
+		"Sensal"
+		"Saxton Hale"
+		"Scout"
+		"Soldier"
+		"Sniper"
+		"Spy"
+	])
 }
