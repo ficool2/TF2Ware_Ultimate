@@ -42,7 +42,7 @@ function OnMinigameStart()
 		if(is_array)
 			description = Ware_Minigame.description[Min(Ware_GetPlayerMission(player), desc_len - 1)]
 		
-		Ware_ChatPrint(player, "{str} {color}{str}{color}!", text, COLOR_GREEN, description, TF_COLOR_DEFAULT)
+		Ware_ChatPrint(player, "{color}{str} {color}{str}", COLOR_GREEN, text, TF_COLOR_DEFAULT, description)
 	}
 }
 
