@@ -33,6 +33,16 @@ function OnMinigameStart()
 {
 	local text = (simon ? "Simon" : "Someone") + " Says:"
 	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.13)
+	
+	local description = Ware_Minigame.description
+	local is_array = typeof(description) == "array"
+	foreach(player in Ware_MinigamePlayers)
+	{
+		if(is_array)
+			description = Ware_Minigame.description[Min(Ware_GetPlayerMission(player), description.len() - 1)]
+		
+		Ware_ChatPrint(player, "{str} {color}{str}{color}!", text, COLOR_GREEN, description, TF_COLOR_DEFAULT)
+	}
 }
 
 function OnCalculateScore(data)
