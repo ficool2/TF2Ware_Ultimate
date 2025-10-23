@@ -93,7 +93,7 @@ function OnStart()
 	tele2.GetScriptScope().tele_sound <- tele_sound
 	tele2.ConnectOutput("OnStartTouch", "OnStartTouch")
 	
-	Ware_CreateTimer(function(){StartBlocks()}, 0.5)
+	Ware_CreateTimer(function(){StartBlocks()}, 0.7)
 }
 
 function StartBlocks()
