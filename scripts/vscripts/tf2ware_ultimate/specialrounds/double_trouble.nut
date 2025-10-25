@@ -157,7 +157,8 @@ function OnPick()
 		
 		if (src.boss_count > data.boss_count)        
 			data.boss_count = src.boss_count		
-		if (src.boss_threshold    != data.boss_threshold)    
+		// never extend boss thresholds for slow-mo
+		if (src.boss_threshold    != data.boss_threshold && data.boss_threshold >= Ware_BossThreshold)    
 			data.boss_threshold    = src.boss_threshold
 		if (src.speedup_threshold != data.speedup_threshold) 
 			data.speedup_threshold = src.speedup_threshold
