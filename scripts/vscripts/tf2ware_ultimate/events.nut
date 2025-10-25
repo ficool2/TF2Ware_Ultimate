@@ -527,7 +527,8 @@ function OnGameEvent_player_death(params)
 			Ware_PassPlayer(player, false)
 	}
 	
-	Ware_Minigame.cb_on_player_death(player, GetPlayerFromUserID(params.attacker), params)
+	local attacker = GetPlayerFromUserID(params.attacker)
+	Ware_Minigame.cb_on_player_death(player, attacker, params)
 }
 
 function OnGameEvent_player_disconnect(params)
