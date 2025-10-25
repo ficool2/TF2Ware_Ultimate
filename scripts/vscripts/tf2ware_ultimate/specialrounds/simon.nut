@@ -97,5 +97,6 @@ function GetSomeone()
 		"Soldier"
 		"Sniper"
 		"Spy"
+		"Sebastian"
 	])
 }
