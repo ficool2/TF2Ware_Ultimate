@@ -6,6 +6,7 @@ minigame <- Ware_MinigameData
 	duration       = Ware_MinigameMode != 1 ? 15 : 8.5
 	music          = "woody"
 	min_players    = 2
+	max_scale      = 1.5
 	allow_damage   = true
 	modes          = 4
 	collisions 	   = true
