@@ -62,7 +62,7 @@ function SwapPlayerPositions()
 		Ware_TeleportPlayer(player1, pos2, ang2, vel2)
 		Ware_SpawnParticle(player1, player1.GetTeam() == TF_TEAM_RED ? "teleported_red" : "teleported_blue")
 		// this can happen in size matters special round
-		if (scale1 != scale2)
+		if (scale1 > scale2)
 			UnstuckPlayer(player1)
 		
 		//player 2
@@ -73,7 +73,7 @@ function SwapPlayerPositions()
 		Ware_TeleportPlayer(player2, pos1, ang1, vel1)
 		Ware_SpawnParticle(player2, player2.GetTeam() == TF_TEAM_RED ? "teleported_red" : "teleported_blue")
 		// this can happen in size matters special round
-		if (scale1 != scale2)
+		if (scale2 > scale1)
 			UnstuckPlayer(player2)		
 	}
 	
