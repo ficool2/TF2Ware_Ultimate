@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	name          = "Market Garden"
 	author        = "pokemonPasta"
 	description   = "Market garden someone!"
-	duration      = 10.0
+	duration      = 12.0
 	music         = "duckhunt"
 	min_players   = 2
 	allow_damage  = true
@@ -38,4 +38,9 @@ function OnPlayerDeath(player, attacker, params)
 {
 	if (attacker && attacker.IsPlayer())
 		Ware_PassPlayer(attacker, true)
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }
