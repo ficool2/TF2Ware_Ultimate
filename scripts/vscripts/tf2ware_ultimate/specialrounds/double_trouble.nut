@@ -89,8 +89,14 @@ function OnPick()
 			
 		if (categories.len() == 0)
 			break
-
-		local pick_category = RandomElement(categories.keys())
+			
+		local category_pool = []
+		// pick random category, weighted towards categories with more items
+		// ("none" has a lot of them)
+		foreach (category, file_names in categories)
+			category_pool.extend(array(file_names.len(), category))
+		
+		local pick_category = RandomElement(category_pool)
 		local file_names = categories[pick_category]
 		local file_index = RandomIndex(file_names)
 		// don't try pick this again
