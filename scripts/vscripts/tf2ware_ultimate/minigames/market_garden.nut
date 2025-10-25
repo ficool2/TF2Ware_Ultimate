@@ -42,5 +42,5 @@ function OnPlayerDeath(player, attacker, params)
 
 function OnCheckEnd()
 {
-	return Ware_GetAlivePlayers().len() == 0
+	return Ware_GetAlivePlayers().len() < 2
 }
