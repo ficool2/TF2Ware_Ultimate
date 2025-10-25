@@ -3,12 +3,12 @@ minigame <- Ware_MinigameData
 	name           = "Buff"
 	author         = ["tilderain"]
 	description    = "Activate buff!"
-	duration       = Ware_MinigameMode != 1 ? 15 : 8.5
+	duration       = 15
 	music          = "woody"
 	min_players    = 2
 	max_scale      = 1.5
 	allow_damage   = true
-	modes          = 4
+	modes          = 3
 	collisions 	   = true
 	location       = "boxingring"
 })
@@ -43,17 +43,11 @@ function OnStart()
 		}
 		else if (Ware_MinigameMode == 1)
 		{
-			Ware_SetPlayerClass(player, TF_CLASS_PYRO)
-			Ware_GivePlayerWeapon(player, "Phlogistinator")
-			player.SetHealth(1250)
-		}
-		else if (Ware_MinigameMode == 2)
-		{
 			Ware_SetPlayerClass(player, TF_CLASS_SNIPER)
 			Ware_GivePlayerWeapon(player, "Cleaner's Carbine")
 			player.SetHealth(1250)
 		}
-		else if (Ware_MinigameMode == 3)
+		else if (Ware_MinigameMode == 2)
 		{
 			Ware_SetPlayerClass(player, TF_CLASS_SCOUT)
 			Ware_GivePlayerWeapon(player, "Soda Popper")
