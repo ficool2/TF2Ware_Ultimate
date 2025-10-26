@@ -166,6 +166,21 @@ Ware_DebugGameOver		  <- false
 
 Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
+Ware_ParticleSystem       <- {
+	speedup  = ["ware_particlesystem_speedup", "Micro_Skybox_SpeedUp"]
+	slowdown = ["ware_particlesystem_slowdown", "Micro_Skybox_SpeedDown"]
+	danger   = ["ware_particlesystem_danger", "Micro_Skybox_Danger"]
+}
+foreach(k,v in Ware_ParticleSystem)
+{
+	local ent = CreateEntitySafe("info_particle_system")
+	ent.KeyValueFromString("targetname", v[0])
+	ent.KeyValueFromString("effect_name", v[1])
+	ent.KeyValueFromVector("origin", vec3_zero)
+	ent.DispatchSpawn()
+	Ware_ParticleSystem[k] = ent
+}
+
 
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
