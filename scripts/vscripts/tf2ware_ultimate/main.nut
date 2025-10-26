@@ -173,6 +173,9 @@ Ware_ParticleSystem       <- {
 }
 foreach(k,v in Ware_ParticleSystem)
 {
+	if(typeof(v) == "instance")
+		continue
+	
 	local ent = CreateEntitySafe("info_particle_system")
 	ent.KeyValueFromString("targetname", v[0])
 	ent.KeyValueFromString("effect_name", v[1])
