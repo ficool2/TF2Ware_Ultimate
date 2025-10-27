@@ -1,5 +1,86 @@
 // - vanilla overrides
 
+CaptureFlag.EnemyStolen
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyDropped
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyCaptured
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyReturned
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamStolen
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamDropped
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamCaptured
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamReturned
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.FlagSpawn
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
 Crocs.JumpOut
 {
 	channel		CHAN_STATIC
@@ -29,11 +110,11 @@ Crocs.JumpBite
 
 BaseCombatCharacter.AmmoPickup
 {
-	channel			CHAN_AUTO
-	volume			0.0
-	pitch			0
-	soundlevel		SNDLVL_60dB
-	wave			common/null.wav
+	channel		CHAN_AUTO
+	volume		0.0
+	pitch		0
+	soundlevel	SNDLVL_60dB
+	wave		common/null.wav
 }
 
 TFPlayer.MedicChargedDeath
