@@ -103,7 +103,10 @@ function OnStart()
 		fogRadial	  = true
 	})
 
-	Generate()
+	Ware_CreateTimer(function()
+	{
+		Generate()
+	}, 2.0)
 
 	Ware_CreateTimer(function()
 	{
