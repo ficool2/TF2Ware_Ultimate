@@ -167,19 +167,20 @@ Ware_DebugGameOver		  <- false
 Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
 
-Ware_ParticleSystem <- {
+Ware_SkyboxParticles <- {
 	speedup  = "Micro_Skybox_SpeedUp"
 	slowdown = "Micro_Skybox_SpeedDown"
 	danger   = "Micro_Skybox_Danger"
 }
-foreach(k,v in Ware_ParticleSystem)
+foreach(k,v in Ware_SkyboxParticles)
 {
 	local ent = SpawnEntityFromTableSafe("info_particle_system",{
 		effect_name = v
-		origin      = vec3_zero
+		origin      = FindByClassname(null, "sky_camera").GetOrigin()
 	})
-	Ware_ParticleSystem[k] = ent
+	Ware_SkyboxParticles[k] = ent
 }
+// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center) // TODO: fix where this teleports
 
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
@@ -909,6 +910,23 @@ function Ware_CheckHomeLocation(player_count)
 			EntityAcceptInput(camera, "Enable")		
 		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
+			
+		// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center)
+	}
+}
+
+// takes a world vector and translates it to equivalent skybox vector for the particles to tele to
+// TODO: this doesnt work atm
+function Ware_TeleportSkyboxParticles(vec)
+{
+	local sky        = FindByClassname(null, "sky_camera")
+	local sky_origin = sky.GetOrigin()
+	local sky_scale  = GetPropInt(sky, "m_skyboxData.scale")
+	foreach(k, v in Ware_SkyboxParticles)
+	{
+		local pfx_origin = v.GetOrigin()
+		local new_origin = sky_origin + (pfx_origin - vec) * (1.0 / sky_scale)
+		v.Teleport(true, new_origin, false, ang_zero, false, vec3_zero)
 	}
 }
 
@@ -1276,6 +1294,9 @@ function Ware_BeginIntermissionInternal(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
+	foreach(k, v in Ware_SkyboxParticles)
+		EntityAcceptInput(v, "Stop")
+	
 	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
 		replace = Ware_SpecialRound.cb_on_begin_intermission(is_boss)
@@ -1320,6 +1341,8 @@ function Ware_BeginBossInternal()
 	{
 		Ware_SetTimeScale(1.0)
 		
+		EntityAcceptInput(Ware_SkyboxParticles.danger, "Start")
+		
 		Ware_PlayGameSound(null, "boss")
 		foreach (player in Ware_Players)
 		{
@@ -1340,6 +1363,8 @@ function Ware_SpeedupInternal()
 	if (!replace)
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+		
+		EntityAcceptInput(Ware_SkyboxParticles.speedup, "Start")
 		
 		Ware_PlayGameSound(null, "speedup")
 		foreach (player in Ware_Players)
