@@ -28,13 +28,13 @@ cameraAngle <- QAngle(90, 90, 0)
 columnSize <- 3
 slotSize <- 3
 backgroundSize <- 640.0
-local centerToSlotOrigin = Vector(0, 27.5, 0)
+local centerToSlotOrigin = Vector(0, 7.5, 0)
 local centerToLeft = Vector(0, -20, -90)
 // More speed = Less Sync
 speedDefault <- 32
-local separation = 30
+local offsetX = 30
 // Less Space = Less Sync
-limit <- 22.5
+local offsetY = 30
 
 local columnCharacters = (function() {
     local chars = clone(charactersConst)
@@ -74,7 +74,7 @@ class ColumnSlot {
 		local cloneCC = clone(columnCharacters)
 		for (local i = 0; i < size; i++) {
 			local icon = SpawnIconToPlayer(RemoveRandomElement(cloneCC))
-			icon.SetOrigin(origin + Vector( 0, separation * i, 0))
+			icon.SetOrigin(origin + Vector( 0, offsetY * i, 0))
 			this.icons.append(icon)
 			AllSlotsIcons.append(icon)
 		}
@@ -196,9 +196,9 @@ function OnStart()
 		minidata.SlotMachine <- []
 		for (local i = 1; i <= slotSize; i++) {
 			local origin = cameraOrigin + centerToLeft
-			origin.x += -separation*2
+			origin.x += -offsetX*2
 			minidata.SlotMachine.append(
-				ColumnSlot(player, speedDefault*i , columnSize, origin + Vector(separation*i, 0, 0), cameraAngle)
+				ColumnSlot(player, speedDefault*i , columnSize, origin + Vector(offsetX*i, 20, 0), cameraAngle)
 			)
 		}
 	}
@@ -227,16 +227,24 @@ function OnUpdate()
 {
     foreach (icon in AllSlotsIcons)
 	{
+		if (icon.GetMoveType() == MOVETYPE_NONE)
+			continue
+
 		local IconSlot = icon.GetScriptScope().ColumnSlot
         local origin = icon.GetOrigin()
 
-		if (IconSlot.origin.y - limit > origin.y) {
-			icon.KeyValueFromVector("origin", (IconSlot.origin + Vector(0, limit * 3, 0)))
+		if (IconSlot.origin.y - offsetY > origin.y) {
+			icon.KeyValueFromVector("origin", (IconSlot.origin + Vector(0, offsetY * (columnSize - 1), 0)))
 
 			//Fix for visible teleport
 			local currentIcon = icon // Local Copy
 			SetPropInt(icon, "m_nRenderMode", 10)
-			Ware_CreateTimer(@() SetPropInt(currentIcon, "m_nRenderMode", 0), 0.05)
+			Ware_CreateTimer(function()
+			{
+				//Make it not visible from above when stopped
+				if (currentIcon.GetMoveType() != MOVETYPE_NONE)
+					SetPropInt(currentIcon, "m_nRenderMode", 0)
+			}, 0.175) // 0.175 Perfect balance for CL_INTERP 0 or 0.1 (Default)
 		}
     }
 
