@@ -423,9 +423,6 @@ function OnGameEvent_player_spawn(params)
 		data.spawn_time = Time()
 		data.lerp_time = GetPropFloat(player, "m_fLerpTime")
 		
-		if (Ware_MinigameTopScorers.find(player) != null)
-			player.AddCond(TF_COND_TELEPORTED)
-		
 		if (!data.start_sound)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 1.0)
 		

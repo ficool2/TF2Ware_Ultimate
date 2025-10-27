@@ -65,7 +65,6 @@ function OnStart()
 	foreach (player in Ware_MinigamePlayers)
 	{
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER) // prevent taunting
-		player.RemoveCond(TF_COND_TELEPORTED)
 		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
 		SetPropInt(player, "m_nRenderMode", kRenderNone)
 		Ware_TogglePlayerWearables(player, false)

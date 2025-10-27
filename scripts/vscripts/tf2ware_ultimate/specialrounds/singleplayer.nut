@@ -17,7 +17,6 @@ function DisablePlayerVisibility(player)
     Ware_TogglePlayerWearables(player, false)
     player.AddHudHideFlags(HIDEHUD_TARGET_ID)
     SetPropInt(player, "m_nRenderMode", kRenderNone)
-    player.RemoveCond(TF_COND_TELEPORTED)
 }
 
 function OnPlayerDeath(player, attacker, params)
@@ -29,7 +28,6 @@ function OnUpdate()
 {
     foreach (player in Ware_Players)
     {
-        player.RemoveCond(TF_COND_TELEPORTED)
         player.AddHudHideFlags(HIDEHUD_TARGET_ID)
         //Bad performance?
         Ware_TogglePlayerWearables(player, false)

@@ -1996,7 +1996,6 @@ function Ware_FinishMinigameInternal()
 				Ware_RemovePlayerAttributeInternal(player, attribute)
 			data.attributes.clear()
 			
-			player.RemoveCond(TF_COND_TELEPORTED)
 			player.SetHealth(player.GetMaxHealth())
 			SetPropInt(player, "m_nImpulse", 101) // refill ammo						
 			Ware_StripPlayer(player, true)
@@ -2132,13 +2131,6 @@ function Ware_FinishMinigameInternal()
 			}	
 		}
 	}
-	
-	CreateTimer(function()
-	{
-		foreach (player in top_players)
-			if (player.IsValid())
-				player.AddCond(TF_COND_TELEPORTED)
-	}, 0.25)
 
 	ClearGameEventsFromScope(Ware_MinigameScope, Ware_MinigameEvents)
 

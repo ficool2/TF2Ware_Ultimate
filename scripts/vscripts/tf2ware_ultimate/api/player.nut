@@ -607,7 +607,6 @@ Ware_DelayPDASwitch <- false
 // Sets the player's class, and regenerates their health, ammo, melee etc
 // If "switch_melee" is true, the player will be switched to their new melee
 // Does nothing if the player is already the given class
-local Ware_CheckTeleportEffectTimer // Ignore this
 function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 {
 	if (player.GetPlayerClass() == player_class)
@@ -624,22 +623,6 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 		
 	player.SetHealth(player.GetMaxHealth())
 	
-	// teleport effect gets cleared on class change, need to recreate it here
-	// creating timers is expensive so avoid doing that for every player
-	player.RemoveCond(TF_COND_TELEPORTED)
-	if (!Ware_CheckTeleportEffectTimer || !Ware_CheckTeleportEffectTimer.IsValid())
-	{
-		Ware_CheckTeleportEffectTimer = CreateTimer(function()
-		{
-			local top_scorers = Ware_MinigameTopScorers
-			foreach (player in Ware_MinigamePlayers)
-			{
-				if (top_scorers.find(player) != null)
-					player.AddCond(TF_COND_TELEPORTED)
-			}
-		}, 0.25)
-	}
-
 	if (melee != null)
 	{
 		// not sure why this is needed
