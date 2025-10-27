@@ -328,7 +328,7 @@ function Ware_StripPlayer(player, give_default_melee)
 			if (active_weapon != use_melee)
 			{
 				if (active_weapon != null)
-				{								
+				{
 					// force switch fixes
 					local classname = active_weapon.GetClassname()
 					if (classname == "tf_weapon_minigun" || classname == "tf_weapon_buff_item")
@@ -355,6 +355,11 @@ function Ware_StripPlayer(player, give_default_melee)
 						local viewmodel = GetPropEntity(player, "m_hViewModel")
 						if (viewmodel)
 							viewmodel.SetBodygroup(1, 0)
+					}
+					// beggar's bazooka
+					else if (active_weapon.GetAttribute("auto fires full clip", 0) != 0)
+					{
+						active_weapon.SetClip1(0)
 					}
 				}
 				
