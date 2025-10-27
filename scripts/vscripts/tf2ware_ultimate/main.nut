@@ -311,7 +311,6 @@ function Ware_SetupMap()
 		})
 		Ware_SkyboxParticles[name] = particle
 	}
-	// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center) // TODO: fix where this teleports
 	
 	if (MAX_CLIENTS >= 64)
 	{
@@ -916,22 +915,24 @@ function Ware_CheckHomeLocation(player_count)
 		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
 			
-		// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center)
+		Ware_TeleportSkyboxParticles()
 	}
 }
 
-// takes a world vector and translates it to equivalent skybox vector for the particles to tele to
-// TODO: This doesn't work. The entities are teleported to the wrong vector in the skybox
-function Ware_TeleportSkyboxParticles(vec)
+function Ware_TeleportSkyboxParticles()
 {
 	local sky_origin = SkyCamera.GetOrigin()
 	local sky_scale  = GetPropInt(SkyCamera, "m_skyboxData.scale")
+	local inv_sky_scale = 1.0 / sky_scale
+	
+	local home_origin = Ware_MinigameHomeLocation.center
+	// world to skybox space
+	local home_sky_origin = sky_origin + home_origin * inv_sky_scale
+	
+	local particle_origin = home_sky_origin - Vector(0, 0, 300 * inv_sky_scale)
+
 	foreach (name, particle in Ware_SkyboxParticles)
-	{
-		local pfx_origin = v.GetOrigin()
-		local new_origin = sky_origin + (pfx_origin - vec) * (1.0 / sky_scale)
-		particle.SetAbsOrigin(new_origin)
-	}
+		particle.SetAbsOrigin(particle_origin)
 }
 
 function Ware_GetOverlays(overlays) 
