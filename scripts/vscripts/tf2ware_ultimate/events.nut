@@ -570,6 +570,13 @@ function OnGameEvent_teamplay_game_over(params)
 	Ware_PlayGameSound(null, "mapend")
 }
 
+function OnGameEvent_localplayer_pickup_weapon(params)
+{
+	// used to fix status meters not showing up in minigames
+	// this event is clientside and server won't allow sending it.. usually
+	// workaround: define this empty listener
+}
+
 if (!Ware_Plugin) // plugin calls Ware_PlayerSay directly
 {
 	function OnGameEvent_player_say(params)

@@ -872,6 +872,11 @@ function Ware_SetPlayerTeamInternal(player, team)
 	}
 }
 
+function Ware_UpdateWeaponMetersInternal()
+{
+	SendGlobalGameEvent("localplayer_pickup_weapon", {})
+}
+
 function Ware_ShowPassEffects(player)
 {
 	player.EmitSound(SFX_WARE_PASS)

@@ -591,6 +591,14 @@ function Ware_DestroySpecialMelee(player)
 	}
 }
 
+// TF2 won't correctly update refresh HUD meters when given weapons such as Buff Banners, Soda Popper etc
+// Call this to fix that
+function Ware_UpdateWeaponMeters()
+{
+	// delay to account for ping
+	EntityEntFire(World, "CallScriptFunction", "Ware_UpdateWeaponMetersInternal", 0.25)
+}
+
 // Players that are force switched to PDAs not show the menu unless given with a delay
 // Set this to true and revert back to false before giving a weapon if you want to show the menu
 // Note this is not reliable depending on lag, and may sometimes still not show the menu
