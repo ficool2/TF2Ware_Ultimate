@@ -872,6 +872,22 @@ function Ware_SetPlayerTeamInternal(player, team)
 	}
 }
 
+function Ware_CheckPlayerTopScoreEffect(player, top_players)
+{
+	SetPropBool(player, "m_bGlowEnabled", false)	
+	
+	if (top_players.find(player) == null)
+		return
+		
+	// if theres too many top scorers, don't show glows
+	local scorer_count = top_players.len()
+	local player_count = Ware_Players.len()
+	if (scorer_count * 6 > player_count)
+		return
+	
+	SetPropBool(player, "m_bGlowEnabled", true)	
+}
+
 function Ware_UpdateWeaponMetersInternal()
 {
 	SendGlobalGameEvent("localplayer_pickup_weapon", {})
@@ -2131,6 +2147,9 @@ function Ware_FinishMinigameInternal()
 			}	
 		}
 	}
+	
+	foreach (player in Ware_MinigamePlayers)
+		Ware_CheckPlayerTopScoreEffect(player, top_players)
 
 	ClearGameEventsFromScope(Ware_MinigameScope, Ware_MinigameEvents)
 

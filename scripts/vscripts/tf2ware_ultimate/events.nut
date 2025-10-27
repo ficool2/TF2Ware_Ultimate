@@ -445,6 +445,8 @@ function OnGameEvent_player_spawn(params)
 			
 			Ware_SpecialRound.cb_on_player_spawn(player)
 		}
+		
+		Ware_CheckPlayerTopScoreEffect(player, Ware_MinigameTopScorers)		
 	}
 }
 

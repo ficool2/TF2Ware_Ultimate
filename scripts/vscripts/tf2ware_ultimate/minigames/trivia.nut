@@ -64,6 +64,7 @@ function OnStart()
 	Ware_SetGlobalAttribute("voice pitch scale", 0, -1)
 	foreach (player in Ware_MinigamePlayers)
 	{
+		SetPropBool(player, "m_bGlowEnabled", false)
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER) // prevent taunting
 		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
 		SetPropInt(player, "m_nRenderMode", kRenderNone)
