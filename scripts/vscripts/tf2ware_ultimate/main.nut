@@ -916,7 +916,7 @@ function Ware_CheckHomeLocation(player_count)
 }
 
 // takes a world vector and translates it to equivalent skybox vector for the particles to tele to
-// TODO: this doesnt work atm
+// TODO: This doesn't work. The entities are teleported to the wrong vector in the skybox
 function Ware_TeleportSkyboxParticles(vec)
 {
 	local sky        = FindByClassname(null, "sky_camera")
