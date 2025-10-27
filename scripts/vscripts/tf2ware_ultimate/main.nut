@@ -1612,20 +1612,17 @@ function Ware_StartMinigameInternal(is_boss)
 			Ware_MinigameMode = 0	
 		}
 		
+		if (from_rotation)
+		{
+			local arr = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
+			RemoveElementIfFound(arr, minigame)
+		}
+		
 		local scope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (scope)
 		{		
 			// success!
 			Ware_MinigameScope = scope
-			
-			if (from_rotation)
-			{
-				local arr = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
-				local idx = arr.find(minigame)
-				if (idx != null)
-					arr.remove(idx)
-			}
-			
 			break
 		}
 	}
