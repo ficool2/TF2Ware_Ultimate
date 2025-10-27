@@ -23,7 +23,9 @@ function OnStart()
 function OnSpeedup()
 {
 	Ware_SetTimeScale(Ware_GetTimeScale() - interval)
-		
+	
+	EntityAcceptInput(Ware_SkyboxParticles.slowdown, "Start")
+	
 	Ware_PlayGameSound(null, "speedup")
 	foreach (player in Ware_Players)
 	{

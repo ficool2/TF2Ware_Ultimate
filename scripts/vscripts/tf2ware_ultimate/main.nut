@@ -167,6 +167,13 @@ Ware_DebugGameOver		  <- false
 Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
 
+Ware_SkyboxParticles <- 
+{
+	speedup  = "Micro_Skybox_SpeedUp"
+	slowdown = "Micro_Skybox_SpeedDown"
+	danger   = "Micro_Skybox_Danger"
+}
+
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
 Ware_NavSpawnAreas		  <- []
@@ -254,6 +261,7 @@ function Ware_SetupMap()
 	World     <- FindByClassname(null, "worldspawn")
 	GameRules <- FindByClassname(null, "tf_gamerules")
 	PlayerMgr <- FindByClassname(null, "tf_player_manager")
+	SkyCamera <- FindByClassname(null, "sky_camera")
 	TeamMgrs  <- []
 	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
 		TeamMgrs.append(mgr)
@@ -292,6 +300,17 @@ function Ware_SetupMap()
 	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
 	
 	Ware_CurrentMapRound = GetPropInt(GameRules, "m_nRoundsPlayed")
+	
+	local sky_origin = SkyCamera.GetOrigin()
+	foreach (name, particle in Ware_SkyboxParticles)
+	{
+		local particle = SpawnEntityFromTableSafe("info_particle_system",
+		{
+			effect_name = particle
+			origin      = sky_origin
+		})
+		Ware_SkyboxParticles[name] = particle
+	}
 	
 	if (MAX_CLIENTS >= 64)
 	{
@@ -895,7 +914,25 @@ function Ware_CheckHomeLocation(player_count)
 			EntityAcceptInput(camera, "Enable")		
 		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
+			
+		Ware_TeleportSkyboxParticles()
 	}
+}
+
+function Ware_TeleportSkyboxParticles()
+{
+	local sky_origin = SkyCamera.GetOrigin()
+	local sky_scale  = GetPropInt(SkyCamera, "m_skyboxData.scale")
+	local inv_sky_scale = 1.0 / sky_scale
+	
+	local home_origin = Ware_MinigameHomeLocation.center
+	// world to skybox space
+	local home_sky_origin = sky_origin + home_origin * inv_sky_scale
+	
+	local particle_origin = home_sky_origin - Vector(0, 0, 300 * inv_sky_scale)
+
+	foreach (name, particle in Ware_SkyboxParticles)
+		particle.SetAbsOrigin(particle_origin)
 }
 
 function Ware_GetOverlays(overlays) 
@@ -1262,6 +1299,9 @@ function Ware_BeginIntermissionInternal(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
+	foreach (name, particle in Ware_SkyboxParticles)
+		EntityEntFire(particle, "Stop")
+	
 	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
 		replace = Ware_SpecialRound.cb_on_begin_intermission(is_boss)
@@ -1306,6 +1346,8 @@ function Ware_BeginBossInternal()
 	{
 		Ware_SetTimeScale(1.0)
 		
+		EntityEntFire(Ware_SkyboxParticles.danger, "Start")
+		
 		Ware_PlayGameSound(null, "boss")
 		foreach (player in Ware_Players)
 		{
@@ -1326,6 +1368,8 @@ function Ware_SpeedupInternal()
 	if (!replace)
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
+		
+		EntityAcceptInput(Ware_SkyboxParticles.speedup, "Start")
 		
 		Ware_PlayGameSound(null, "speedup")
 		foreach (player in Ware_Players)
