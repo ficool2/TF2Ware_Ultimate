@@ -174,10 +174,10 @@ Ware_ParticleSystem <- {
 }
 foreach(k,v in Ware_ParticleSystem)
 {
-	local ent = CreateEntitySafe("info_particle_system")
-	ent.KeyValueFromString("effect_name", v)
-	ent.KeyValueFromVector("origin", vec3_zero)
-	ent.DispatchSpawn()
+	local ent = SpawnEntityFromTableSafe("info_particle_system",{
+		effect_name = v
+		origin      = vec3_zero
+	})
 	Ware_ParticleSystem[k] = ent
 }
 
