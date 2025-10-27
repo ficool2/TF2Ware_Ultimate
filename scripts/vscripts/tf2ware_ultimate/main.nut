@@ -302,14 +302,14 @@ function Ware_SetupMap()
 	Ware_CurrentMapRound = GetPropInt(GameRules, "m_nRoundsPlayed")
 	
 	local sky_origin = SkyCamera.GetOrigin()
-	foreach (k, v in Ware_SkyboxParticles)
+	foreach (name, particle in Ware_SkyboxParticles)
 	{
-		local ent = SpawnEntityFromTableSafe("info_particle_system",
+		local particle = SpawnEntityFromTableSafe("info_particle_system",
 		{
-			effect_name = v
+			effect_name = particle
 			origin      = sky_origin
 		})
-		Ware_SkyboxParticles[k] = ent
+		Ware_SkyboxParticles[name] = particle
 	}
 	// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center) // TODO: fix where this teleports
 	
@@ -924,14 +924,13 @@ function Ware_CheckHomeLocation(player_count)
 // TODO: This doesn't work. The entities are teleported to the wrong vector in the skybox
 function Ware_TeleportSkyboxParticles(vec)
 {
-	local sky        = FindByClassname(null, "sky_camera")
-	local sky_origin = sky.GetOrigin()
-	local sky_scale  = GetPropInt(sky, "m_skyboxData.scale")
-	foreach(k, v in Ware_SkyboxParticles)
+	local sky_origin = SkyCamera.GetOrigin()
+	local sky_scale  = GetPropInt(SkyCamera, "m_skyboxData.scale")
+	foreach (name, particle in Ware_SkyboxParticles)
 	{
 		local pfx_origin = v.GetOrigin()
 		local new_origin = sky_origin + (pfx_origin - vec) * (1.0 / sky_scale)
-		v.Teleport(true, new_origin, false, ang_zero, false, vec3_zero)
+		particle.SetAbsOrigin(new_origin)
 	}
 }
 
@@ -1299,8 +1298,8 @@ function Ware_BeginIntermissionInternal(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
-	foreach (k, v in Ware_SkyboxParticles)
-		EntityAcceptInput(v, "Stop")
+	foreach (name, particle in Ware_SkyboxParticles)
+		EntityEntFire(particle, "Stop")
 	
 	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
@@ -1346,7 +1345,7 @@ function Ware_BeginBossInternal()
 	{
 		Ware_SetTimeScale(1.0)
 		
-		EntityAcceptInput(Ware_SkyboxParticles.danger, "Start")
+		EntityEntFire(Ware_SkyboxParticles.danger, "Start")
 		
 		Ware_PlayGameSound(null, "boss")
 		foreach (player in Ware_Players)
