@@ -167,20 +167,12 @@ Ware_DebugGameOver		  <- false
 Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
 
-Ware_SkyboxParticles <- {
+Ware_SkyboxParticles <- 
+{
 	speedup  = "Micro_Skybox_SpeedUp"
 	slowdown = "Micro_Skybox_SpeedDown"
 	danger   = "Micro_Skybox_Danger"
 }
-foreach(k,v in Ware_SkyboxParticles)
-{
-	local ent = SpawnEntityFromTableSafe("info_particle_system",{
-		effect_name = v
-		origin      = FindByClassname(null, "sky_camera").GetOrigin()
-	})
-	Ware_SkyboxParticles[k] = ent
-}
-// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center) // TODO: fix where this teleports
 
 Ware_RespawnRooms         <- []
 Ware_NavAreas             <- []
@@ -269,6 +261,7 @@ function Ware_SetupMap()
 	World     <- FindByClassname(null, "worldspawn")
 	GameRules <- FindByClassname(null, "tf_gamerules")
 	PlayerMgr <- FindByClassname(null, "tf_player_manager")
+	SkyCamera <- FindByClassname(null, "sky_camera")
 	TeamMgrs  <- []
 	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
 		TeamMgrs.append(mgr)
@@ -307,6 +300,18 @@ function Ware_SetupMap()
 	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
 	
 	Ware_CurrentMapRound = GetPropInt(GameRules, "m_nRoundsPlayed")
+	
+	local sky_origin = SkyCamera.GetOrigin()
+	foreach (k, v in Ware_SkyboxParticles)
+	{
+		local ent = SpawnEntityFromTableSafe("info_particle_system",
+		{
+			effect_name = v
+			origin      = sky_origin
+		})
+		Ware_SkyboxParticles[k] = ent
+	}
+	// Ware_TeleportSkyboxParticles(Ware_MinigameHomeLocation.center) // TODO: fix where this teleports
 	
 	if (MAX_CLIENTS >= 64)
 	{
@@ -1294,7 +1299,7 @@ function Ware_BeginIntermissionInternal(is_boss)
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
 	
-	foreach(k, v in Ware_SkyboxParticles)
+	foreach (k, v in Ware_SkyboxParticles)
 		EntityAcceptInput(v, "Stop")
 	
 	local replace = false
