@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name        = "Math Only"
 	author      = ["Gemidyne", "ficool2"]
 	description = "Only math questions this round!"
-	category    = ""
+	categories = ["text"] // this sucks enough as is, no need to make it impossible with no_text or reversed_text
 })
 
 function GetMinigameName(is_boss)

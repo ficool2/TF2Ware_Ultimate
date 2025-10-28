@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Barrels"
 	author = "tilderain"
 	description = "Explosive barrels will rain from the sky!"
-	category = ""
+	categories = []
 })
 
 local barrels = []
@@ -17,12 +17,12 @@ function OnPrecache()
 function OnUpdate()
 {
 	if(barrels.len() < 64)
-	{	
+	{
 		if (RandomInt(0, 48) == 0)
-		{ 
+		{
 			local ply = RandomElement(Ware_Players)
 			local barrelOrigin =  ply.GetOrigin() +
-								Vector(RandomFloat(-250.0, 250.0), 
+								Vector(RandomFloat(-250.0, 250.0),
 									   RandomFloat(-250.0, 250.0),
 									   RandomFloat(250.0, 1000.0))
 			if (TraceLine(barrelOrigin, barrelOrigin, ply) > 0.0)
@@ -41,7 +41,7 @@ function OnUpdate()
 	else
 	{
 		local barrel = barrels.remove(0)
-	
+
 		if (barrel.IsValid())
 		{
 			barrel.Kill()

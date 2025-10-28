@@ -3,9 +3,9 @@ special_round <- Ware_SpecialRoundData
 	name             = "Singleplayer"
 	author           = ["Mecha the Slag", "tilderain"]
 	description      = "You're playing alone...?"
-	category         = ""
+	categories       = ["playermodel"]
     min_players		 = 2
-	convars			 = 
+	convars			 =
 	{
 		mp_show_voice_icons = 0
 	}
@@ -34,7 +34,7 @@ function OnUpdate()
 		// hides medic bubbles
 		SetPropBool(player, "m_bSaveMeParity", false)
     }
-	
+
 	EntFire("tf_ragdoll", "Kill")
 }
 

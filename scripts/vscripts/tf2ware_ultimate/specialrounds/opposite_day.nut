@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Opposite Day"
 	author =  ["Gemidyne", "pokemonPasta"]
 	description = "Do the opposite of what the minigame tells you."
-	category = "scores"
+	categories = ["scores"]
 	opposite_win = true
 })
 

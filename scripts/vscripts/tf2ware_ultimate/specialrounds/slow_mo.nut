@@ -4,9 +4,9 @@ special_round <- Ware_SpecialRoundData
 	name = "Slow-Mo"
 	author =  ["Gemidyne", "pokemonPasta"]
 	description = "Everything slows down!"
-	category = "timescale"
-	boss_threshold = 10
-	
+	categories = ["timescale"]
+	// TODO: boss_threshold = 0.5 * current boss threshold
+
 })
 
 function OnSpeedup()

@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Boss Rush"
 	author = "pokemonPasta"
 	description = "Five bosses will be played back to back!"
-	category = "bosses"
+	categories = ["bosses", "load_last"]
 	boss_threshold = 0
 	boss_count = 5
 })

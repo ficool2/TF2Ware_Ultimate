@@ -6,8 +6,8 @@ special_round <- Ware_SpecialRoundData
 	name = "Simon Goes Crazy"
 	author = "pokemonPasta"
 	description = "Only do what Simon tells you to do."
-	category = "scores"
-	
+	categories = ["scores"]
+
 	opposite_win = !simon
 })
 
@@ -34,7 +34,7 @@ function OnMinigameStart()
 	local someone = GetSomeone()
 	local text = (simon ? "Simon" : someone) + " Says:"
 	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.13)
-	
+
 	local description = Ware_Minigame.description
 	local is_array = typeof(description) == "array"
 	local desc_len = Ware_Minigame.description.len()
@@ -42,7 +42,7 @@ function OnMinigameStart()
 	{
 		if(is_array)
 			description = Ware_Minigame.description[Min(Ware_GetPlayerMission(player), desc_len - 1)]
-		
+
 		Ware_ChatPrint(player, "{color}{str} {color}{str}", COLOR_GREEN, text, TF_COLOR_DEFAULT, description)
 	}
 }
@@ -54,7 +54,7 @@ function OnCalculateScore(data)
 		data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 		return
 	}
-	
+
 	local player = data.player
 	local special_data = Ware_GetPlayerSpecialRoundData(player)
 	if (!simon)
@@ -65,7 +65,7 @@ function OnCalculateScore(data)
 			text += "\n{color}HINT: {color}Only do what Simon tells you to do!"
 			special_data.hint_shown = true
 		}
-		
+
 		local description = Ware_Minigame.description
 		if (typeof(description) == "array")
 			description = description[Min(data.mission, description.len() - 1)]
@@ -77,7 +77,7 @@ function GetSomeone()
 {
 	if(RandomBool())
 		return "Someone"
-	
+
 	return RandomElement([
 		"Salmon"
 		"Samuel"

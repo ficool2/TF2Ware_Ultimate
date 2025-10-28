@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Hunger Update"
 	author = "tilderain"
 	description = "Eat to survive!"
-	category = ""
+	categories = []
 })
 
 foods <- []
@@ -23,7 +23,7 @@ items <-
 
 function OnPrecache()
 {
-	foreach (item in items) 
+	foreach (item in items)
 		PrecacheModel(item[3])
 }
 
@@ -49,14 +49,14 @@ function OnUpdate()
 	local time = Time()
 	foreach (player in Ware_Players)
 	{
-		if (!player.IsAlive()) 
+		if (!player.IsAlive())
 			continue
 
-		local last_eat = time - Ware_GetPlayerSpecialRoundData(player).last_eat 
-		
+		local last_eat = time - Ware_GetPlayerSpecialRoundData(player).last_eat
+
 		if (dmg_tick % 60 == 0)
 			player.SetHealth(player.GetHealth() - last_eat)
-		
+
 		if (player.GetHealth() <= 0)
 		{
 			Ware_GetPlayerSpecialRoundData(player).last_eat <- time
@@ -64,7 +64,7 @@ function OnUpdate()
 		}
 
 		if (foods.len() < 100)
-		{	
+		{
 			if ((dmg_tick % 400 == 0) || (RandomInt(0, 400) == 0))
 			{
        			local start = player.EyePosition()
@@ -88,7 +88,7 @@ function OnUpdate()
 				food.ConnectOutput("OnPlayerTouch", "OnPlayerTouch")
 				foods.append(food)
     		}
-		}	
+		}
 		else
 		{
 			local food = foods.remove(0)
