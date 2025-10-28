@@ -47,6 +47,7 @@ function OnStart()
 	{
 		Ware_SetPlayerLoadout(player, TF_CLASS_ENGINEER, "Eureka Effect", { "deploy time increased" : 1.0 })
 		Ware_ChatPrint(player, "{color}HINT: {color}Press R to open the teleport menu.", COLOR_GREEN, TF_COLOR_DEFAULT)
+		Ware_SetPlayerMission(player, RandomInt(0,1))
 		
 		local assigned = false
 		local destination = RandomElement(DestinationsArr)
@@ -81,7 +82,7 @@ function OnUpdate()
 {
 	foreach(player in Ware_MinigamePlayers)
 	{
-		local destination = Ware_MinigameMode == 0 ? Ware_MinigameHomeLocation : Ware_GetPlayerMiniData(player).destination
+		local destination = Ware_GetPlayerMission(player) == 0 ? Ware_MinigameHomeLocation : Ware_GetPlayerMiniData(player).destination
 		local mins = destination.mins
 		local maxs = destination.maxs
 		local origin = player.GetOrigin()
