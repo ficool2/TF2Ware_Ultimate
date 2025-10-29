@@ -1,9 +1,15 @@
 
 Destinations <- {
 	// location     max teles
-	// circlepit     = 12
-	// circlepit_big = 12
-	boxarena      = 12
+	circlepit       = 12
+	circlepit_big   = 12
+	sawrun          = 10
+	sawrun_micro    = 10
+	boxarena        = 12
+	beach           = 12
+	frogger         = 8
+	warehouse       = 12
+	// todo: add more...
 }
 
 DestinationsArr <- []
@@ -28,16 +34,17 @@ minigame <- Ware_MinigameData
 		"teleport_home"
 		"teleport_exit"
 	]
-	duration       = 6.0
+	duration       = 5.0
 	location       = "homerun_contest"
 	music          = "settingthescene"
 	max_players    = max_teles
+	allow_damage   = true
 })
 
 function OnTeleport(players)
 {
 	local center = Ware_MinigameLocation.center + Vector(0, 10000, 0)
-	center.z = -14350
+	center.z = -14390
 	Ware_TeleportPlayersCircle(players, center, 500.0)
 }
 
@@ -95,4 +102,11 @@ function OnUpdate()
 		)
 			Ware_PassPlayer(player, true)
 	}
+}
+
+function OnTakeDamage(params)
+{
+	local weapon = params.weapon
+	if(weapon && weapon.IsMeleeWeapon())
+		params.damage = 0.0
 }
