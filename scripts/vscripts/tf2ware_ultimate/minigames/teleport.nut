@@ -52,7 +52,7 @@ function OnStart()
 {
 	foreach(player in Ware_MinigamePlayers)
 	{
-		Ware_SetPlayerLoadout(player, TF_CLASS_ENGINEER, "Eureka Effect", { "deploy time increased" : 1.0 })
+		Ware_SetPlayerLoadout(player, TF_CLASS_ENGINEER, "Eureka Effect", { "deploy time increased" : 1.0, "cannot pick up buildings" : 1.0 })
 		Ware_ChatPrint(player, "{color}HINT: {color}Press R to open the teleport menu.", COLOR_GREEN, TF_COLOR_DEFAULT)
 		Ware_SetPlayerMission(player, RandomInt(0,1))
 		
