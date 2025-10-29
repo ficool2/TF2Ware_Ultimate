@@ -1,5 +1,26 @@
 
 simon <- RandomBool()
+friends <- [
+	"Salmon"
+	"Samuel"
+	"Simothy"
+	"Samantha"
+	"Sam"
+	"Cerberus"
+	"Simone"
+	"Simeon"
+	"Samson"
+	"Sinéad"
+	"SCP-079"
+	"Silvester"
+	"Sensal"
+	"Saxton Hale"
+	"Scout"
+	"Soldier"
+	"Sniper"
+	"Spy"
+	"Sebastian"
+]
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -78,25 +99,5 @@ function GetSomeone()
 	if(RandomBool())
 		return "Someone"
 	
-	return RandomElement([
-		"Salmon"
-		"Samuel"
-		"Simothy"
-		"Samantha"
-		"Sam"
-		"Cerberus"
-		"Simone"
-		"Simeon"
-		"Samson"
-		"Sinéad"
-		"SCP-079"
-		"Silvester"
-		"Sensal"
-		"Saxton Hale"
-		"Scout"
-		"Soldier"
-		"Sniper"
-		"Spy"
-		"Sebastian"
-	])
+	return RandomElement(friends)
 }
