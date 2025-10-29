@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Noclip"
 	author = "ficool2"
 	description = "Everyone can noclip! Press ACTION KEY (default: H) to noclip!"
+	category = ""
 })
 
 function OnStart()
