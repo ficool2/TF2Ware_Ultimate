@@ -14,6 +14,7 @@ friends <- [
 	"SCP-079"
 	"Silvester"
 	"Sensal"
+	"Soldine"
 	"Saxton Hale"
 	"Scout"
 	"Soldier"
@@ -96,7 +97,7 @@ function OnCalculateScore(data)
 
 function GetSomeone()
 {
-	if(RandomBool())
+	if(RandomInt(0,2) == 0)
 		return "Someone"
 	
 	return RandomElement(friends)
