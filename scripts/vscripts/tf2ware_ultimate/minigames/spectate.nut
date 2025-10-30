@@ -1,5 +1,6 @@
 spots <- 
 [
+    // TODO: uncomment when mercenary kart is fixed
     // {
     //     name = "Waluigi",
     //     origin = Vector(11491, 28, 8544),
