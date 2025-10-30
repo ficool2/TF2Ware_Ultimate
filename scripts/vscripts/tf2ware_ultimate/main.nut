@@ -423,18 +423,23 @@ function Ware_PrecacheNext()
 		}
 		else if ("special_round" in scope)
 		{
-			if (scope.special_round.category != null)
+			if ("categories" in scope.special_round)
 			{
-				local category = scope.special_round.category
-				if (category == "")
-					category = "none"
-				if (!(category in Ware_SpecialRoundCategories))
-					Ware_SpecialRoundCategories[category] <- []
-				Ware_SpecialRoundCategories[category].append(name)
+				local categories = scope.special_round.categories
+				if (categories == null)
+					categories = [] // don't use in double trouble
+				else if (categories.len() == 0)
+					categories = ["none"] // no conflicts with other special rounds
+				foreach (category in categories)
+				{
+					if (!(category in Ware_SpecialRoundCategories))
+						Ware_SpecialRoundCategories[category] <- []
+					Ware_SpecialRoundCategories[category].append(name)
+				}
 			}
 			else
 			{
-				Ware_Error("Special round '%s' has no category entry", name)
+				Ware_Error("Special round '%s' has no categories entry", name)
 			}
 			
 			AddAuthor(scope.special_round.author, folder)

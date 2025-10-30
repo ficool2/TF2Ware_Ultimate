@@ -20,6 +20,7 @@ class Ware_SpecialRoundData
 		boss_threshold    = Ware_BossThreshold
 		speedup_threshold = Ware_SpeedUpThreshold
 		pitch_override    = -1
+		priority		  = 0
 
 		if (table)
 		{
@@ -40,9 +41,7 @@ class Ware_SpecialRoundData
 	// Category array
 	// Used when stacking multiple special rounds. More than one special round from a given category cannot be stacked.
 	// If categories is empty, it's assumed it has no possible conflicts with any other special round
-	// If categories contains "load_first", this special round has to be first in the load order
-	// If categories contains "load_last", this special round has to be last in the load order
-	// If categories contains "unique", this special round cannot be loaded alongside any other special round
+	// If categories is null, this special round cannot be loaded alongside any other special round
 	categories               = null
 
 	// == Optional settings ==
@@ -77,6 +76,8 @@ class Ware_SpecialRoundData
 	speedup_threshold        = null
 	// Override player voice pitch if set
 	pitch_override           = null
+	// Priority for loading order, lower values load first, default is 0
+	priority                 = null
 
 	// == Internal use only ==
 	file_name                = null

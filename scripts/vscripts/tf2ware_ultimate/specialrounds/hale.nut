@@ -32,6 +32,10 @@ function OnPrecache()
 	PrecacheParticle(land_particle)
 }
 
+function OnMultipleSpecialRounds(file_names, parent_special) {
+	parent_special.boss_threshold = special_round.boss_threshold
+}
+
 function InitHale(player)
 {
 	local special = Ware_GetPlayerSpecialRoundData(player)

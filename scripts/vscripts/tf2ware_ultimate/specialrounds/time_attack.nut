@@ -10,6 +10,10 @@ special_round <- Ware_SpecialRoundData
 	speedup_threshold = INT_MAX
 })
 
+function OnMultipleSpecialRounds(file_names, parent_special) {
+	parent_special.speedup_threshold = special_round.speedup_threshold
+}
+
 function OnMinigameEnd()
 {
 	last_timescale = Ware_GetTimeScale() + 0.05
