@@ -97,7 +97,7 @@ function OnCalculateScore(data)
 
 function GetSomeone()
 {
-	if(RandomInt(0,2) == 0)
+	if(RandomInt(0,2) != 0)
 		return "Someone"
 	
 	return RandomElement(friends)
