@@ -16,12 +16,26 @@ function OnPick()
 
 	local remaining_categories = clone(Ware_SpecialRoundCategories)
 
+	local available_special_rounds = {} // table: file_name -> [categories]
+	local selected_special_rounds = [] // array of the file names
+
+	foreach (category, file_names in remaining_categories) {
+		remaining_categories[category] = clone(file_names) // deep clone as we will remove picks from the list
+		foreach (file_name in file_names) {
+			if (!(file_name in  available_special_rounds))
+				available_special_rounds[file_name] <- []
+			available_special_rounds[file_name].append(category)
+		}
+	}
+
 	// load in any debug/forced special rounds first
 	local debug_len = Ware_DebugNextSpecialRound.len()
 	if (debug_len >= desired_count)
 	{
 		// in case any don't get picked, we'll let the rest be random picked
 		desired_count = debug_len
+
+		local incompatible_with_selected = []
 
 		foreach (file_name in Ware_DebugNextSpecialRound)
 		{
@@ -37,21 +51,30 @@ function OnPick()
 			if (scope)
 			{
 				scopes.append(scope)
+				selected_special_rounds.append(file_name)
+				delete available_special_rounds[file_name]
 
 				// don't random roll conflicting special rounds sharing the same category
 				// note that forcing incompatible categories is intentionally allowed
-				local categories = scope.special_round.categories
-				foreach (category in categories)
+				local picked_categories = scope.special_round.categories
+				foreach (category in picked_categories)
 				{
-					local file_names = remaining_categories[category]
-					RemoveElementIfFound(file_names, file_name)
+					if (category == "none" || !(category in remaining_categories))
+						continue
 
-					// make sure we don't have empty categories
-					if (file_names.len() == 0)
-						delete remaining_categories[category]
+					local file_names_in_category = remaining_categories[category]
+					foreach(file_name_in_category in file_names_in_category)
+						incompatible_with_selected.append(file_name_in_category)
+
+					delete remaining_categories[category]
 				}
 			}
 		}
+
+		// delete after all forced rounds have been dealt with
+		foreach (file_name in incompatible_with_selected)
+			if (file_name in available_special_rounds)
+				delete available_special_rounds[file_name]
 	}
 	else
 	{
@@ -67,17 +90,6 @@ function OnPick()
 			desired_count++
 	}
 
-	// The special rounds we have to choose from, and their categories
-	local special_rounds = {}
-
-	foreach (category, file_names in remaining_categories) {
-		remaining_categories[category] = clone(file_names) // deep clone as we will remove picks from the list
-		foreach (file_name in file_names)
-			if (!(file_name in  special_rounds))
-				special_rounds[file_name] <- []
-			special_rounds[file_name].append(category)
-	}
-
 	// fill in the rest of desired special rounds
 	// as some might have rejected the pick earlier
 	while (true)
@@ -88,25 +100,30 @@ function OnPick()
 		if (remaining_categories.len() == 0)
 			break
 
-		local file_names = special_rounds.keys()
+		local file_names = available_special_rounds.keys()
 		local file_name = file_names[RandomInt(0, file_names.len() - 1)]
-		local picked_categories = special_rounds[file_name]
+		local picked_categories = available_special_rounds[file_name]
+		delete available_special_rounds[file_name]
 
 		local scope = Ware_LoadSpecialRound(file_name, player_count, false)
 		if (scope)
 		{
 			scopes.append(scope)
-
-			// don't try pick anything else from these categories
-			foreach (category in picked_categories)
-				if (category != "none")
-					delete remaining_categories[category]
+			selected_special_rounds.append(file_name)
 		}
-		foreach (category in picked_categories)
-			if (file_names.len() == 0)
-				delete remaining_categories[category]
 
-		delete special_rounds[file_name]
+		foreach (category in picked_categories)
+		{
+			if (category == "none" || !(category in remaining_categories))
+				continue
+
+			local file_names_in_category = remaining_categories[category]
+			foreach(file_name_in_category in file_names_in_category)
+				if (file_name_in_category in available_special_rounds)
+					delete available_special_rounds[file_name_in_category]
+
+			delete remaining_categories[category]
+		}
 	}
 
 	// sort by ascending priority
