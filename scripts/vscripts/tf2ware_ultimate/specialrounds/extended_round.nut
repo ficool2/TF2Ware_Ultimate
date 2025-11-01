@@ -8,7 +8,7 @@ special_round <- Ware_SpecialRoundData
 	description = format("%d minigames will be played before the boss.", threshold)
 	categories = []
 	boss_threshold = threshold
-	priority = 50
+	priority = 50 // Needs to be after slow_mo or any other specials that modify the boss threshold.
 })
 
 function OnMultipleSpecialRounds(file_names, parent_special) {

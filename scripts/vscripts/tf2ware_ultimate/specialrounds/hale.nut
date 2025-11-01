@@ -33,7 +33,7 @@ function OnPrecache()
 }
 
 function OnMultipleSpecialRounds(file_names, parent_special) {
-	parent_special.boss_threshold = special_round.boss_threshold
+	parent_special.pitch_override = special_round.pitch_override
 }
 
 function InitHale(player)
