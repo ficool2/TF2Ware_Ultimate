@@ -570,6 +570,16 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 		Vector(3615, 1880, -11400)
 	]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+	PlatformToggle = function(enable_platform) {
+		local trigger = FindByName(null, "smasharena_trigger")
+		if(enable_platform)
+		{
+			EntityAcceptInput(trigger, "EndTouch")
+			EntityAcceptInput(trigger, "Disable")
+		}
+		else
+			EntityAcceptInput(trigger, "Enable")
+	}
 }
 
 Ware_Location.abcdeathpit <-  // NOTE: Players can get stuck if collisions are on (they will still die though)
