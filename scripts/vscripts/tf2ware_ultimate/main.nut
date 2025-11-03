@@ -1390,7 +1390,7 @@ function Ware_SpeedupInternal()
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
 		
-		EntityAcceptInput(Ware_SkyboxParticles.speedup, "Start")
+		EntityEntFire(Ware_SkyboxParticles.speedup, "Start")
 		
 		Ware_PlayGameSound(null, "speedup")
 		foreach (player in Ware_Players)
