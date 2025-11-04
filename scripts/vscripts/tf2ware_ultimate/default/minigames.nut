@@ -81,6 +81,7 @@ stun
 sumo
 swim_up
 taunt_kill
+teleport
 time_jump
 touch_sky
 trampoline

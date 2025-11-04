@@ -72,6 +72,8 @@ Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720)
 	radius   = 288.0
+	mins     = Vector(-2750, -1620, -700)
+	maxs     = Vector(-1210, -110, 3580)
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
@@ -79,6 +81,8 @@ Ware_Location.circlepit_big <-
 {
 	center   = Vector(-3304, 2400, 1056)
 	radius   = 600.0
+	mins     = Vector(-4130, 1450, -500)
+	maxs     = Vector(-2450, 3200, 3580)
 	Teleport = Ware_Location.circlepit.Teleport
 }
 
@@ -86,6 +90,8 @@ Ware_Location.sawrun <-
 {
 	center   = Vector(4480, -4000, -4495)
 	finish   = Vector(4480, -3056, -4495)
+	mins     = Vector(3890, -4430, -4500)
+	maxs     = Vector(4950, -2500, -4125)
 	Teleport = function(players) 
 	{
 		local spacing_x = -50.0, spacing_y = 50.0
@@ -106,6 +112,8 @@ Ware_Location.sawrun_micro <-
 {
 	center   = Vector(-160, 5546, -11887)
 	finish   = Vector(-160, 5948, -11887)
+	mins     = Vector(-450, 4790, -11890)
+	maxs     = Vector(125 , 6295, -11630)
 	Teleport = function(players) 
 	{
 		local spacing_x = -50.0, spacing_y = 50.0
@@ -251,6 +259,8 @@ Ware_Location.kart_containers <-
 {
 	center         = Vector(-1200, 3450, -6718)
 	cameras        = ["kartcontainers_camera"]
+	mins           = Vector(-5120, 2500, -6720)
+	maxs           = Vector(-380, 5950, -5120)
 	Teleport = function(players)
 	{
 		local pos = center * 1.0
@@ -301,6 +311,8 @@ Ware_Location.kart_paths <-
 Ware_Location.kart_ramp <-
 {
 	center   = Vector(-7000, -10400, -6494)
+	mins           = Vector(-7900, -10650, -6500)
+	maxs           = Vector(-6230, -5700, -5320)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), 
@@ -315,6 +327,8 @@ Ware_Location.frogger <-
 {
 	center   = Vector(11488, -6150, -6447)
 	cameras  = ["frogger_camera1", "frogger_camera2", "frogger_camera3"]
+	mins           = Vector(10450, -6950, -6450)
+	maxs           = Vector(12510, 1500, -5660)
 	Teleport = function(players)
 	{
 		local spacing = 50.0
@@ -556,6 +570,16 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 		Vector(3615, 1880, -11400)
 	]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+	PlatformToggle = function(enable_platform) {
+		local trigger = FindByName(null, "smasharena_trigger")
+		if(enable_platform)
+		{
+			EntityAcceptInput(trigger, "EndTouch")
+			EntityAcceptInput(trigger, "Disable")
+		}
+		else
+			EntityAcceptInput(trigger, "Enable")
+	}
 }
 
 Ware_Location.abcdeathpit <-  // NOTE: Players can get stuck if collisions are on (they will still die though)
