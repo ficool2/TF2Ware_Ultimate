@@ -97,7 +97,7 @@ function OnPick()
 		if (scopes.len() >= desired_count)
 			break
 
-		if (remaining_categories.len() == 0)
+		if (remaining_categories.len() == 0 || available_special_rounds.len() == 0)
 			break
 
 		local file_names = available_special_rounds.keys()

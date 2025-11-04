@@ -14,7 +14,7 @@ function Ware_ErrorHandler(e)
 	local info = getstackinfos(2)
 	if (info && "post_func" in info.locals)
 		return
-		
+
 	local developers = []
 	if ("Ware_Players" in ROOT)
 	{
@@ -23,7 +23,7 @@ function Ware_ErrorHandler(e)
 		if (Ware_ListenHost && Ware_ListenHost.IsValid() && developers.find(Ware_ListenHost) == null)
 			developers.append(Ware_ListenHost)
 	}
-		
+
 	local Print = function(msg)
 	{
 		// dev chat
@@ -33,7 +33,7 @@ function Ware_ErrorHandler(e)
 		if (Ware_ListenHost == null)
 			printl(msg)
 	}
-	
+
 	local time = Time()
 	if (Ware_LastErrorTime < time)
 	{
@@ -42,9 +42,9 @@ function Ware_ErrorHandler(e)
 		foreach (developer in developers)
 			ClientPrint(developer, HUD_PRINTTALK, "\x07FF0000A script error has occured. Check console for details")
 	}
-	
+
 	Print(format("\n[TF2Ware] AN ERROR HAS OCCURRED [%s]", e))
-	
+
 	if (info)
 	{
 		local i = 2
@@ -52,10 +52,10 @@ function Ware_ErrorHandler(e)
 		{
 			if (info == null || info == ROOT)
 				break
-			
+
 			Print(format("* %s (%s, line %d)", info.func, info.src, info.line))
-			
-			foreach (n, v in info.locals) 
+
+			foreach (n, v in info.locals)
 			{
 				local t = type(v)
 				t ==    "null" ? Print(format("\t[%s] NULL"  , n))    :
@@ -67,16 +67,16 @@ function Ware_ErrorHandler(e)
 				t ==  "table"  ? Print(format("\t[%s] table (%d)", n, v.len())) :
 								 Print(format("\t[%s] %s %s" , n, t, v.tostring()))
 			}
-			
+
 			info = getstackinfos(++i)
 		}
 	}
-	
+
 	if (Ware_CriticalZone)
 	{
-		Ware_CriticalZone = false	
+		Ware_CriticalZone = false
 		SetConvarValue("mp_restartgame", 5)
-		PlaySoundOnAllClients(SFX_WARE_ERROR)		
+		PlaySoundOnAllClients(SFX_WARE_ERROR)
 		Ware_Error("Critical error detected. Restarting in 5 seconds...")
 	}
 }
@@ -122,7 +122,7 @@ class Ware_Callback
 		if (name in _scope)
 			func = _scope[name]
 	}
-	
+
 	function _call(...)
 	{
 		if (func != null)
@@ -133,12 +133,12 @@ class Ware_Callback
 		}
 		return null
 	}
-	
+
 	function IsValid()
 	{
 		return func != null
 	}
-	
+
 	function GetDefaultScope() { return null }
 
 	func = null
@@ -167,7 +167,7 @@ Ware_DebugGameOver		  <- false
 Ware_TextManager          <- null
 Ware_ParticleSpawner      <- null
 
-Ware_SkyboxParticles <- 
+Ware_SkyboxParticles <-
 {
 	speedup  = "Micro_Skybox_SpeedUp"
 	slowdown = "Micro_Skybox_SpeedDown"
@@ -212,8 +212,8 @@ Ware_AllowLoadouts		  <- false
 if (!("Ware_Precached" in this))
 {
 	Ware_Precached                <- false
-	
-	// optimization to avoid having to fetch it back from player handles 
+
+	// optimization to avoid having to fetch it back from player handles
 	// which eats up +1 native call per player
 	Ware_PlayersData              <- []
 	Ware_MinigamePlayersData      <- []
@@ -221,14 +221,14 @@ if (!("Ware_Precached" in this))
 	Ware_RoundsPlayed             <- 0
 	Ware_MapResetTimer            <- null
 	Ware_MapRoundsPlayed		  <- null
-	
+
 	Ware_Theme              	  <- Ware_Themes[0]
 	Ware_CurrentThemeSounds 	  <- {}
 	Ware_DebugNextTheme           <- ""
-	
+
 	Ware_MinigameCache            <- {}
 	Ware_BossgameCache            <- {}
-	
+
 	Ware_SpecialRound             <- null
 	Ware_SpecialRoundScope        <- {}
 	Ware_SpecialRoundSavedConvars <- {}
@@ -236,11 +236,11 @@ if (!("Ware_Precached" in this))
 	Ware_SpecialRoundPrevious     <- false
 	Ware_SpecialRoundNext         <- false
 	Ware_SpecialRoundCategories   <- {}
-	
+
 	Ware_AnnotationIDs            <- 0
-	
+
 	// credits
-	Ware_Authors                  <- 
+	Ware_Authors                  <-
 	{
 		"ficool2"          : ["Lead Programmer", "Map Porting"],
 		"pokemonPasta"     : ["Programmer", "Themes", "Map Porting", "Trailer"],
@@ -266,22 +266,22 @@ function Ware_SetupMap()
 	for (local mgr; mgr = FindByClassname(mgr, "tf_team");)
 		TeamMgrs.append(mgr)
 	ClientCmd <- CreateEntitySafe("point_clientcommand")
-	
+
 	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
 	{
 		trigger.SetTeam(TEAM_UNASSIGNED) // spawnpoints change team of the respawnroom
 		Ware_RespawnRooms.append(trigger)
 	}
-	
+
 	// avoid adding the think again to not break global execution order
 	if (World.GetScriptThinkFunc() != "Ware_OnUpdate")
 	{
 		AddThinkToEnt(World, "Ware_OnUpdate")
 		AddThinkToEnt(PlayerMgr, "Ware_LeaderboardUpdate")
 	}
-	
+
 	Ware_UpdateGlobalMaterialState()
-	
+
 	Ware_TextManager = SpawnEntityFromTableSafe("game_text",
 	{
 		message = ""
@@ -290,17 +290,17 @@ function Ware_SetupMap()
 		fadeout = 0.0
 		fxtime  = 0.0
 	})
-	
+
 	Ware_ParticleSpawner <- CreateEntitySafe("trigger_particle")
 	Ware_ParticleSpawner.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
-	
+
 	local areas = {}
 	NavMesh.GetAllAreas(areas)
 	Ware_NavAreas = areas.values()
 	Ware_NavSpawnAreas = Ware_NavAreas.filter(@(i, area) area.HasAttributeTF(TF_NAV_RESCUE_CLOSET))
-	
+
 	Ware_CurrentMapRound = GetPropInt(GameRules, "m_nRoundsPlayed")
-	
+
 	local sky_origin = SkyCamera.GetOrigin()
 	foreach (name, particle in Ware_SkyboxParticles)
 	{
@@ -311,16 +311,16 @@ function Ware_SetupMap()
 		})
 		Ware_SkyboxParticles[name] = particle
 	}
-	
+
 	if (MAX_CLIENTS >= 64)
 	{
 		// saves 217 entities
-		EntFire("beam", "Kill")	
+		EntFire("beam", "Kill")
 		if (MAX_CLIENTS >= 100)
 		{
 			// saves 86 entities
 			EntFire("env_sprite", "Kill")
-		}		
+		}
 	}
 }
 
@@ -344,7 +344,7 @@ function Ware_PrecacheNext()
 		local list = author
 		if (typeof(list) != "array")
 			list = [author]
-		
+
 		foreach (author in list)
 		{
 			if (!(author in authors))
@@ -357,14 +357,14 @@ function Ware_PrecacheNext()
 					themes        = 0
 				}
 			}
-				
+
 			authors[author][folder]++
 		}
 	}
-	
+
 	local PrecacheFile = function(folder, name)
 	{
-		local scope = {}	
+		local scope = {}
 		local path = format("tf2ware_ultimate/%s/%s", folder, name)
 		try
 		{
@@ -374,24 +374,24 @@ function Ware_PrecacheNext()
 		{
 			Ware_Error("Failed to precache '%s.nut'. Missing from disk or syntax error", path)
 			return true
-		}		
-			
+		}
+
 		if ("OnPrecache" in scope)
 			scope.OnPrecache()
-			
+
 		if ("minigame" in scope)
 		{
 			local minigame = scope.minigame
-			
+
 			local overlays = [], overlays2 = []
 			if (minigame.custom_overlay == null)
 				overlays = ["hud/tf2ware_ultimate/minigames/" + name]
 			else
 				overlays = Ware_GetOverlays(minigame.custom_overlay)
-			
+
 			if (minigame.custom_overlay2 != null)
-				overlays2 = Ware_GetOverlays(minigame.custom_overlay2)			
-			
+				overlays2 = Ware_GetOverlays(minigame.custom_overlay2)
+
 			foreach (overlay in overlays)
 			{
 				if (overlay)
@@ -402,9 +402,9 @@ function Ware_PrecacheNext()
 				if (overlay)
 					PrecacheOverlay(overlay)
 			}
-			
+
 			AddAuthor(minigame.author, folder)
-			
+
 			if (minigame.music)
 			{
 				if (folder == "bossgames")
@@ -412,14 +412,14 @@ function Ware_PrecacheNext()
 				else
 					music_minigame[minigame.music] <- true
 			}
-			
+
 			local cache = folder == "bossgames" ? Ware_BossgameCache : Ware_MinigameCache
 			cache[name] <-
 			{
 				min_players = minigame.min_players
 				max_players = minigame.max_players
 				modes       = minigame.modes
-			}					
+			}
 		}
 		else if ("special_round" in scope)
 		{
@@ -441,34 +441,34 @@ function Ware_PrecacheNext()
 			{
 				Ware_Error("Special round '%s' has no categories entry", name)
 			}
-			
+
 			AddAuthor(scope.special_round.author, folder)
 		}
 
 		return true
 	}
-	
+
 	foreach (overlay in Ware_GameOverlays)
-		yield PrecacheOverlay("hud/tf2ware_ultimate/" + overlay)	
+		yield PrecacheOverlay("hud/tf2ware_ultimate/" + overlay)
 	foreach (minigame in Ware_Minigames)
 		yield PrecacheFile("minigames", minigame)
 	foreach (bossgame in Ware_Bossgames)
 		yield PrecacheFile("bossgames", bossgame)
 	foreach (special in Ware_SpecialRounds)
 		yield PrecacheFile("specialrounds", special)
-		
+
 	// sounds aren't loaded from disk when precached so this can be done in one go
-		
+
 	foreach (name, _ in music_minigame)
 		Ware_PrecacheMinigameMusic(name, false)
 	foreach (name, _ in music_bossgame)
 		Ware_PrecacheMinigameMusic(name, true)
-	
+
 	foreach (theme in Ware_Themes)
 	{
 		if("author" in theme)
 			AddAuthor(theme.author, "themes")
-		
+
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
@@ -477,23 +477,23 @@ function Ware_PrecacheNext()
 		foreach (key, value in theme.sounds)
 			PrecacheSound(format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, theme.theme_name, key))
 	}
-		
+
 	foreach (author, credits in authors)
 	{
 		if (!(author in Ware_Authors))
 			Ware_Authors[author] <- []
-		
+
 		if (credits.minigames > 0)
 			Ware_Authors[author].append(format("%d Minigame%s", credits.minigames, credits.minigames == 1 ? "" : "s"))
 		if (credits.bossgames > 0)
-			Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))		
+			Ware_Authors[author].append(format("%d Bossgame%s", credits.bossgames, credits.bossgames == 1 ? "" : "s"))
 		if (credits.specialrounds > 0)
 			Ware_Authors[author].append(format("%d Special Round%s", credits.specialrounds,  credits.specialrounds == 1 ? "" : "s"))
 		if (credits.themes > 0)
-			Ware_Authors[author].append(format("%d Theme%s", credits.themes, credits.themes == 1 ? "" : "s"))			
+			Ware_Authors[author].append(format("%d Theme%s", credits.themes, credits.themes == 1 ? "" : "s"))
 	}
-	
-	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n", 
+
+	printf("[TF2Ware] Precached %d minigames, %d bossgames, %d special rounds\n",
 		Ware_Minigames.len(), Ware_Bossgames.len(), Ware_SpecialRounds.len())
 
 	return null
@@ -510,7 +510,7 @@ function Ware_PrecacheEverything()
 	if (Ware_Precached)
 		return
 	Ware_Precached = true
-	
+
 	// the precaching can take so long that the script is terminated for taking too long
 	// as a workaround, spread it out across I/O events
 	// note: normally a co-routine would workaround that
@@ -527,7 +527,7 @@ function Ware_SetupLocations()
 		location.setdelegate(Ware_LocationParent)
 		if ("Init" in location)
 			location.Init()
-			
+
 		local cameras = []
 		if ("cameras" in location)
 		{
@@ -552,7 +552,7 @@ function Ware_FindTheme(name)
 	{
 		if (theme.theme_name == name)
 			return theme
-	}	
+	}
 	return null
 }
 
@@ -575,10 +575,10 @@ function Ware_SetTheme(requested_theme)
 function Ware_SetupThemeSounds()
 {
 	Ware_CurrentThemeSounds.clear()
-	
+
 	local default_theme = Ware_Themes[0]
 	local parent_theme = Ware_GetParentTheme(Ware_Theme)
-	
+
 	local function GetThemeForSound(sound_name)
 	{
 		if (sound_name in Ware_Theme.sounds) // If the given sound exists in the requested theme then set that sound
@@ -588,11 +588,11 @@ function Ware_SetupThemeSounds()
 		else
 			return default_theme
 	}
-	
+
 	foreach (sound_name, _ in default_theme.sounds)
 	{
 		local theme = GetThemeForSound(sound_name)
-		
+
 		// special case as this is a late change and I don't want to update every theme
 		// if no failure_all is defined then fallback to failure
 		local search_name = sound_name
@@ -606,9 +606,9 @@ function Ware_SetupThemeSounds()
 				search_name = "failure"
 			}
 		}
-			
-		Ware_CurrentThemeSounds[sound_name] <- 
-		{ 
+
+		Ware_CurrentThemeSounds[sound_name] <-
+		{
 			sound_name = search_name
 			theme_name = theme.theme_name
 			duration   = theme.sounds[search_name]
@@ -628,15 +628,15 @@ function Ware_GetParentTheme(theme)
 	// returns internal theme that multiple themes point to based on theme_name
 	// this is mostly used for shared sounds due to shared platform, so we don't
 	// have multiple copies of the same sound
-	
+
 	// note: this returns a table
-	
+
 	foreach(internal_theme in Ware_InternalThemes)
 	{
 		if (startswith(theme.theme_name, internal_theme.theme_name))
 			return internal_theme
 	}
-	
+
 	return null
 }
 
@@ -663,7 +663,7 @@ function Ware_ParseLoadout(player)
 		RemoveAllOfEntity("tf_wearable_demoshield")
 		SetPropBool(player, "m_Shared.m_bShieldEquipped", false)
 	}
-	
+
 	// nothing uses the spy watch currently and this saves entities
 	local viewmodel = GetPropEntityArray(player, "m_hViewModel", 1)
 	if (viewmodel)
@@ -671,7 +671,7 @@ function Ware_ParseLoadout(player)
 		MarkForPurge(viewmodel)
 		viewmodel.Kill()
 	}
-	
+
 	local data = player.GetScriptScope().ware_data
 
 	local special_melee = data.special_melee
@@ -681,9 +681,9 @@ function Ware_ParseLoadout(player)
 		if (data.melee_index == null)
 		{
 			Ware_Error("Failed to find special melee slot for %s", GetPlayerName(player))
-			return null					
+			return null
 		}
-		
+
 		if (!Ware_AllowLoadouts)
 		{
 			for (local i = 0; i < MAX_WEAPONS; i++)
@@ -692,24 +692,24 @@ function Ware_ParseLoadout(player)
 				if (!weapon)
 					continue
 				MarkForPurge(weapon)
-				
+
 				if (weapon != special_melee)
 					KillWeapon(weapon)
 				SetPropEntityArray(player, "m_hMyWeapons", null, i)
 			}
 		}
-		SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)			
-		
-		return special_melee	
-	}	
-		
+		SetPropEntityArray(player, "m_hMyWeapons", special_melee, data.melee_index)
+
+		return special_melee
+	}
+
 	local melee, last_melee
 	for (local i = 0; i < MAX_WEAPONS; i++)
 	{
 		local weapon = GetPropEntityArray(player, "m_hMyWeapons", i)
 		if (!weapon)
 			continue
-		
+
 		MarkForPurge(weapon)
 		if (weapon.GetSlot() == TF_SLOT_MELEE)
 		{
@@ -733,10 +733,10 @@ function Ware_ParseLoadout(player)
 			weapon.AddAttribute("special taunt", 1, -1)
 		}
 	}
-	
+
 	if (last_melee != null && last_melee != melee && last_melee.IsValid())
 		last_melee.Destroy()
-		
+
 	return melee
 }
 
@@ -744,7 +744,7 @@ function Ware_ModifyMeleeAttributes(melee)
 {
 	// prevent thriller taunt
 	melee.AddAttribute("special taunt", 1, -1)
-	
+
 	local id = GetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
 	if (id in Ware_MeleeAttributeOverrides)
 	{
@@ -752,12 +752,12 @@ function Ware_ModifyMeleeAttributes(melee)
 		foreach (name, value in attributes)
 			melee.AddAttribute(name, value, -1)
 	}
-	
+
 	// special case to disable caber
 	if (id == 307)
 	{
 		SetPropBool(melee, "m_bBroken", true)
-		SetPropInt(melee, "m_iDetonated", 1)	
+		SetPropInt(melee, "m_iDetonated", 1)
 	}
 }
 
@@ -765,17 +765,17 @@ function Ware_ShowCredits(player, full)
 {
 	if (full)
 	{
-		Ware_ChatPrint(player, 
-			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for all credits.", 
+		Ware_ChatPrint(player,
+			"{color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta, based on {color}TF2Ware Universe{color} by SLAG.TF, {color}MicroTF2{color} by Gemidyne and {color}TF2Ware v2{color} by TonyBaretta. See console for all credits.",
 			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
-		
+
 		ClientPrint(player, HUD_PRINTCONSOLE, "TF2Ware Ultimate Contributors:")
-		
+
 		local all_credits = []
 		foreach (author, credits in Ware_Authors)
 			all_credits.append([author].extend(credits))
 		all_credits.sort(@(a, b) a[0].tolower() <=> b[0].tolower())
-						
+
 		foreach (credits in all_credits)
 		{
 			local author = credits.remove(0)
@@ -792,9 +792,9 @@ function Ware_ShowCredits(player, full)
 	}
 	else
 	{
-		Ware_ChatPrint(player, 
-			"Welcome to {color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta! Type {color}!ware_credits{color} for more information.", 
-			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)	
+		Ware_ChatPrint(player,
+			"Welcome to {color}TF2Ware{color} Ultimate{color} by ficool2 and pokemonPasta! Type {color}!ware_credits{color} for more information.",
+			COLOR_DARKBLUE, COLOR_LIGHTRED, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 	}
 }
 
@@ -849,9 +849,9 @@ function Ware_CheckPlayerArray()
 		{
 			Ware_MinigamePlayers.remove(i)
 			Ware_MinigamePlayersData.remove(i)
-		}	
+		}
 	}
-	
+
 	// randomize the array to make spawns unpredictable
 	Shuffle(Ware_Players)
 	Ware_PlayersData.clear()
@@ -865,7 +865,7 @@ function Ware_SetPlayerTeamInternal(player, team)
 	SetPropBool(player, "m_bIsCoaching", true)
 	player.ForceChangeTeam(team, true)
 	SetPropBool(player, "m_bIsCoaching", false)
-	
+
 	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 	{
 		// cheap way to only catch weapons and cosmetics
@@ -879,18 +879,18 @@ function Ware_SetPlayerTeamInternal(player, team)
 
 function Ware_CheckPlayerTopScoreEffect(player, top_players)
 {
-	SetPropBool(player, "m_bGlowEnabled", false)	
-	
+	SetPropBool(player, "m_bGlowEnabled", false)
+
 	if (top_players.find(player) == null)
 		return
-		
+
 	// if theres too many top scorers, don't show glows
 	local scorer_count = top_players.len()
 	local player_count = Ware_Players.len()
 	if (scorer_count * 6 > player_count)
 		return
-	
-	SetPropBool(player, "m_bGlowEnabled", true)	
+
+	SetPropBool(player, "m_bGlowEnabled", true)
 }
 
 function Ware_UpdateWeaponMetersInternal()
@@ -909,10 +909,10 @@ function Ware_PlayStartSound()
 {
 	if (ware_data.start_sound)
 		return
-	
+
 	ware_data.start_sound = true
 	Ware_ShowCredits(self, false)
-	
+
 	if (IsInWaitingForPlayers())
 	{
 		Ware_PlayGameSound(self, "lets_get_started")
@@ -925,22 +925,22 @@ function Ware_CheckHomeLocation(player_count)
 	local old_location = Ware_MinigameHomeLocation
 	local new_location = Ware_Location[player_count > 12 ? "home_big" : "home"]
 	Ware_MinigameHomeLocation = new_location
-	
+
 	if (new_location != old_location)
 	{
 		if (old_location)
 		{
 			foreach (camera in old_location.cameras)
-				EntityAcceptInput(camera, "Disable")		
+				EntityAcceptInput(camera, "Disable")
 			foreach (spawn in old_location.spawns)
 				SetPropBool(spawn, "m_bDisabled", true)
 		}
 
 		foreach (camera in new_location.cameras)
-			EntityAcceptInput(camera, "Enable")		
+			EntityAcceptInput(camera, "Enable")
 		foreach (spawn in new_location.spawns)
 			SetPropBool(spawn, "m_bDisabled", false)
-			
+
 		Ware_TeleportSkyboxParticles()
 	}
 }
@@ -950,18 +950,18 @@ function Ware_TeleportSkyboxParticles()
 	local sky_origin = SkyCamera.GetOrigin()
 	local sky_scale  = GetPropInt(SkyCamera, "m_skyboxData.scale")
 	local inv_sky_scale = 1.0 / sky_scale
-	
+
 	local home_origin = Ware_MinigameHomeLocation.center
 	// world to skybox space
 	local home_sky_origin = sky_origin + home_origin * inv_sky_scale
-	
+
 	local particle_origin = home_sky_origin - Vector(0, 0, 300 * inv_sky_scale)
 
 	foreach (name, particle in Ware_SkyboxParticles)
 		particle.SetAbsOrigin(particle_origin)
 }
 
-function Ware_GetOverlays(overlays) 
+function Ware_GetOverlays(overlays)
 {
 	local FixupOverlay = function(name)
 	{
@@ -972,10 +972,10 @@ function Ware_GetOverlays(overlays)
 			else
 				return "hud/tf2ware_ultimate/minigames/" + name
 		}
-		
+
 		return null
 	}
-		
+
 	if (typeof(overlays) == "array")
 		return overlays.map(@(name) FixupOverlay(name))
 	else
@@ -986,7 +986,7 @@ function Ware_ShowRoundCounter()
 {
 	if (Ware_MaxRounds <= 0)
 		return
-		
+
 	// don't show round text for a bit if something else more important wants it..
 	local delay = Ware_DelayRoundText
 	if (delay > 0.0)
@@ -994,12 +994,12 @@ function Ware_ShowRoundCounter()
 		Ware_DelayRoundText = 0.0
 		return delay
 	}
-	
+
 	local duration = 5.0
 	local text = format("Round: %d/%d", Min(Ware_CurrentMapRound + 1, Ware_MaxRounds), Ware_MaxRounds)
 	Ware_ShowText(Ware_Players, CHANNEL_BACKUP, text, duration + 0.2, "255 255 255", 0.9, 0.85)
 	Ware_DelayRoundText = 0.0
-	
+
 	return duration
 }
 
@@ -1016,7 +1016,7 @@ function Ware_GetSpecialRoundName()
 
 function Ware_ShowSpecialRoundText(players)
 {
-	local holdtime = 3.0 
+	local holdtime = 3.0
 	local text = ""
 	if (Ware_SpecialRound)
 	{
@@ -1034,7 +1034,7 @@ function Ware_SetupSpecialRoundCallbacks()
 {
 	local special_round = Ware_SpecialRound
 	local scope = Ware_SpecialRoundScope
-	
+
 	special_round.cb_get_name                = Ware_Callback(scope, "GetName")
 	special_round.cb_get_overlay2            = Ware_Callback(scope, "GetOverlay2")
 	special_round.cb_get_player_roll         = Ware_Callback(scope, "GetPlayerRollAngle")
@@ -1063,7 +1063,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_speedup              = Ware_Callback(scope, "OnSpeedup")
 	special_round.cb_on_take_damage          = Ware_Callback(scope, "OnTakeDamage")
 	special_round.cb_on_update               = Ware_Callback(scope, "OnUpdate")
-	
+
 }
 
 // TODO move into specialround.nut
@@ -1080,63 +1080,80 @@ function Ware_LoadSpecialRound(file_name, player_count, is_forced)
 		Ware_Error("Failed to load '%s.nut'. Missing from disk or syntax error", path)
 		return null
 	}
-	
+
 	local min_players = scope.special_round.min_players
 	local max_players = scope.special_round.max_players
 	if (player_count >= min_players && player_count <= max_players)
 	{
-		if (!("OnPick" in scope) || scope.OnPick())	
+		if (!("OnPick" in scope) || scope.OnPick())
 		{
 			scope.special_round.file_name = file_name
 			return scope
 		}
 		else if (is_forced)
 		{
-			Ware_Error("Not loading '%s' as it rejected the pick", file_name)	
+			Ware_Error("Not loading '%s' as it rejected the pick", file_name)
 		}
 	}
 	else if (is_forced)
 	{
 		if (player_count < min_players)
-			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)
 		else
-			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)	
+			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)
 	}
-	
+
 	return null
 }
 
 function Ware_BeginSpecialRoundInternal()
 {
 	Ware_CriticalZone = true
-	
+
 	// copied logic from minigame start
 	Ware_SpecialRoundScope.clear()
-	
+
 	local valid_players = Ware_GetValidPlayers()
 	local player_count = valid_players.len()
-	
+
 	local attempts = 0
 	local success = false
 	local round
-	
+
+	// Double Trouble "any2", "any3" etc
+	if (Ware_DebugNextSpecialRound.len() == 1)
+	{
+		local regex = regexp(@"^any(\d+)$");
+		local match = regex.match(Ware_DebugNextSpecialRound[0]);
+
+		if (match) {
+			local count = Ware_DebugNextSpecialRound[0].slice(3).tointeger();
+			if (count > 1) {
+				Ware_DebugNextSpecialRound.clear();
+				for (local i = 0; i < count; i++) {
+					Ware_DebugNextSpecialRound.append("any");
+				}
+			}
+		}
+	}
+
 	for (local attempt = 0; attempt < 16; attempt++)
 	{
 		round = null
-		
-		local is_forced = false	
-		local debug_len = Ware_DebugNextSpecialRound.len()	
-		
+
+		local is_forced = false
+		local debug_len = Ware_DebugNextSpecialRound.len()
+
 		if (debug_len >= 2)
 		{
 			round = "double_trouble"
 			is_forced = true
-		}		
+		}
 		else if (debug_len == 1 && Ware_DebugNextSpecialRound[0] != "any")
 		{
 			round = Ware_DebugNextSpecialRound[0]
 			is_forced = true
-		}		
+		}
 		else
 		{
 			if (Ware_SpecialRoundRotation.len() == 0)
@@ -1146,40 +1163,40 @@ function Ware_BeginSpecialRoundInternal()
 					Ware_Error("Special Round rotation is empty")
 					return false
 				}
-				
+
 				Ware_SpecialRoundRotation = Ware_SpecialRounds
 			}
-		
+
 			round = RemoveRandomElement(Ware_SpecialRoundRotation)
 		}
-		
+
 		local scope = Ware_LoadSpecialRound(round, player_count, is_forced)
-						
+
 		Ware_DebugNextSpecialRound.clear()
-		
+
 		if (scope)
 		{
 			Ware_SpecialRoundScope = scope
 			break
 		}
 	}
-		
+
 	if (Ware_SpecialRoundScope.len() == 0)
 	{
 		Ware_Error("No valid special round found to pick. There may not be enough minimum players")
 		return false
-	}	
-	
+	}
+
 	printf("[TF2Ware] Starting special round '%s'\n", round)
-	
+
 	Ware_SpecialRoundPrevious = true
-	
+
 	// ingame sequence
 	Ware_PlayGameSound(null, "special_round")
-	
+
 	foreach (player in Ware_Players)
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/special_round")
-	
+
 	local start_time = Time()
 	local duration = Ware_GetThemeSoundDuration("special_round") * 0.99 // finish slightly faster to set special round before intermission begins
 	local reveal_duration = duration * 0.6
@@ -1188,59 +1205,59 @@ function Ware_BeginSpecialRoundInternal()
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
 	local special_round = Ware_SpecialRoundScope.special_round
-		
-	CreateTimer(function() 
-	{	
+
+	CreateTimer(function()
+	{
 		local time = Time()
 		local t = RemapValClamped(time, start_time + duration * 0.3, time + reveal_duration, 0.0, 1.0)
 		local interval = Lerp(0.05, 0.5, pow(t * 4.0, 2.5))
-		
+
 		local finished = time - start_time > reveal_duration
 		local text_duration = interval
 		if (!finished)
 			text_duration *= 3.0
 		Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, RandomElement(Ware_FakeSpecialRounds).toupper(), text_duration)
-		
+
 		if (finished)
 		{
 			Ware_ShowText(Ware_Players, CHANNEL_SPECIALROUND, special_round.name.toupper(), end_duration)
-			
+
 			Ware_ChatPrint(null, "{color}Special Round: {color}{str}{color}! {str}",TF_COLOR_DEFAULT, COLOR_GREEN, special_round.name, TF_COLOR_DEFAULT, special_round.description)
-			
+
 			Ware_PlaySoundOnAllClients(Ware_FixupMP3("tf2ware_ultimate/v%d/pass.mp3"))
-			
+
 			CreateTimer(function()
-			{	
+			{
 				Ware_CriticalZone = true
-				
+
 				Ware_SpecialRound = special_round
-					
-				Ware_SetupSpecialRoundCallbacks()	
-						
+
+				Ware_SetupSpecialRoundCallbacks()
+
 				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
 				foreach(name, value in special_round.convars)
 				{
 					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
 					SetConvarValue(name, value)
 				}
-				
+
 				if ("OnStart" in Ware_SpecialRoundScope)
 					Ware_SpecialRoundScope.OnStart()
-					
+
 				if (special_round.allow_damage)
 					Ware_ToggleTruce(false)
-				
+
 				// TODO this doesn't work with double_trouble
 				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
-				
+
 				Ware_CriticalZone = false
-					
-				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
-				CreateTimer(function() 
+
+				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)
+				CreateTimer(function()
 				{
 					Ware_BeginIntermission(false)
 				}, 0.0)
-			
+
 			}, end_duration - 1.0) // hack: more closely syncs up with the theme
 		}
 		else
@@ -1248,7 +1265,7 @@ function Ware_BeginSpecialRoundInternal()
 			return interval
 		}
 	}, 0.0)
-	
+
 	Ware_CriticalZone = false
 	return true
 }
@@ -1257,22 +1274,22 @@ function Ware_EndSpecialRoundInternal()
 {
 	if (!Ware_SpecialRound)
 		return
-	
+
 	if ("OnEnd" in Ware_SpecialRoundScope)
 		Ware_SpecialRoundScope.OnEnd()
-	
+
 	foreach (name, value in Ware_SpecialRoundSavedConvars)
 		SetConvarValue(name, value)
 	Ware_SpecialRoundSavedConvars.clear()
-	
+
 	ClearGameEventsFromScope(Ware_SpecialRoundScope, Ware_SpecialRoundEvents)
-	
+
 	foreach(player in Ware_Players)
 	{
 		local scope = player.GetScriptScope()
 		scope.ware_specialdata.clear()
 	}
-	
+
 	Ware_SpecialRound = null
 }
 
@@ -1280,11 +1297,11 @@ function Ware_SetupMinigameCallbacks()
 {
 	local minigame = Ware_Minigame
 	local scope = Ware_MinigameScope
-	
+
 	// TODO: The other callbacks like OnStart are done legacy style (I don't remember why)
 	minigame.cb_on_update				= Ware_Callback(scope, "OnUpdate")
 	minigame.cb_on_check_end			= Ware_Callback(scope, "OnCheckEnd")
-	
+
 	minigame.cb_on_take_damage			= Ware_Callback(scope, "OnTakeDamage")
 	minigame.cb_on_player_attack		= Ware_Callback(scope, "OnPlayerAttack")
 	minigame.cb_on_player_death			= Ware_Callback(scope, "OnPlayerDeath")
@@ -1294,13 +1311,13 @@ function Ware_SetupMinigameCallbacks()
 	minigame.cb_on_player_horn			= Ware_Callback(scope, "OnPlayerHorn")
 	minigame.cb_on_player_touch			= Ware_Callback(scope, "OnPlayerTouch")
 	minigame.cb_on_player_inventory		= Ware_Callback(scope, "OnPlayerInventory")
-	
+
 }
 
 function Ware_BeginIntermissionInternal(is_boss)
 {
 	Ware_CriticalZone = true
-	
+
 	if (Ware_DebugStop)
 	{
 		// message
@@ -1308,7 +1325,7 @@ function Ware_BeginIntermissionInternal(is_boss)
 		// retry
 		return 1.0
 	}
-	
+
 	if (Ware_DebugForceTheme.len() > 0)
 	{
 		if (Ware_DebugOldTheme == "")
@@ -1321,13 +1338,13 @@ function Ware_BeginIntermissionInternal(is_boss)
 		Ware_SetTheme(Ware_DebugOldTheme)
 		Ware_DebugOldTheme = ""
 	}
-	
+
 	if (Ware_Theme == {})
 		Ware_SetTheme("_default")
-	
+
 	foreach (name, particle in Ware_SkyboxParticles)
 		EntityEntFire(particle, "Stop")
-	
+
 	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_begin_intermission.IsValid())
 		replace = Ware_SpecialRound.cb_on_begin_intermission(is_boss)
@@ -1340,10 +1357,10 @@ function Ware_BeginIntermissionInternal(is_boss)
 			Ware_ShowScreenOverlay(player, null)
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
+
 		CreateTimer(@() Ware_StartMinigame(is_boss), Ware_GetThemeSoundDuration("intro"))
 	}
-	
+
 	Ware_CriticalZone = false
 }
 
@@ -1353,11 +1370,11 @@ function Ware_SetTimeScaleInternal(timescale)
 		Ware_EventCallback("timescale", { value = timescale })
 	else
 		SendToConsole(format("host_timescale %g", timescale))
-	
+
 	Ware_TimeScale = timescale
 	// audio fails at very high timescales
 	Ware_PitchScale = Clamp(timescale, 0.1, 3.5)
-	
+
 	foreach (player in Ware_MinigamePlayers)
 		Ware_UpdatePlayerVoicePitch(player)
 }
@@ -1371,16 +1388,16 @@ function Ware_BeginBossInternal()
 	if (!replace)
 	{
 		Ware_SetTimeScale(1.0)
-		
+
 		EntityEntFire(Ware_SkyboxParticles.danger, "Start")
-		
+
 		Ware_PlayGameSound(null, "boss")
 		foreach (player in Ware_Players)
 		{
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_boss")
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
+
 		CreateTimer(@() Ware_BeginIntermission(true), Ware_GetThemeSoundDuration("boss"))
 	}
 }
@@ -1390,20 +1407,20 @@ function Ware_SpeedupInternal()
 	local replace = false
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_speedup.IsValid())
 		replace = Ware_SpecialRound.cb_on_speedup()
-	
+
 	if (!replace)
 	{
 		Ware_SetTimeScale(Ware_TimeScale + Ware_SpeedUpInterval)
-		
+
 		EntityAcceptInput(Ware_SkyboxParticles.speedup, "Start")
-		
+
 		Ware_PlayGameSound(null, "speedup")
 		foreach (player in Ware_Players)
 		{
 			Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/default_speed")
 			Ware_ShowScreenOverlay2(player, null)
 		}
-		
+
 		CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 	}
 }
@@ -1412,7 +1429,7 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 {
 	local path = format("tf2ware_ultimate/%s/%s", is_boss ? "bossgames" : "minigames", file_name)
 	local scope = {}
-	try 
+	try
 	{
 		IncludeScript(path, scope)
 	}
@@ -1421,31 +1438,31 @@ function Ware_LoadMinigame(file_name, player_count, is_boss, is_forced)
 		Ware_Error("Failed to load '%s.nut'. Missing from disk or syntax error", path)
 		return null
 	}
-	
+
 	local min_players = scope.minigame.min_players
 	local max_players = scope.minigame.max_players
 	if (player_count >= min_players && player_count <= max_players)
 	{
-		if (!("OnPick" in scope) || scope.OnPick())	
+		if (!("OnPick" in scope) || scope.OnPick())
 		{
 			scope.minigame.boss = is_boss
-			scope.minigame.file_name = file_name		
+			scope.minigame.file_name = file_name
 			return scope
 		}
 		else if (is_forced)
 		{
-			Ware_Error("Not loading '%s' as it rejected the pick", file_name)	
+			Ware_Error("Not loading '%s' as it rejected the pick", file_name)
 		}
 	}
 	else if (is_forced)
 	{
 		if (player_count < min_players)
-			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)	
+			Ware_Error("Not enough players to load '%s', minimum is %d", file_name, min_players)
 		else
-			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)	
+			Ware_Error("Too many players to load '%s', maximum is %d", file_name, max_players)
 	}
-	
-	return null	
+
+	return null
 }
 
 Ware_CheckMinigameIsBoss <- false
@@ -1459,7 +1476,7 @@ function Ware_CheckMinigameDebug(is_boss)
 			{
 				local minigame = Ware_DebugForceBossgame
 				Ware_DebugForceBossgame = ""
-				Ware_DebugForceBossgameOnce = false	
+				Ware_DebugForceBossgameOnce = false
 				Ware_CheckMinigameIsBoss = true
 				return minigame
 			}
@@ -1471,7 +1488,7 @@ function Ware_CheckMinigameDebug(is_boss)
 			return minigame
 		}
 	}
-	
+
 	if (Ware_DebugForceMinigame.len() > 0)
 	{
 		local minigame = Ware_DebugForceMinigame
@@ -1482,8 +1499,8 @@ function Ware_CheckMinigameDebug(is_boss)
 		}
 		Ware_CheckMinigameIsBoss = false
 		return minigame
-	}	
-	
+	}
+
 	return null
 }
 
@@ -1500,7 +1517,7 @@ function Ware_ReloadMinigameRotation(is_boss)
 	{
 		if (Ware_Minigames.len() == 0)
 			Ware_Error("Minigame rotation is empty")
-			
+
 		// Weight moded minigames more in rotation
 		foreach (minigame in Ware_Minigames)
 		{
@@ -1517,15 +1534,15 @@ function Ware_ReloadMinigameRotation(is_boss)
 				Ware_MinigameRotation.append(minigame)
 			}
 		}
-		
+
 		return Shuffle(Ware_MinigameRotation)
-	}	
+	}
 }
 
 function Ware_GetMinigameRotation(is_boss, player_count)
 {
 	local rotation = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
-	local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache	
+	local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
 	local function CacheFilter(i, file_name)
 	{
 		if (file_name in cache)
@@ -1534,7 +1551,7 @@ function Ware_GetMinigameRotation(is_boss, player_count)
 			return player_count >= entry.min_players && player_count <= entry.max_players
 		}
 		// if not cached, player count is checked later during load
-		return true		
+		return true
 	}
 
 	rotation = rotation.filter(CacheFilter)
@@ -1550,7 +1567,7 @@ function Ware_GetMinigameRotation(is_boss, player_count)
 function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
-	
+
 	local valid_players = []
 	foreach (player in Ware_Players)
 	{
@@ -1566,7 +1583,7 @@ function Ware_StartMinigameInternal(is_boss)
 					player.ForceRespawn()
 					// safety check
 					if (player.IsAlive())
-						valid_players.append(player)	
+						valid_players.append(player)
 				}
 			}
 			else
@@ -1577,25 +1594,25 @@ function Ware_StartMinigameInternal(is_boss)
 	}
 
 	Ware_MinigameScope.clear()
-	
+
 	local player_count = valid_players.len()
 	local try_debug = true, try_specialround = true
 	local prev_is_boss = is_boss
 	local attempts = 0
 	local minigame, rotation
-	
+
 	for (local attempt = 0; attempt < 16; attempt++)
 	{
 		minigame = null
-		
+
 		// 1) check debug overrides first
 		// 2) check special round
 		// 3) lastly try normal rotation
-		
+
 		local is_forced = false
 		if (try_debug)
 		{
-			minigame = Ware_CheckMinigameDebug(is_boss)	
+			minigame = Ware_CheckMinigameDebug(is_boss)
 			if (minigame)
 			{
 				is_boss = Ware_CheckMinigameIsBoss
@@ -1607,7 +1624,7 @@ function Ware_StartMinigameInternal(is_boss)
 		{
 			is_boss = prev_is_boss
 		}
-		
+
 		local minigame_arr
 		local from_rotation = false
 		if (!is_forced)
@@ -1618,23 +1635,23 @@ function Ware_StartMinigameInternal(is_boss)
 				if (Ware_SpecialRound && Ware_SpecialRound.cb_get_minigame.IsValid())
 					minigame = Ware_SpecialRound.cb_get_minigame(is_boss)
 			}
-			
+
 			if (minigame == null)
 			{
 				if (rotation == null || rotation.len() == 0)
 					rotation = Ware_GetMinigameRotation(is_boss, player_count)
-					
+
 				if (rotation.len() == 0)
 				{
 					// nothing in rotation after refreshing it... fail
 					break
 				}
-					
+
 				minigame = RemoveRandomElement(rotation)
 				from_rotation = true
 			}
 		}
-		
+
 		// Set mode before scope is assigned in case any params depend on it
 		local cache = is_boss ? Ware_BossgameCache : Ware_MinigameCache
 		local modes = minigame in cache ? cache[minigame].modes : 1
@@ -1644,7 +1661,7 @@ function Ware_StartMinigameInternal(is_boss)
 			Ware_MinigameMode = Min(Ware_DebugForceMode, modes - 1)
 			if (modes > 1 && Ware_MinigameMode != Ware_DebugForceMode)
 			{
-				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n", 
+				printf("[TF2Ware] Forced mode %d exceeds highest minigame mode. Using highest mode %d instead...\n",
 					Ware_DebugForceMode, Ware_MinigameMode)
 			}
 		}
@@ -1673,83 +1690,83 @@ function Ware_StartMinigameInternal(is_boss)
 
 			if (mode == null)
 				mode = RandomInt(0, modes - 1)
-				
+
 			Ware_MinigameMode = mode
 			Ware_MinigamePlayedModes[minigame][mode] <- true
 		}
 		else
 		{
-			Ware_MinigameMode = 0	
+			Ware_MinigameMode = 0
 		}
-		
+
 		if (from_rotation)
 		{
 			local arr = is_boss ? Ware_BossgameRotation : Ware_MinigameRotation
 			RemoveElementIfFound(arr, minigame)
 		}
-		
+
 		local scope = Ware_LoadMinigame(minigame, player_count, is_boss, is_forced)
 		if (scope)
-		{		
+		{
 			// success!
 			Ware_MinigameScope = scope
 			break
 		}
 	}
-	
+
 	if (Ware_MinigameScope.len() == 0)
 	{
 		Ware_Error("No valid %s found to pick. There may not be enough minimum players", is_boss ? "bossgame" : "minigame")
 		return false
 	}
-	
+
 	local time = Time()
 
 	Ware_MinigameEnded = false
 	Ware_Minigame = Ware_MinigameScope.minigame
 	Ware_MinigameStartTime = time
-	
+
 	if (Ware_Minigame.modes > 1)
 		printf("[TF2Ware] Starting %s '%s' with mode %d\n", is_boss ? "bossgame" : "minigame", minigame, Ware_MinigameMode)
 	else
 		printf("[TF2Ware] Starting %s '%s'\n", is_boss ? "bossgame" : "minigame", minigame)
-	
+
 	local player_indices_valid = ""
 	foreach (player in valid_players)
 		player_indices_valid += player.entindex().tochar()
-	
-	Ware_EventCallback("minigame_start", 
-	{ 
+
+	Ware_EventCallback("minigame_start",
+	{
 		name          = Ware_Minigame.name
 		file_name     = minigame
 		players_valid = player_indices_valid
 		is_boss       = is_boss
 	})
-	
+
 	foreach (name, value in Ware_Minigame.convars)
 	{
 		Ware_MinigameSavedConvars[name] <- GetConvarValue(name)
 		SetConvarValue(name, value)
 	}
-	
+
 	Ware_ToggleRespawnRooms(false)
-	
+
 	local enable_collisions = Ware_Minigame.collisions || (Ware_SpecialRound && Ware_SpecialRound.force_collisions)
-	
+
 	// small optimization
 	local minigame_players = Ware_MinigamePlayers
 	local minigame_playersdata = Ware_MinigamePlayersData
-	
+
 	minigame_players.clear()
 	minigame_playersdata.clear()
-	
+
 	foreach (player in valid_players)
 	{
 		if (enable_collisions)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
-		
+
 		local max_scale = Ware_Minigame.max_scale
 		if (max_scale && player.GetModelScale() > max_scale)
 			Ware_SetPlayerScale(player, max_scale, 0.0, true)
@@ -1763,44 +1780,44 @@ function Ware_StartMinigameInternal(is_boss)
 		data.mission = 0
 		data.suicided = false
 		data.horn_timer = time + 0.7
-				
+
 		minigame_players.append(player)
 		minigame_playersdata.append(data)
 	}
-	
+
 	local location
 	if (player_count > 12 && ((Ware_Minigame.location + "_big") in Ware_Location))
 		location = Ware_Location[Ware_Minigame.location + "_big"]
 	else
 		location = Ware_Location[Ware_Minigame.location]
-		
+
 	if (Ware_Minigame.start_freeze > 0.0)
 	{
 		foreach (player in valid_players)
 			player.AddFlag(FL_ATCONTROLS)
-		
-		Ware_CreateTimer(function() 
+
+		Ware_CreateTimer(function()
 		{
-			foreach (player in Ware_MinigamePlayers) 
+			foreach (player in Ware_MinigamePlayers)
 				player.RemoveFlag(FL_ATCONTROLS)
 		}, Ware_Minigame.start_freeze)
 	}
-	
+
 	local custom_teleport = "OnTeleport" in Ware_MinigameScope
 	if (location != Ware_MinigameLocation)
 	{
 		foreach (camera in Ware_MinigameLocation.cameras)
-			EntityAcceptInput(camera, "Disable")		
+			EntityAcceptInput(camera, "Disable")
 		foreach (camera in location.cameras)
 			EntityAcceptInput(camera, "Enable")
-		
+
 		Ware_MinigameLocation = location
 		if (!custom_teleport)
 			location.Teleport(clone(valid_players))
 	}
-	
-	Ware_SetupMinigameCallbacks()	
-	
+
+	Ware_SetupMinigameCallbacks()
+
 	// late precache if new minigames are added at runtime
 	if (developer() > 0)
 	{
@@ -1810,29 +1827,29 @@ function Ware_StartMinigameInternal(is_boss)
 		if("OnPrecache" in Ware_MinigameScope)
 			Ware_MinigameScope.OnPrecache()
 	}
-	
+
 	if (custom_teleport)
 		Ware_MinigameScope.OnTeleport(clone(valid_players))
-		
+
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(false)
-		
+
 	// bit hacky but does the job
 	Ware_BlockPassEffects = Ware_SpecialRound && Ware_SpecialRound.opposite_win
 	if ("OnStart" in Ware_MinigameScope)
-		Ware_MinigameScope.OnStart()	
+		Ware_MinigameScope.OnStart()
 	Ware_BlockPassEffects = false
 
 	Ware_MinigameEvents = CollectGameEventsInScope(Ware_MinigameScope)
-	
+
 	Ware_TextManager.KeyValueFromFloat("holdtime", Ware_Minigame.duration + Ware_Minigame.end_delay)
-	
+
 	local overlays = [], overlays2 = []
 	if (Ware_Minigame.custom_overlay == null)
 		overlays = ["hud/tf2ware_ultimate/minigames/" + minigame]
 	else
 		overlays = Ware_GetOverlays(Ware_Minigame.custom_overlay)
-	
+
 	if (Ware_Minigame.custom_overlay2 != null)
 	{
 		overlays2 = Ware_GetOverlays(Ware_Minigame.custom_overlay2)
@@ -1842,27 +1859,27 @@ function Ware_StartMinigameInternal(is_boss)
 	local overlay_len = overlays.len()
 	local overlay2_len = overlays2.len()
 	foreach (data in minigame_playersdata)
-	{	
+	{
 		local mission = data.mission
 		if (mission < overlay_len)
 			Ware_ShowScreenOverlay(data.player, overlays[mission])
 		if (mission < overlay2_len)
 			Ware_ShowScreenOverlay2(data.player, overlays2[mission])
 	}
-	
+
 	if (Ware_Minigame.music)
 		Ware_PlayMinigameMusic(null, Ware_Minigame.music)
-	
+
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_start()
-	
-	Ware_MinigamePreEndTimer = CreateTimer(function() 
-	{ 
-		if ("OnEnd" in Ware_MinigameScope) 
+
+	Ware_MinigamePreEndTimer = CreateTimer(function()
+	{
+		if ("OnEnd" in Ware_MinigameScope)
 			Ware_MinigameScope.OnEnd()
-			
+
 		local pass_flag = !(Ware_SpecialRound && Ware_SpecialRound.opposite_win)
-			
+
 		if (Ware_Minigame.start_pass || pass_flag == false)
 		{
 			foreach (data in minigame_playersdata)
@@ -1874,19 +1891,19 @@ function Ware_StartMinigameInternal(is_boss)
 				}
 			}
 		}
-			
+
 		if (Ware_Minigame.suicide_on_end)
 			Ware_SuicideFailedPlayers()
-				
-		Ware_MinigameEnded = true			
+
+		Ware_MinigameEnded = true
 	}, Ware_Minigame.duration)
-	
+
 	Ware_MinigameEndTimer = CreateTimer
 	(
-		@() Ware_FinishMinigameInternal(), 
+		@() Ware_FinishMinigameInternal(),
 		Ware_Minigame.duration + Ware_Minigame.end_delay
 	)
-	
+
 	Ware_CriticalZone = false
 }
 
@@ -1894,10 +1911,10 @@ function Ware_EndMinigameInternal()
 {
 	if (Ware_MinigameEnded)
 		return
-		
+
 	FireTimer(Ware_MinigamePreEndTimer)
 	KillTimer(Ware_MinigameEndTimer)
-	
+
 	Ware_MinigameEndTimer = CreateTimer(
 		@() Ware_FinishMinigameInternal(),
 		Ware_Minigame.end_delay
@@ -1907,7 +1924,7 @@ function Ware_EndMinigameInternal()
 function Ware_FinishMinigameInternal()
 {
 	Ware_CriticalZone = true
-	
+
 	local ware_minigameplayers_len = Ware_MinigamePlayers.len()
 
 	// default to false if only one player
@@ -1921,7 +1938,7 @@ function Ware_FinishMinigameInternal()
 	foreach (data in Ware_MinigamePlayersData)
 	{
 		participated_players[data.player] <- true
-		
+
 		local index_char = data.index.tochar()
 		player_indices_valid += index_char
 		if (data.passed == pass_flag)
@@ -1937,41 +1954,41 @@ function Ware_FinishMinigameInternal()
 				all_failed = false
 				player_indices_passed += index_char
 			}
-		}	
+		}
 		else
 		{
 			all_passed = false
 		}
 	}
-	
-	if ("OnCleanup" in Ware_MinigameScope) 
+
+	if ("OnCleanup" in Ware_MinigameScope)
 		Ware_MinigameScope.OnCleanup()
-		
+
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_cleanup()
-				
+
 	Ware_MinigamesPlayed++
 	if (Ware_Minigame.boss)
 		Ware_BossgamesPlayed++
-	
+
 	Ware_PreviousMinigames.append(clone(Ware_Minigame))
-	
+
 	foreach (name, value in Ware_MinigameSavedConvars)
 		SetConvarValue(name, value)
 	Ware_MinigameSavedConvars.clear()
-	
+
 	if (!Ware_SpecialRound || Ware_SpecialRound.allow_respawnroom)
 		Ware_ToggleRespawnRooms(true)
-	
+
 	local restore_collisions = Ware_Minigame.collisions && (!Ware_SpecialRound || !Ware_SpecialRound.force_collisions)
-	
+
 	local player_count = 0
 	local respawn_players = []
 	foreach (player in Ware_Players)
 	{
 		if (!(player.GetTeam() & TF_TEAM_MASK))
 			continue
-			
+
 		player.RemoveFlag(FL_FROZEN)
 		player.RemoveAllObjects(false)
 		player.SetGrapplingHookTarget(null, false)
@@ -1982,81 +1999,81 @@ function Ware_FinishMinigameInternal()
 			player.SetForcedTauntCam(0)
 		foreach (condition in Ware_Minigame.conditions)
 			player.RemoveCond(condition)
-			
+
 		local data = player.GetScriptScope().ware_data
 		if (data.saved_team != null)
 		{
 			Ware_SetPlayerTeamInternal(player, data.saved_team)
 			data.saved_team = null
 		}
-		
+
 		if (data.saved_scale != null)
 		{
 			player.SetModelScale(data.saved_scale, 0.0)
 			data.saved_scale = null
 		}
-			
+
 		if (player.IsAlive())
-		{		
+		{
 			player_count++
-		
+
 			local melee
 			if (data.special_melee)
 				melee = data.special_melee
 			else
 				melee = data.melee
-			
+
 			if (melee)
 			{
 				foreach (attribute, value in data.melee_attributes)
 					melee.RemoveAttribute(attribute)
 			}
 			data.melee_attributes.clear()
-			
+
 			foreach (attribute, value in data.attributes)
 				Ware_RemovePlayerAttributeInternal(player, attribute)
 			data.attributes.clear()
-			
+
 			player.SetHealth(player.GetMaxHealth())
-			SetPropInt(player, "m_nImpulse", 101) // refill ammo						
+			SetPropInt(player, "m_nImpulse", 101) // refill ammo
 			Ware_StripPlayer(player, true)
 		}
 		else if (Ware_CanPlayerRespawn(player))
-		{	
+		{
 			player_count++
 			respawn_players.append(player)
 		}
 	}
 
 	Ware_CheckHomeLocation(player_count)
-	
+
 	foreach (player in respawn_players)
 		player.ForceRespawn()
-	
+
 	if (Ware_MinigameLocation != Ware_MinigameHomeLocation)
 	{
 		foreach (camera in Ware_MinigameLocation.cameras)
-			EntityAcceptInput(camera, "Disable")	
+			EntityAcceptInput(camera, "Disable")
 		foreach (camera in Ware_MinigameHomeLocation.cameras)
 			EntityAcceptInput(camera, "Enable")
-		
+
 		Ware_MinigameHomeLocation.Teleport(Ware_MinigamePlayers)
 		Ware_MinigameLocation = Ware_MinigameHomeLocation
 	}
-	
+
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(true)
-		
-	if (Ware_Minigame.music)	
+
+	if (Ware_Minigame.music)
 		Ware_PlayMinigameMusic(null, Ware_Minigame.music, SND_STOP)
-	
+
 	foreach (data in Ware_PlayersData)
 	{
-		local player = data.player	
+		local player = data.player
 		local participated = player in participated_players
 		local overlay, sound
 		local passed
-		
+
 		if (participated)
 		{
 			passed = data.passed == pass_flag
@@ -2065,7 +2082,7 @@ function Ware_FinishMinigameInternal()
 		{
 			// if spectating, use the win status of our target
 			// otherwise just count it as "win" so it's not awkward silence
-			local target = GetPropEntity(player, "m_hObserverTarget") 
+			local target = GetPropEntity(player, "m_hObserverTarget")
 			if (target && target in participated_players)
 				passed = target.GetScriptScope().ware_data.passed == pass_flag
 			else
@@ -2075,7 +2092,7 @@ function Ware_FinishMinigameInternal()
 		{
 			passed = false
 		}
-		
+
 		if (all_passed)
 		{
 			overlay = "hud/tf2ware_ultimate/default_victory_all"
@@ -2095,14 +2112,14 @@ function Ware_FinishMinigameInternal()
 		{
 			overlay = "hud/tf2ware_ultimate/default_failure"
 			sound = "failure"
-		}		
-		
+		}
+
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
 		Ware_ShowScreenOverlay(player, overlay)
 		if (Ware_MinigameOverlay2Set)
 			Ware_ShowScreenOverlay2(player, null)
-		
+
 		if (participated)
 		{
 			local add_score = data.passed
@@ -2111,30 +2128,30 @@ function Ware_FinishMinigameInternal()
 				if (Ware_SpecialRound.cb_on_calculate_score(data) != false)
 					add_score = false
 			}
-				
+
 			if (add_score)
 				data.score += Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
 		}
 	}
-	
-	Ware_EventCallback("minigame_end", 
+
+	Ware_EventCallback("minigame_end",
 	{
 		name           = Ware_Minigame.name
 		file_name      = Ware_Minigame.file_name
 		is_boss        = Ware_Minigame.boss
-		players_valid  = player_indices_valid		
+		players_valid  = player_indices_valid
 		players_passed = player_indices_passed
 	})
-	
+
 	local top_players = Ware_MinigameTopScorers
-	top_players.clear()	
-	
+	top_players.clear()
+
 	local calc_topscorers = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_calculate_topscorers.IsValid())
 	{
 		calc_topscorers = Ware_SpecialRound.cb_on_calculate_topscorers(top_players) == false
 	}
-	
+
 	if (calc_topscorers == true)
 	{
 		local top_score = 1
@@ -2149,10 +2166,10 @@ function Ware_FinishMinigameInternal()
 			else if (data.score == top_score)
 			{
 				top_players.append(data.player)
-			}	
+			}
 		}
 	}
-	
+
 	foreach (player in Ware_MinigamePlayers)
 		Ware_CheckPlayerTopScoreEffect(player, top_players)
 
@@ -2165,33 +2182,33 @@ function Ware_FinishMinigameInternal()
 			// an entity still exists for a frame
 			// this prevents connected outputs from firing
 			entity.TerminateScriptScope()
-			
+
 			entity.Kill()
 		}
 	}
-	
+
 	foreach (name, v in Ware_Minigame.cleanup_names)
 		EntFire(name, "Kill")
-		
+
 	foreach (timer in Ware_Minigame.timers)
 		KillTimer(timer)
-		
+
 	local annotations = Ware_Minigame.annotations
 	for (local i = annotations.len() - 1; i >= 0; i--)
 		Ware_HideAnnotation(annotations[i])
-		
+
 	if (Ware_SpecialRound)
-		Ware_SpecialRound.cb_on_minigame_end()		
-	
+		Ware_SpecialRound.cb_on_minigame_end()
+
 	Ware_Minigame = null
 	Ware_MinigameScope.clear()
 	Ware_MinigameOverlay2Set = false
-	
+
 	local sound_duration = Max(Ware_GetThemeSoundDuration("victory"), Ware_GetThemeSoundDuration("failure"))
 	if (all_failed)
 		sound_duration = Ware_GetThemeSoundDuration("failure_all")
-	
-	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount()) 
+
+	if ((Ware_MinigamesPlayed > Ware_GetBossThreshold() && Ware_BossgamesPlayed >= Ware_GetBossCount())
 		|| (Ware_SpecialRound && Ware_SpecialRound.cb_on_check_gameover())
 		|| Ware_DebugGameOver)
 		CreateTimer(@() Ware_GameOver(), sound_duration)
@@ -2201,7 +2218,7 @@ function Ware_FinishMinigameInternal()
 		CreateTimer(@() Ware_Speedup(), sound_duration)
 	else
 		CreateTimer(@() Ware_BeginIntermission(false), sound_duration)
-		
+
 	Ware_CriticalZone = false
 }
 
@@ -2210,24 +2227,24 @@ function Ware_GameOverInternal()
 	Ware_CriticalZone = true
 	Ware_Finished = true
 	Ware_RoundsPlayed++
-	
+
 	local top_players = Ware_MinigameTopScorers
 	top_players = top_players.filter(@(i, player) player.IsValid())
-	
+
 	local top_score = 0
 	local winner_count = top_players.len()
-	
+
 	if (winner_count > 0)
 		top_score = top_players[0].GetScriptScope().ware_data.score
-	
+
 	local restart_delay = GetConvarValue("mp_bonusroundtime").tofloat()
-	
+
 	Ware_ToggleTruce(false)
 	Ware_ToggleRespawnRooms(false)
-	
+
 	local winners = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) != null)
 	local losers = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) == null)
-	
+
 	foreach (data in losers)
 	{
 		local player = data.player
@@ -2235,7 +2252,7 @@ function Ware_GameOverInternal()
 		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_failure")
 		player.StunPlayer(restart_delay, 0.5, TF_STUN_LOSER_STATE|TF_STUN_NO_EFFECTS, null)
 	}
-	
+
 	Ware_TogglePlayerLoadouts(true)
 	local player_winner_indices = ""
 	foreach (data in winners)
@@ -2248,23 +2265,23 @@ function Ware_GameOverInternal()
 		Ware_PlayGameSound(player, "gameclear")
 		player.SetScriptOverlayMaterial("hud/tf2ware_ultimate/default_victory")
 		player.AcceptInput("SpeakResponseConcept", "TLK_PLAYER_BATTLECRY randomnum:100", null, null)
-		
+
 		// TODO: Allow class changing for winners
-		// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)	
+		// TODO: Fix some weapons being weird in gameover (flamethrower doesn't damage, frontier justice removes crits, etc. Needs more testing)
 	}
 	Ware_TogglePlayerLoadouts(false)
-	
-	Ware_RoundEndMusicTimer <- CreateTimer(function() 
+
+	Ware_RoundEndMusicTimer <- CreateTimer(function()
 	{
 		Ware_PlayGameSound(null, "results")
 	}, 5.0)
-	
+
 	// fireworks
 	if (winner_count > 0)
 	{
 		local location = Ware_MinigameHomeLocation
 		CreateTimer(function()
-		{	
+		{
 			EmitSoundEx
 			({
 				channel    = CHAN_STATIC
@@ -2275,12 +2292,12 @@ function Ware_GameOverInternal()
 		}, 1.5)
 		CreateTimer(function()
 		{
-			DispatchParticleEffect(PFX_WARE_FIREWORKS, 
+			DispatchParticleEffect(PFX_WARE_FIREWORKS,
 				Vector(
 					RandomFloat(location.mins.x + 100.0, location.maxs.x - 100.0),
 					RandomFloat(location.mins.y + 100.0, location.maxs.y - 100.0),
 					RandomFloat(-50.0, 50.0)),
-				Vector(1, 0, 0))	
+				Vector(1, 0, 0))
 			return RandomFloat(0.5, 1.5)
 		}, 1.0)
 	}
@@ -2288,11 +2305,11 @@ function Ware_GameOverInternal()
 	// force update round counter
 	Ware_DelayRoundText = 0.0
 	Ware_ShowRoundCounter()
-	
+
 	Ware_ForceRoundWin(restart_delay)
-	
+
 	Ware_CriticalZone = false
-	
+
 	local player_scores = "", player_bonuses = ""
 	for (local i = 1; i <= MAX_CLIENTS; i++)
 	{
@@ -2304,18 +2321,18 @@ function Ware_GameOverInternal()
 			score = ware_data.score
 			bonus = ware_data.bonus
 		}
-		
+
 		player_scores += score.tostring()
 		player_bonuses += bonus.tostring()
-		
+
 		if (i < MAX_CLIENTS)
 		{
 			player_scores += " "
 			player_bonuses += " "
 		}
 	}
-	
-	Ware_EventCallback("game_over", 
+
+	Ware_EventCallback("game_over",
 	{
 		players_won             = player_winner_indices
 		players_score           = player_scores
@@ -2324,13 +2341,13 @@ function Ware_GameOverInternal()
 		special_round_name      = Ware_SpecialRound ? Ware_SpecialRound.name : ""
 		special_round_file_name = Ware_SpecialRound ? Ware_SpecialRound.file_name : ""
 	})
-	
+
 	local declare_winners = true
 	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_declare_winners.IsValid())
 	{
 		declare_winners = Ware_SpecialRound.cb_on_declare_winners(top_players, top_score, winner_count) == false
 	}
-	
+
 	if (declare_winners == true)
 	{
 		if (winner_count > 1)
@@ -2342,13 +2359,13 @@ function Ware_GameOverInternal()
 		else if (winner_count == 1)
 		{
 			Ware_ChatPrint(null, "{player} {color}won with {int} points!", top_players[0], TF_COLOR_DEFAULT, top_score)
-		}	
+		}
 		else if (winner_count == 0)
 		{
 			Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)
 		}
 	}
-	
+
 	local sprite_offset = Vector(0, 0, 125.0)
 	foreach (player in top_players)
 	{
@@ -2368,20 +2385,20 @@ function Ware_GameOverInternal()
 
 function Ware_ForceRoundWin(restart_delay)
 {
-	local win = SpawnEntityFromTableSafe("game_round_win", 
+	local win = SpawnEntityFromTableSafe("game_round_win",
 	{
 		teamnum         = TEAM_UNASSIGNED
 		force_map_reset = true
 		switch_teams    = true
 	})
 	EntityAcceptInput(win, "RoundWin")
-	
+
 	// prevent loser state on winners
 	SetPropInt(GameRules, "m_iRoundState", GR_STATE_RND_RUNNING)
-	
+
 	// hide win panel
 	SendGlobalGameEvent("tf_game_over", {})
-	
+
 	// stop stalemate sound
 	for (local team = TF_TEAM_RED; team <= TF_TEAM_BLUE; team++)
 	{
@@ -2393,19 +2410,19 @@ function Ware_ForceRoundWin(restart_delay)
 			player           = -1
 		})
 	}
-	
+
 	// changing the round state would cause instant intermission if roundlimit is hit
 	// spoof round limit and restore it later on
 	Ware_MapRoundsPlayed = GetPropInt(GameRules, "m_nRoundsPlayed")
 	SetPropInt(GameRules, "m_nRoundsPlayed", 0)
-	
+
 	CreateTimer(function()
 	{
 		if (Ware_MapRoundsPlayed != null)
 		{
 			// restore rounds played (for mp_maxrounds)
 			SetPropInt(GameRules, "m_nRoundsPlayed", Ware_MapRoundsPlayed)
-			Ware_MapRoundsPlayed = null		
+			Ware_MapRoundsPlayed = null
 		}
 	}, restart_delay - 1.1) // gamerules checks round limit every second
 }
@@ -2413,32 +2430,32 @@ function Ware_ForceRoundWin(restart_delay)
 function Ware_OnUpdate()
 {
 	Ware_SDRUpdate()
-	
+
 	Ware_UpdateNav()
 
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
-	
+
 	Ware_UpdatePlayerVoicelines()
 
 	Ware_UpdatePlayerTouch()
-		
+
 	if (Ware_Minigame == null)
 		return -1
-		
+
 	if (!Ware_MinigameEnded)
 	{
 		local ret = Ware_Minigame.cb_on_check_end()
 		if (ret != null && ret == true)
 			Ware_EndMinigame()
 	}
-	
+
 	Ware_UpdatePlayerMinigame()
-	
+
 	Ware_Minigame.cb_on_update()
-	
+
 	Ware_UpdatePlayerAttack()
-	
+
 	return -1
 }
 
@@ -2450,7 +2467,7 @@ function Ware_OnPlayerSay(player, text)
 	text = lstrip(rstrip(text))
 	if (text.len() == 0)
 		return false
-	
+
 	if (startswith(text, "!ware_") || startswith(text, "/ware_"))
 	{
 		local len = text.find(" ")
@@ -2459,7 +2476,7 @@ function Ware_OnPlayerSay(player, text)
 		if (cmd in Ware_DevCommands)
 		{
 			if (/*GetPlayerSteamID3(player) in DEVELOPER_STEAMID3 ||*/
-				player == Ware_ListenHost || 
+				player == Ware_ListenHost ||
 				GetPropBool(player, "m_autoKickDisabled")) // has rcon access
 			{
 				Ware_DevCommands[cmd](player, len != null ? text.slice(len+1) : "")
@@ -2483,7 +2500,7 @@ function Ware_OnPlayerSay(player, text)
 		}
 		return false
 	}
-	
+
 	if (Ware_Minigame != null)
 		return Ware_Minigame.cb_on_player_say(player, text)
 	else
@@ -2523,14 +2540,14 @@ function Ware_UpdatePlayerTouch()
 	if (cb_minigame_player_touch && !cb_minigame_player_touch.IsValid())
 		cb_minigame_player_touch = null
 	if (cb_specialround_player_touch && !cb_specialround_player_touch.IsValid())
-		cb_specialround_player_touch = null	
-		
+		cb_specialround_player_touch = null
+
 	if (cb_minigame_player_touch || cb_specialround_player_touch)
 	{
 		local candidates = []
 		local bloat_maxs = Vector(0.05, 0.05, 0.05)
 		local bloat_mins = bloat_maxs * -1.0
-		
+
 		foreach (player in Ware_MinigamePlayers)
 		{
 			if (player.IsAlive())
@@ -2538,13 +2555,13 @@ function Ware_UpdatePlayerTouch()
 				local origin = player.GetOrigin()
 				candidates.append(
 				[
-					player, 
-					origin + player.GetBoundingMins() + bloat_mins, 
+					player,
+					origin + player.GetBoundingMins() + bloat_mins,
 					origin + player.GetPlayerMaxs() + bloat_maxs
 				])
 			}
 		}
-		
+
 		local intersections = {}
 		local candidates_len = candidates.len()
 		for (local i = 0; i < candidates_len; ++i)
@@ -2552,23 +2569,23 @@ function Ware_UpdatePlayerTouch()
 			local candidate_a = candidates[i]
 			if (candidate_a in intersections)
 				continue
-			
+
 			for (local j = i + 1; j < candidates_len; ++j)
 			{
 				local candidate_b = candidates[j]
 				if (candidate_b in intersections)
 					continue
-				
+
 				if (IntersectBoxBox(candidate_a[1], candidate_a[2], candidate_b[1], candidate_b[2]))
 				{
 					local player_a = candidate_a[0]
-					local player_b = candidate_b[0]		
+					local player_b = candidate_b[0]
 					intersections[player_a] <- player_b
 					intersections[player_b] <- player_a
 				}
 			}
 		}
-		
+
 		foreach (player, other_player in intersections)
 		{
 			if (cb_minigame_player_touch)
@@ -2577,19 +2594,19 @@ function Ware_UpdatePlayerTouch()
 				cb_specialround_player_touch(player, other_player)
 		}
 	}
-	
+
 }
 
 function Ware_UpdatePlayerVoicelines()
 {
-	if ((Ware_Minigame != null && Ware_Minigame.cb_on_player_voiceline.IsValid()) 
+	if ((Ware_Minigame != null && Ware_Minigame.cb_on_player_voiceline.IsValid())
 		|| (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid()))
 	{
 		for (local scene; scene = FindByClassname(scene, "instanced_scripted_scene");)
 		{
 			scene.KeyValueFromString("classname", "ware_voiceline")
 			MarkForPurge(scene)
-			
+
 			local player = GetPropEntity(scene, "m_hOwner")
 			if (player)
 			{
@@ -2598,7 +2615,7 @@ function Ware_UpdatePlayerVoicelines()
 				{
 					if (Ware_Minigame != null && Ware_Minigame.cb_on_player_voiceline.IsValid())
 						Ware_Minigame.cb_on_player_voiceline(player, name.tolower())
-					
+
 					if(Ware_SpecialRound && Ware_SpecialRound.cb_on_player_voiceline.IsValid())
 						Ware_SpecialRound.cb_on_player_voiceline(player, name.tolower())
 				}
@@ -2642,11 +2659,11 @@ function Ware_UpdatePlayerMinigame()
 			{
 				player.EmitSound(SFX_WARE_KART_HORN)
 				data.horn_timer = time + 1.0
-				Ware_Minigame.cb_on_player_horn(player)		
+				Ware_Minigame.cb_on_player_horn(player)
 			}
 			data.horn_buttons = buttons
 		}
-		
+
 		local special_melee = data.special_melee
 		local special_vm = data.special_vm
 		if (special_melee && special_melee.IsValid())
