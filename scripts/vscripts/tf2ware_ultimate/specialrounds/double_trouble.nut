@@ -187,7 +187,7 @@ function OnPick()
 		// - "hale" sets to 0 (stops default merc sounds playing)
 		// call OnMultipleSpecialRounds and pass in all loaded special rounds and the current data
 		if ("OnMultipleSpecialRounds" in scope)
-			scope.OnMultipleSpecialRounds(scopes, data)
+			scope.OnMultipleSpecialRounds(scopes.map(@(s) s.special_round.file_name), data)
 	}
 
 	return true
