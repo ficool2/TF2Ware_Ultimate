@@ -590,20 +590,19 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 		{
 			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
 			{
-				if(ent.GetClassname() == "env_sprite")
-					EntityEntFire(ent, "ShowSprite")
-				else
-					EntityEntFire(ent, "Enable")
+				EntityEntFire(ent, "Enable")
+				if(ent.GetClassname() == "prop_dynamic")
+					EntityEntFire(ent, "EnableCollision")
 			}
 		}
 		else
 		{
 			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
 			{
-				if(ent.GetClassname() == "env_sprite")
-					EntityEntFire(ent, "HideSprite")
-				else
-					EntityEntFire(ent, "Disable")
+				if(ent.GetClassname() == "prop_dynamic")
+					EntityEntFire(ent, "DisableCollision")
+				
+				EntityEntFire(ent, "Disable")
 			}
 		}
 	}
