@@ -569,16 +569,43 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 		Vector(3615, 3380, -11400)
 		Vector(3615, 1880, -11400)
 	]
+	Init = function(){this.PlatformToggle(false, false)}
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
-	PlatformToggle = function(enable_platform) {
-		local trigger = FindByName(null, "smasharena_trigger")
+	PlatformToggle = function(enable_platform, enable_boxingring = false) {
+		local trigger = FindByName(null, "smasharena_trigger") // microtf2 logic starts when anyone is in this
+		local platform = FindByName(null, "smasharena_platform")
 		if(enable_platform)
 		{
-			EntityAcceptInput(trigger, "EndTouch")
-			EntityAcceptInput(trigger, "Disable")
+			EntityEntFire(trigger, "EndTouch")
+			EntityEntFire(trigger, "Disable")
+			EntityEntFire(platform, "Enable")
 		}
 		else
-			EntityAcceptInput(trigger, "Enable")
+		{
+			EntityEntFire(platform, "Disable")
+			EntityEntFire(trigger, "Enable")
+		}
+		
+		if(enable_boxingring)
+		{
+			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
+			{
+				if(ent.GetClassname() == "env_sprite")
+					EntityEntFire(ent, "ShowSprite")
+				else
+					EntityEntFire(ent, "Enable")
+			}
+		}
+		else
+		{
+			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
+			{
+				if(ent.GetClassname() == "env_sprite")
+					EntityEntFire(ent, "HideSprite")
+				else
+					EntityEntFire(ent, "Disable")
+			}
+		}
 	}
 }
 
