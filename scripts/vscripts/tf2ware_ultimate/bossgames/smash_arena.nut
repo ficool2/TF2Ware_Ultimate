@@ -26,6 +26,7 @@ function OnPick()
 
 function OnStart()
 {
+	Ware_MinigameLocation.PlatformToggle(false)
 	alive_players = clone(Ware_MinigamePlayers)
 	
 	foreach (player in alive_players)
