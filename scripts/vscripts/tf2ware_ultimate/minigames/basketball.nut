@@ -52,7 +52,8 @@ function OnHoopTouch()
 		Ware_PassPlayer(owner, true)
 	}
 	
-	activator.Kill()
+	if(!activator.IsPlayer())
+		activator.Kill()
 }
 
 function OnUpdate()
