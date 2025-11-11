@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.3.1"
+#define PLUGIN_VERSION "1.4.0"
 
 // unused event repurposed for vscript <-> sourcemod communication
 #define PROXY_EVENT "tf_map_time_remaining"
@@ -277,10 +277,6 @@ void Disable(bool map_unload)
 	LoadoutWhitelister_End(map_unload);
 #endif
 
-	host_timescale.SetFloat(1.0, true, false);
-	sv_cheats.SetInt(0, true, false);
-	vscript_perf_warning_spew_ms.SetFloat(g_ScriptPerfValue, false, false);
-	
 	UnhookConVarChange(sv_cheats, OnCheatsChanged);
 	
 	UnhookEvent(PROXY_EVENT, ListenerVScript, EventHookMode_Pre);
@@ -306,7 +302,10 @@ void Disable(bool map_unload)
 	
 	g_CheatCommands.Clear();
 	g_CheatCommandsArgs.Clear();
-
+	
+	host_timescale.SetFloat(1.0, true, false);
+	sv_cheats.SetInt(0, true, false);
+	vscript_perf_warning_spew_ms.SetFloat(g_ScriptPerfValue, false, false);
 }
 
 public void OnClientPutInServer(int client)

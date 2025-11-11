@@ -13,7 +13,7 @@ const WARE_THEME_VERSION        = 4
 const WARE_MP3_VERSION = 3
 
 // keep in sync with sourcemod plugin
-WARE_PLUGIN_VERSION <- [1, 3, 0]
+WARE_PLUGIN_VERSION <- [1, 4, 0]
 
 Ware_CfgPath <- "tf2ware_ultimate/%s.cfg"
 
