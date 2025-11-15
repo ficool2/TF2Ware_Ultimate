@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name             = "Collisions"
 	author           = "ficool2"
 	description      = "Players are always solid to each other!"
-	category         = ""
+	categories 		 = ["collisions"]
 	force_collisions = true
 	min_players      = 2
 	max_players      = 40

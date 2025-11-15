@@ -38,10 +38,10 @@ special_round <- Ware_SpecialRoundData
 	name = "Wipeout"
 	author = ["Mecha the Slag", "pokemonPasta"]
 	description = "2 lives, battle in smaller groups until one player remains!" // TODO: better description
-	category = "meta" // TODO: wipeout modifies special_round late which double trouble doesn't support
-	
+	categories = null // TODO: wipeout modifies special_round late which double trouble doesn't support
+
 	min_players = 3
-	
+
 	boss_count     = INT_MAX
 	boss_threshold = INT_MAX
 })
@@ -105,7 +105,7 @@ function OnBeginIntermission(is_boss)
 			break
 		}
 	}
-	
+
 	while (Wipeout_ValidPlayers.len() < player_count)
 	{
 		if (Wipeout_PlayerRotation.len() > 0)
@@ -119,35 +119,35 @@ function OnBeginIntermission(is_boss)
 		else
 			Wipeout_PlayerRotation <- Wipeout_GetAlivePlayers()
 	}
-	
+
 	foreach(player in Ware_Players)
 	{
 		if (Wipeout_ValidPlayers.find(player) == null)
 			Wipeout_Spectators.append(player)
 	}
-	
+
 	local holdtime = Ware_GetThemeSoundDuration("intro")
 	local pre_text = format("This %s players are:\n", is_boss ? "bossgame's" : "minigame's")
 	local player_list = ""
-	
+
 	foreach(player in Wipeout_ValidPlayers)
 	{
 		player_list += GetPlayerName(player)
 		player_list += "\n"
 	}
-	
+
 	foreach (player in Ware_Players)
 	{
 		Ware_ShowScreenOverlay2(player, null)
-		
+
 		local lives = Ware_GetPlayerSpecialRoundData(player).lives
 		if (Wipeout_ValidPlayers.find(player) != null)
 		{
 			Ware_ShowScreenOverlay(player, overlay)
-			
+
 			local text = pre_text + player_list + format("You have %d %s remaining.", lives, lives == 1 ? "life" : "lives")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
-			
+
 			local sound
 			switch (lives) {
 				case 3:
@@ -172,14 +172,14 @@ function OnBeginIntermission(is_boss)
 		if (Wipeout_Spectators.find(player) != null)
 		{
 			Ware_ShowScreenOverlay(player, null)
-			
+
 			local text = pre_text + player_list + (lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			Ware_ShowText(player, CHANNEL_MISC, text, holdtime)
-			
+
 			Ware_PlayGameSound(player, "intro")
 		}
 	}
-		
+
 	CreateTimer(@() Ware_StartMinigame(is_boss), holdtime)
 	return true
 }
@@ -192,26 +192,26 @@ function GetValidPlayers()
 function Wipeout_GetAlivePlayers()
 {
 	local alive_players = []
-	
+
 	foreach(player in Ware_Players)
 	{
 		local data = Ware_GetPlayerSpecialRoundData(player)
 		if (data.lives && data.lives > 0)
 			alive_players.append(player)
 	}
-	
+
 	return alive_players
 }
 
 function OnCalculateScore(data)
 {
 	local specialdata = Ware_GetPlayerSpecialRoundData(data.player)
-	
+
 	if (!data.passed)
 		specialdata.lives--
-	
+
 	specialdata.lives = Max(0, specialdata.lives)
-	
+
 	data.score = specialdata.lives
 }
 
@@ -234,7 +234,7 @@ function OnMinigameEnd()
 			}
 			break
 	}
-	
+
 	foreach(player in Wipeout_Spectators)
 	{
 		Ware_PlayGameSound(player, "victory") // there's just a weird silence without this
@@ -253,7 +253,7 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 	else if (winner_count == 1)
 	{
 		Ware_ChatPrint(null, "{player} {color}won with {int} {str} remaining!", top_players[0], TF_COLOR_DEFAULT, top_score, top_score == 1 ? "life" : "lives")
-	}	
+	}
 	else if (winner_count == 0)
 	{
 		Ware_ChatPrint(null, "{color}Nobody won!?", TF_COLOR_DEFAULT)

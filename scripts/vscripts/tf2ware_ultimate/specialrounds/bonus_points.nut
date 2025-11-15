@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Bonus Points"
 	author = "pokemonPasta"
 	description = "Extra points will be awarded in some minigames!"
-	category = ""
+	categories = []
 	bonus_points = true
 })
 

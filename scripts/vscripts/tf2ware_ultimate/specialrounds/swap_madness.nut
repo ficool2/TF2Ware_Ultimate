@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Swap Madness"
 	author = "CzechMate"
 	description = "Players will randomly swap positions during a minigame!"
-	category = "teleport"
+	categories = ["teleport"]
 	min_players = 2
 })
 
@@ -50,7 +50,7 @@ function SwapPlayerPositions()
 
 		local vel1 = player1.GetAbsVelocity()
 		local vel2 = player2.GetAbsVelocity()
-		
+
 		local scale1 = player1.GetModelScale()
 		local scale2 = player2.GetModelScale()
 
@@ -64,7 +64,7 @@ function SwapPlayerPositions()
 		// this can happen in size matters special round
 		if (scale1 > scale2)
 			UnstuckPlayer(player1)
-		
+
 		//player 2
 		if (player2.GetMoveParent())
 			SetPlayerParentPlayer(player2, null)
@@ -74,8 +74,8 @@ function SwapPlayerPositions()
 		Ware_SpawnParticle(player2, player2.GetTeam() == TF_TEAM_RED ? "teleported_red" : "teleported_blue")
 		// this can happen in size matters special round
 		if (scale2 > scale1)
-			UnstuckPlayer(player2)		
+			UnstuckPlayer(player2)
 	}
-	
-	Ware_PlaySoundOnAllClients(teleport_sound)	
+
+	Ware_PlaySoundOnAllClients(teleport_sound)
 }

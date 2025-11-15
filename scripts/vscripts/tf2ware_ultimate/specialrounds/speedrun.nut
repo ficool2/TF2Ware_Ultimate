@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Speedrun"
 	author = "ficool2"
 	description = "The round is 3x faster!!"
-	category = "timescale"
+	categories = ["timescale"]
 	max_players = 40
 })
 

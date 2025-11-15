@@ -8,7 +8,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Bonk"
 	author = ["Mecha the Slag", "ficool2"]
 	description = "Everyone gets a BONK BAT!"
-	category = "weapon"
+	categories = ["weapon"]
 	allow_damage = true
 })
 
@@ -22,14 +22,14 @@ function GiveSpecialMelee(player)
 {
 	local data = Ware_GetPlayerData(player)
 	local melee, vm
-	
+
 	if (!data.special_melee || !data.special_melee.IsValid())
 	{
 		melee = CreateEntitySafe("tf_weapon_bat")
 		SetPropInt(melee, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1123)
 		SetPropBool(melee, "m_AttributeManager.m_Item.m_bInitialized", true)
 		melee.DispatchSpawn()
-		
+
 		for (local i = 0; i < 4; i++)
 			SetPropIntArray(melee, "m_nModelIndexOverrides", bat_modelindex, i)
 		SetPropBool(melee, "m_bBeingRepurposedForTaunt", true)
@@ -43,7 +43,7 @@ function GiveSpecialMelee(player)
 		SetPropBool(vm, "m_bValidatedAttachedEntity", true)
 		vm.DispatchSpawn()
 	}
-	
+
 	if (melee || vm)
 		Ware_EquipSpecialMelee(player, melee, vm)
 }
@@ -73,16 +73,16 @@ function OnTakeDamage(params)
 				if (weapon && GetPropInt(weapon, "m_nModelIndexOverrides") == bat_modelindex)
 				{
 					params.damage = 1.0
-					
+
 					Ware_UngroundPlayer(victim)
-					
+
 					local scale = 450.0
 					local dir = attacker.EyeAngles().Forward()
 					local vel = victim.GetAbsVelocity()
 					dir.z = Max(dir.z, 0.0)
 					vel += dir * scale
 					vel.z += scale
-					victim.SetAbsVelocity(vel)				
+					victim.SetAbsVelocity(vel)
 					victim.EmitSound(bat_hit_sound)
 				}
 			}

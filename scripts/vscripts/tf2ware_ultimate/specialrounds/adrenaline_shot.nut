@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Adrenaline Shot"
 	author = ["Gemidyne", "pokemonPasta"]
 	description = "The round starts fast, then slows down."
-	category = "timescale"
+	categories = ["timescale"]
 })
 
 local interval = Ware_SpeedUpInterval * 1.5
@@ -32,7 +32,7 @@ function OnSpeedup()
 		Ware_ShowScreenOverlay(player, "hud/tf2ware_ultimate/slow_down")
 		Ware_ShowScreenOverlay2(player, null)
 	}
-	
+
 	CreateTimer(@() Ware_BeginIntermission(false), Ware_GetThemeSoundDuration("speedup"))
 	return true
 }

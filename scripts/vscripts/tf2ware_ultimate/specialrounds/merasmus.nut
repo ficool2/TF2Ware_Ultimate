@@ -8,8 +8,8 @@ special_round <- Ware_SpecialRoundData
 	name = "Kill Merasmus"
 	author = "tilderain"
 	description = "Or else!"
-	category = ""
-	convars = 
+	categories = ["winners"]
+	convars =
 	{
 		tf_merasmus_lifetime = 999999
 		tf_merasmus_chase_range = 10000000
@@ -48,24 +48,24 @@ function OnUpdate()
 		merasmus_killed = true
 		OnMerasmusKilled()
 	}
-	
+
 	if (!merasmus_killed)
 	{
 		foreach (player in Ware_Players)
 		{
-			if (!player.IsAlive()) 
+			if (!player.IsAlive())
 				continue
-			
+
 			local special = Ware_GetPlayerSpecialRoundData(player)
 			if (special.vo_timer < Time())
 			{
 				local player_class = player.GetPlayerClass()
 				special.vo_timer <- Time() + 10.0 + RandomFloat(0.0, 6.0)
-	
+
 				local vo = vos[player_class]
-				if (vo.len() == 0) 
+				if (vo.len() == 0)
 					continue
-	
+
 				player.PlayScene(RandomElement(vo), 0.0)
 			}
 		}
@@ -85,7 +85,7 @@ function SpawnMerasmus()
 		modelscale = 1,
 		targetname = "merasmus_special"
 	})
-	
+
 	merasmus.ValidateScriptScope()
 	merasmus.GetScriptScope().MerasmusThink <- function()
 	{
@@ -116,10 +116,10 @@ function OnTakeDamage(params)
 		//spy op
 		if (params.weapon && params.weapon.GetName() == "tf_weapon_knife")
 			params.damage = 20
-		
+
 		if (params.damage > 200)
 			params.damage = 20
-		
+
 		if (attacker && attacker.IsPlayer())
 		{
 			local special = Ware_GetPlayerSpecialRoundData(attacker)
@@ -164,7 +164,7 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 function OnMerasmusKilled()
 {
 	local playerDamageList = []
-	foreach (player in Ware_Players) 
+	foreach (player in Ware_Players)
 	{
 	    local special = Ware_GetPlayerSpecialRoundData(player)
 	    playerDamageList.append
@@ -176,9 +176,9 @@ function OnMerasmusKilled()
 
 	playerDamageList.sort(@(a, b) b.damage <=> a.damage)
 
-	for (local i = 0; i < 3 && i < playerDamageList.len(); i++) 
+	for (local i = 0; i < 3 && i < playerDamageList.len(); i++)
 	{
-	    Ware_ChatPrint(null, "{player}{color} did {int} damage to {color}MERASMUS!", 
+	    Ware_ChatPrint(null, "{player}{color} did {int} damage to {color}MERASMUS!",
 			playerDamageList[i].player, TF_COLOR_DEFAULT, playerDamageList[i].damage, merasmus_color)
 	}
 
@@ -201,11 +201,11 @@ function OnMerasmusKilled()
 		if (topPlayers.find(player) == null)
 		{
 			local special = Ware_GetPlayerSpecialRoundData(player)
-			Ware_ChatPrint(player, "You did {int} damage to {color}MERASMUS!", 
+			Ware_ChatPrint(player, "You did {int} damage to {color}MERASMUS!",
 			special.damage, merasmus_color)
 		}
 	}
-	
+
 	Ware_AwardBonusPoints(topPlayers.remove(0), 2, true, special_round.name, special_round.file_name)
 	if (topPlayers.len() > 0)
 		Ware_AwardBonusPoints(topPlayers, 1, true, special_round.name, special_round.file_name)

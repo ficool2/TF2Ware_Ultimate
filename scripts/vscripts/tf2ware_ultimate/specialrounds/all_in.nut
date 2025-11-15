@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "All In"
 	author = ["Gemidyne", "pokemonPasta"]
 	description = "If you lose one minigame, you lose ALL your points."
-	category = "scores"
+	categories = ["scores"]
 })
 
 function OnCalculateScore(data)

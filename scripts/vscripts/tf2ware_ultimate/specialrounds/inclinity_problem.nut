@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Inclinity Problem"
 	author = "ficool2"
 	description = "The world tilts as much as your score!"
-	category = ""
+	categories = []
 })
 
 function SetGlobalPlayerRoll()
