@@ -114,11 +114,14 @@ function OnStart()
 function GetWinThreshhold()
 {
 	local win_threshold
-	if (Ware_Players.len() > 64)
+	local ware_players_len = Ware_Players.len()
+	if (ware_players_len > 64)
+		win_threshold = 24
+	else if (ware_players_len > 32)
+		win_threshold = 12
+	else if (ware_players_len > 24)
 		win_threshold = 10
-	else if (Ware_Players.len() > 24)
-		win_threshold = 6
-	else if (Ware_Players.len() > 3)
+	else if (ware_players_len > 3)
 		win_threshold = 3
 	else
 		win_threshold = 1
