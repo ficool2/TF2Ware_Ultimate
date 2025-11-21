@@ -582,7 +582,6 @@ function OnEnd()
 			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score,  playerScoreList[i].combo)
 	}
 
-	local winners = []
 	local low_score = min_score
 	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
 	{
