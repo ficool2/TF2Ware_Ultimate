@@ -44,8 +44,9 @@ minigame <- Ware_MinigameData
 function OnTeleport(players)
 {
 	local center = Ware_MinigameLocation.center + Vector(0, 10000, 0)
+	local radius = Ware_MinigamePlayers.len() * 20.0
 	center.z = -14390
-	Ware_TeleportPlayersCircle(players, center, 500.0)
+	Ware_TeleportPlayersCircle(players, center, radius)
 }
 
 function OnStart()
