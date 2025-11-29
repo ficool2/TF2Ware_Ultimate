@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Squid Game"
 	author = "tilderain"
 	description = "You can always kill people!"
-	category = ""
+	categories = []
 	friendly_fire = true
 	allow_damage = true
 	force_pvp_damage = true

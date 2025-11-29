@@ -1,11 +1,11 @@
-fov <- 130 
+fov <- 130
 
 special_round <- Ware_SpecialRoundData
 ({
 	name             = "Quake Pro"
 	author           = ["TonyBaretta", "ficool2"]
 	description      = "FOV increased to 130!"
-	category         = ""
+	categories 		 = ["fov"]
 })
 
 function OnStart()
@@ -17,7 +17,7 @@ function OnStart()
 function OnMinigameEnd()
 {
 	foreach (player in Ware_Players)
-		SetPropInt(player, "m_iFOV", fov)	
+		SetPropInt(player, "m_iFOV", fov)
 }
 
 function OnEnd()

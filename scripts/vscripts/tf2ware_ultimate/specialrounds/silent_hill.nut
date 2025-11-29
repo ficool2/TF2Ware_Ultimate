@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name        = "Silent Hill"
 	author      = "ficool2"
 	description = "The fog is coming."
-	category    = ""
+	categories	= [""]
 })
 
 fog         <- null
@@ -14,7 +14,7 @@ function UpdateFog()
 {
 	foreach (player in Ware_Players)
 	{
-		SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)		
+		SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 		SetPropInt(player, "m_Local.m_skybox3d.area", 255)
 	}
 }
@@ -30,13 +30,13 @@ function OnStart()
 		fogmaxdensity = 1
 		fogRadial     = true
 	})
-	
+
 	local sky_camera = FindByClassname(null, "sky_camera")
 	if (sky_camera)
 		sky3d_area = GetPropInt(sky_camera, "m_skyboxData.area")
-	
+
 	UpdateFog()
-	
+
 	skybox_name = Convars.GetStr("sv_skyname")
 	SetSkyboxTexture("white_sky")
 }

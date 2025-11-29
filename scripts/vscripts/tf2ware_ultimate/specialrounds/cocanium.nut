@@ -6,7 +6,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Cocanium"
 	author = "ficool2"
 	description = "Woah.. I feel different..."
-	category = "overlay"
+	categories = ["overlay"]
 })
 
 function GetOverlay2()

@@ -15,7 +15,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Versus Saxton Hale"
 	author = ["Batfoxkid", "Lizard of Oz", "Druoxtheshredder", "ficool2"]  // includes OG modeler and voice actor
 	description = "Everyone is SAXTON HALE!"
-	category = "weapon"
+	categories = ["weapon", "playermodel"]
 	pitch_override = 0
 })
 
@@ -30,6 +30,10 @@ function OnPrecache()
 	PrecacheScriptSound(hale_win_sound)
 	PrecacheScriptSound(land_sound)
 	PrecacheParticle(land_particle)
+}
+
+function OnMultipleSpecialRounds(file_names, parent_special) {
+	parent_special.pitch_override = special_round.pitch_override
 }
 
 function InitHale(player)
@@ -77,7 +81,7 @@ function OnStart()
 	foreach (player in Ware_Players)
 	{
 		InitHale(player)
-		
+
 		if (player.IsAlive())
 		{
 			ApplyHaleMelee(player)
@@ -126,13 +130,13 @@ function OnUpdate()
 			local text = ""
 			local buttons = GetPropInt(player, "m_nButtons")
 			local time = Time()
-			
-			local origin = player.GetOrigin()	
-			
+
+			local origin = player.GetOrigin()
+
 			if (special.hale_injump != 0)
 			{
 				local teleported = VectorDistance(origin, special.hale_lastorigin) > 64.0
-				
+
 				if (teleported || (player.GetFlags() & FL_ONGROUND))
 				{
 					player.RemoveCustomAttribute("cancel falling damage")
@@ -140,12 +144,12 @@ function OnUpdate()
 					if (special.hale_injump == 2)
 					{
 						player.SetGravity(1.0)
-						
+
 						// don't slam after getting teleported
 						if (!teleported)
 						{
 							player.EmitSound(land_sound)
-							DispatchParticleEffect(land_particle, origin, vec3_up)					
+							DispatchParticleEffect(land_particle, origin, vec3_up)
 
 							foreach (victim in Ware_MinigamePlayers)
 							{
@@ -304,7 +308,7 @@ function OnPlayerVoiceline(player, voiceline)
 				filter_type = RECIPIENT_FILTER_GLOBAL
 			})
 
-			local origin = player.GetOrigin()	
+			local origin = player.GetOrigin()
 			local duration = Clamp(30.0 / Max(1, Ware_MinigamePlayers.len()), 1.5, 3.0)
 
 			player.AddCondEx(TF_COND_NOHEALINGDAMAGEBUFF, duration, null)
@@ -343,7 +347,7 @@ function OnCalculateScore(data)
 
 		Ware_PlaySoundOnClient(player, hale_death_sound, 1.0, 100, SND_CHANGE_PITCH)
 	}
-	
+
 	// use normal score calculations
 	return false
 }

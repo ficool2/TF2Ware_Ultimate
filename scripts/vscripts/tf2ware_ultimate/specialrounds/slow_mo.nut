@@ -1,13 +1,15 @@
-
 special_round <- Ware_SpecialRoundData
 ({
 	name = "Slow-Mo"
 	author =  ["Gemidyne", "pokemonPasta"]
 	description = "Everything slows down!"
-	category = "timescale"
+	categories = ["timescale"]
 	boss_threshold = 10
-	
 })
+
+function OnMultipleSpecialRounds(file_names, parent_special) {
+	parent_special.boss_threshold = special_round.boss_threshold
+}
 
 function OnSpeedup()
 {

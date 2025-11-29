@@ -5,7 +5,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Mirrored World"
 	author = "ficool2"
 	description = "The world is mirrored!"
-	category = "overlay"
+	categories = ["overlay"]
 })
 
 function GetOverlay2()

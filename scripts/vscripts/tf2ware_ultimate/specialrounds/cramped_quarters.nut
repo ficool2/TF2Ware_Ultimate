@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name             = "Cramped Quarters"
 	author           = ["Mecha the Slag", "ficool2"]
 	description      = "Don't touch anyone!"
-	category         = ""
+	categories 		 = ["collisions"]
 	min_players      = 2
 })
 
@@ -25,16 +25,16 @@ function OnPlayerTouch(player1, player2)
 {
 	if(grace)
 		return
-	
+
 	if (Ware_Minigame || Ware_Finished)
 	{
-		touch_dmg = true	
+		touch_dmg = true
 		local truce = GetPropBool(GameRules, "m_bTruceActive")
 		SetPropBool(GameRules, "m_bTruceActive", false)
 		player1.TakeDamage(1000.0, DMG_BULLET, player2)
 		SetPropBool(GameRules, "m_bTruceActive", truce)
 		touch_dmg = false
-		
+
 		// don't spam the chat if killing somehow fails, but still try to kill.
 		local data = Ware_GetPlayerSpecialRoundData(player1)
 		if(!data.touched)

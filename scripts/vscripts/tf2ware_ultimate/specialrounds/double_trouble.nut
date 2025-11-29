@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name        = "Double Trouble"
 	author      = "ficool2"
 	description = "Two special rounds will be stacked together!"
-	category    = "meta"
+	categories  = null
 })
 
 scopes <- []
@@ -11,56 +11,70 @@ scopes <- []
 function OnPick()
 {
 	local desired_count = 2
-	
+
 	local player_count = Ware_GetValidPlayers().len()
-	
-	local categories = clone(Ware_SpecialRoundCategories)
-	// don't add ourself!!!!
-	delete categories["meta"]
-	
+
+	local remaining_categories = clone(Ware_SpecialRoundCategories)
+
+	local available_special_rounds = {} // table: file_name -> [categories]
+	local selected_special_rounds = [] // array of the file names
+
+	foreach (category, file_names in remaining_categories) {
+		remaining_categories[category] = clone(file_names) // deep clone as we will remove picks from the list
+		foreach (file_name in file_names) {
+			if (!(file_name in  available_special_rounds))
+				available_special_rounds[file_name] <- []
+			available_special_rounds[file_name].append(category)
+		}
+	}
+
 	// load in any debug/forced special rounds first
 	local debug_len = Ware_DebugNextSpecialRound.len()
 	if (debug_len >= desired_count)
 	{
 		// in case any don't get picked, we'll let the rest be random picked
 		desired_count = debug_len
-		
+
+		local incompatible_with_selected = []
+
 		foreach (file_name in Ware_DebugNextSpecialRound)
 		{
 			// in case someone is silly..
 			if (file_name == "double_trouble")
 				continue
-				
+
 			// intentional random pick
 			if (file_name == "any")
 				continue
-				
+
 			local scope = Ware_LoadSpecialRound(file_name, player_count, false)
 			if (scope)
 			{
 				scopes.append(scope)
-				
-				// don't random roll conflicting special rounds under the same category
+				selected_special_rounds.append(file_name)
+				delete available_special_rounds[file_name]
+
+				// don't random roll conflicting special rounds sharing the same category
 				// note that forcing incompatible categories is intentionally allowed
-				local category = scope.special_round.category
-				if (category in categories)
+				local picked_categories = scope.special_round.categories
+				foreach (category in picked_categories)
 				{
-					if (category != "none")
-					{
-						delete categories[category]
-					}
-					else
-					{
-						local file_names = categories[category]
-						RemoveElementIfFound(file_names, file_name)
-						
-						// make sure we don't have empty categories
-						if (file_names.len() == 0)
-							delete categories[category]
-					}
+					if (category == "none" || !(category in remaining_categories))
+						continue
+
+					local file_names_in_category = remaining_categories[category]
+					foreach(file_name_in_category in file_names_in_category)
+						incompatible_with_selected.append(file_name_in_category)
+
+					delete remaining_categories[category]
 				}
 			}
 		}
+
+		// delete after all forced rounds have been dealt with
+		foreach (file_name in incompatible_with_selected)
+			if (file_name in available_special_rounds)
+				delete available_special_rounds[file_name]
 	}
 	else
 	{
@@ -73,50 +87,48 @@ function OnPick()
 			desired_count++
 		// ULTRA TROUBLE!!!!
 		if (random <= 0.01)
-			desired_count++			
+			desired_count++
 	}
 
-	// deep clone as we will remove picks from the list
-	foreach (category, file_names in categories)
-		categories[category] = clone(file_names)
-	
-	// fill in the rest of desired special  rounds
+	// fill in the rest of desired special rounds
 	// as some might have rejected the pick earlier
 	while (true)
 	{
 		if (scopes.len() >= desired_count)
 			break
-			
-		if (categories.len() == 0)
+
+		if (remaining_categories.len() == 0 || available_special_rounds.len() == 0)
 			break
-			
-		local category_pool = []
-		// pick random category, weighted towards categories with more items
-		// ("none" has a lot of them)
-		foreach (category, file_names in categories)
-			category_pool.extend(array(file_names.len(), category))
-		
-		local pick_category = RandomElement(category_pool)
-		local file_names = categories[pick_category]
-		local file_index = RandomIndex(file_names)
-		// don't try pick this again
-		local file_name = file_names.remove(file_index)
-		
+
+		local file_names = available_special_rounds.keys()
+		local file_name = file_names[RandomInt(0, file_names.len() - 1)]
+		local picked_categories = available_special_rounds[file_name]
+		delete available_special_rounds[file_name]
+
 		local scope = Ware_LoadSpecialRound(file_name, player_count, false)
 		if (scope)
 		{
 			scopes.append(scope)
-			
-			// don't try pick anything else from this category
-			if (pick_category != "none" || file_names.len() == 0)
-				delete categories[pick_category]	
+			selected_special_rounds.append(file_name)
 		}
-		else if (file_names.len() == 0)
+
+		foreach (category in picked_categories)
 		{
-			delete categories[pick_category]
+			if (category == "none" || !(category in remaining_categories))
+				continue
+
+			local file_names_in_category = remaining_categories[category]
+			foreach(file_name_in_category in file_names_in_category)
+				if (file_name_in_category in available_special_rounds)
+					delete available_special_rounds[file_name_in_category]
+
+			delete remaining_categories[category]
 		}
 	}
-	
+
+	// sort by ascending priority
+	scopes.sort(@(a, b) a.special_round.priority <=> b.special_round.priority)
+
 	local scope_len = scopes.len()
 	if (scope_len == 3)
 	{
@@ -126,14 +138,14 @@ function OnPick()
 	else if (scope_len == 4)
 	{
 		special_round.name        = "Quadruple Trouble"
-		special_round.description = "QUADRUPLE special rounds will be stacked together!!!"
+		special_round.description = "FOUR special rounds will be stacked together!!!"
 	}
 	else if (scope_len >= 5)
 	{
 		special_round.name = "ULTRA TROUBLE"
 		special_round.description = format("%d special rounds will be stacked together!!!!", scope_len)
-	}	
-	
+	}
+
 	foreach (callback_name, func in delegated_callbacks)
 	{
 		foreach (scope in scopes)
@@ -143,15 +155,16 @@ function OnPick()
 		}
 	}
 	delete delegated_callbacks
-	
+
 	local data = special_round
 	foreach (scope in scopes)
 	{
 		local src = scope.special_round
-		
-		foreach (name, value in src.convars) 
+
+		foreach (name, value in src.convars)
 			data.convars[name] <- value
-		
+
+		// if any special round sets these to non-default, then we use the non-default
 		data.reverse_text      = data.reverse_text      || src.reverse_text
 		data.allow_damage      = data.allow_damage      || src.allow_damage
 		data.force_collisions  = data.force_collisions  || src.force_collisions
@@ -160,18 +173,23 @@ function OnPick()
 		data.force_pvp_damage  = data.force_pvp_damage  || src.force_pvp_damage
 		data.bonus_points      = data.bonus_points      || src.bonus_points
 		data.allow_respawnroom = data.allow_respawnroom && src.allow_respawnroom
-		
-		if (src.boss_count > data.boss_count)        
-			data.boss_count = src.boss_count		
-		// never extend boss thresholds for slow-mo
-		if (src.boss_threshold    != data.boss_threshold && data.boss_threshold >= Ware_BossThreshold)    
-			data.boss_threshold    = src.boss_threshold
-		if (src.speedup_threshold != data.speedup_threshold) 
-			data.speedup_threshold = src.speedup_threshold
-		if (src.pitch_override    != data.pitch_override)    
-			data.pitch_override    = src.pitch_override	
+
+		// let special rounds decide how they want to interact for the other properties
+		// boss_count:
+		// - "boss_rush" sets to 5 (8 if "extended_round" is present)
+		// boss_threshold:
+		// - "slow_mo" sets to half configured value (MAX 10)
+		// - "extended_round" sets to ceil(1.5x current value)
+		// - "boss_rush" sets to 0
+		// speedup_threshold:
+		// - "time_attack" sets to INT_MAX (handles speed logic by itself)
+		// pitch_override:
+		// - "hale" sets to 0 (stops default merc sounds playing)
+		// call OnMultipleSpecialRounds and pass in all loaded special rounds and the current data
+		if ("OnMultipleSpecialRounds" in scope)
+			scope.OnMultipleSpecialRounds(scopes.map(@(s) s.special_round.file_name), data)
 	}
-	
+
 	return true
 }
 
@@ -191,17 +209,17 @@ function IsSet(file_name)
 		if (scope.special_round.file_name == file_name)
 			return true
 	}
-	
+
 	return false
 }
 
-function OnStartInternal() 
+function OnStartInternal()
 {
 	foreach (scope in scopes)
 	{
-		Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, scope.special_round.name, 
+		Ware_ChatPrint(null, "{color}{color}{str}{color}! {str}", TF_COLOR_DEFAULT, COLOR_GREEN, scope.special_round.name,
 			TF_COLOR_DEFAULT,  scope.special_round.description)
-	}		
+	}
 }
 
 OnStart <- OnStartInternal // might get overriden below
@@ -224,20 +242,20 @@ delegated_callbacks <-
 	function OnStart()
 	{
 		OnStartInternal()
-		
-		foreach (scope in scopes)		
+
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnStart")
 	}
 
 	function OnUpdate()
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnUpdate")
 	}
 
 	function OnEnd()
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnEnd")
 	}
 
@@ -265,19 +283,19 @@ delegated_callbacks <-
 
 	function OnMinigameStart()
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnMinigameStart")
 	}
 
 	function OnMinigameEnd()
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnMinigameEnd")
 	}
 
 	function OnMinigameCleanup()
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnMinigameCleanup")
 	}
 
@@ -290,20 +308,20 @@ delegated_callbacks <-
 			if (DelegatedCall(scope, "OnBeginIntermission", is_boss))
 				result = true
 		}
-		
+
 		// handle simon special round opposite_win logic
 		// start from first scope's value
 		local len = scopes.len()
 		if (len > 0)
 			special_round.opposite_win = scopes[0].special_round.opposite_win
-	
+
 		// flip for each additional scope that has it true
-		for (local i = 1; i < len; i++) 
+		for (local i = 1; i < len; i++)
 		{
 			if (scopes[i].special_round.opposite_win)
 				special_round.opposite_win = !special_round.opposite_win
 		}
-		
+
 		return result
 	}
 
@@ -317,7 +335,7 @@ delegated_callbacks <-
 		}
 		return result
 	}
-	
+
 	function OnBeginBoss()
 	{
 		local result = false
@@ -328,7 +346,7 @@ delegated_callbacks <-
 		}
 		return result
 	}
-	
+
 	function OnCheckGameOver()
 	{
 		// if either one returns true then it's game over
@@ -344,9 +362,9 @@ delegated_callbacks <-
 	function GetValidPlayers()
 	{
 		// these cannot overlap so don't run two instances
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 		{
-			local ret = DelegatedCall(scope, "GetValidPlayers")	
+			local ret = DelegatedCall(scope, "GetValidPlayers")
 			if (!call_failed)
 				return ret
 		}
@@ -381,7 +399,7 @@ delegated_callbacks <-
 			local ret = DelegatedCall(scope, "OnDeclareWinners", top_players, top_score, winner_count)
 			if (!call_failed && ret)
 				return ret
-		}	
+		}
 		return false
 	}
 
@@ -392,7 +410,7 @@ delegated_callbacks <-
 			local ret = DelegatedCall(scope, "OnShowChatText", player, fmt)
 			if (!call_failed)
 				fmt = ret
-		}			
+		}
 		return fmt
 	}
 
@@ -403,7 +421,7 @@ delegated_callbacks <-
 			local ret = DelegatedCall(scope, "OnShowGameText", players, channel, text)
 			if (!call_failed)
 				text = ret
-		}			
+		}
 		return text
 	}
 
@@ -414,51 +432,51 @@ delegated_callbacks <-
 			local ret = DelegatedCall(scope, "OnShowOverlay", players, overlay_name)
 			if (!call_failed)
 				overlay_name = ret
-		}			
+		}
 		return overlay_name
 	}
 
 	function OnPlayerConnect(player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerConnect", player)
 	}
 
 	function OnPlayerDisconnect(player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerDisconnect", player)
 	}
 
 	function OnPlayerSpawn(player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerSpawn", player)
 	}
-	
+
 	function OnPlayerPostSpawn(player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerPostSpawn", player)
 	}
 
 	function OnPlayerInventory(player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerInventory", player)
 	}
-	
+
 	function OnPlayerVoiceline(player, name)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerVoiceline", player, name)
-	}	
-	
+	}
+
 	function OnPlayerTouch(player, other_player)
 	{
-		foreach (scope in scopes)		
+		foreach (scope in scopes)
 			DelegatedCall(scope, "OnPlayerTouch", player, other_player)
-	}		
+	}
 
 	function GetPlayerRoll(player)
 	{
@@ -480,7 +498,7 @@ delegated_callbacks <-
 			local ret = DelegatedCall(scope, "CanPlayerRespawn", player)
 			if (!call_failed && !ret)
 				return false
-		}		
+		}
 		return true
 	}
 

@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Noclip"
 	author = "ficool2"
 	description = "Everyone can noclip! Press ACTION KEY (default: H) to noclip!"
-	category = ""
+	categories = []
 })
 
 function OnStart()
@@ -24,9 +24,9 @@ function OnUpdate()
 	{
 		local data = Ware_GetPlayerSpecialRoundData(player)
 		local action_key = player.IsUsingActionSlot()
-		
+
 		if (action_key && !data.noclip_action_key)
-		{	
+		{
 			if (player.IsAlive())
 			{
 				if (player.GetMoveType() == MOVETYPE_NOCLIP)
@@ -35,7 +35,7 @@ function OnUpdate()
 					player.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
 			}
 		}
-		
+
 		data.noclip_action_key <- action_key
 	}
 }

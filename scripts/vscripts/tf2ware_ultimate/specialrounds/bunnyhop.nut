@@ -2,9 +2,9 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Bunnyhop"
 	author = "ficool2"
-	description = "Hold space to bunny hop!"	
-	category = ""
-	convars = 
+	description = "Hold space to bunny hop!"
+	categories = []
+	convars =
 	{
 		sv_airaccelerate = 100.0
 	}
@@ -17,7 +17,7 @@ function BunnyhopInit(player)
 	local data = Ware_GetPlayerSpecialRoundData(player)
 	data.self <- player
 	data.on_ground <- player.GetFlags() & FL_ONGROUND
-	
+
 	player.GetScriptScope().BunnyhopThink <- BunnyhopThink.bindenv(data)
 	AddThinkToEnt(player, "BunnyhopThink")
 }
@@ -30,7 +30,7 @@ function BunnyhopThink()
 	{
 		local velocity = self.GetAbsVelocity()
 		velocity.z = 289.0 - ((gravity * FrameTime()) * 0.5)
-		self.SetAbsVelocity(velocity)		
+		self.SetAbsVelocity(velocity)
 	}
 	return -1
 }
