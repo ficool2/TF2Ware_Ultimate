@@ -3,7 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Hunger Update"
 	author = "tilderain"
 	description = "Eat to survive!"
-	category = ""
+	category = "entities"
 })
 
 foods <- []

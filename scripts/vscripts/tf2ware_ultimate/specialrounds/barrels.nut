@@ -4,7 +4,7 @@ special_round <- Ware_SpecialRoundData
 	name = "Barrels"
 	author = "tilderain"
 	description = "Explosive barrels will rain from the sky!"
-	category = ""
+	category = "entities"
 })
 
 local barrels = []
