@@ -806,7 +806,7 @@ function AddWegas()
 	// Above 20
 	if (playerCount > 20)
 	{
-		extraWegas = ceil(playerCount / 2.5)
+		extraWegas = ceil(playerCount / 2.6)
 		extraWegas++
 	}
 
