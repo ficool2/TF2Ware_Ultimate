@@ -500,6 +500,11 @@ function Generate()
 			{
 				local rnd = RandomInt(0, possibleList.len()-1)
 				selectedChunk = possibleList[rnd]
+					
+            	//Prevent impossible layouts
+            	if (selectedChunk == 0)
+                	selectedChunk = 8
+					
 				CellArray[x][y] = selectedChunk 
 			}
 		} 
