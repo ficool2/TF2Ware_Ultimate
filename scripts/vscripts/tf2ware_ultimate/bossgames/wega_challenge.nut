@@ -417,9 +417,10 @@ function Generate()
 		CellArray[i] = array(Size)
 	}
 
-	CellArray[0][0] = 8
-	CellArray[Size-1][Size-1] = 8
-	CellArray[Size-1][0] = 5
+    CellArray[0][0] = 8
+    CellArray[0][Size-1] = 8
+    CellArray[Size-1][Size-1] = 8
+    CellArray[Size-1][0] = 8
 
 	// Phase 1 Connect to the other spawn first
 	local x = 1
@@ -660,8 +661,9 @@ function Generate()
 		}
 	}
 	
-	CellArray[0][Size-1] = 8
-	CellArray[Size-1][Size-2] = 8
+    CellArray[0][0] = 8
+    CellArray[0][Size-1] = 8
+    CellArray[Size-1][Size-2] = 8
 
 	// Phase 6, spawn templates
 	x = 0
