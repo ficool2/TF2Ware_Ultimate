@@ -430,8 +430,8 @@ function Generate()
 	{
 		if (x < Size-1 && y < Size-1)
 		{
-			local rnd = RandomInt(0, 1)
-			if (rnd == 0)
+			local rnd = RandomInt(0, 4)
+			if (rnd > 1)
 				direction = DIRECTION.UP
 			else
 				direction = DIRECTION.RIGHT
