@@ -811,8 +811,8 @@ function AddWegas()
 	}
 
 	local buffer = Size
-	if (buffer > 6)
-		buffer = 7
+	if (buffer > 7)
+		buffer = 8
 
 	for (local i = 0; i < extraWegas ; i++)
 	{
