@@ -18,11 +18,7 @@ jumprope_maxs <- null
 
 function OnStart()
 {
-	foreach(player in Ware_MinigamePlayers)
-	{
-		Ware_AddPlayerAttribute(player, "no double jump", 1, -1)
-		Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
-	}
+	Ware_SetGlobalAttribute("no double jump", 1, -1)
 	
 	jumprope_door = FindByName(null, "jumprope_door")
 	MarkForPurge(jumprope_door)

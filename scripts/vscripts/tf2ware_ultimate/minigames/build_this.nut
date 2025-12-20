@@ -19,6 +19,7 @@ minigame <- Ware_MinigameData
 	music          = "sillytime"
 	custom_overlay = building_mode[1]
 	allow_damage   = true
+	allow_building = true
 	convars        = 
 	{
 		tf_fastbuild = 1

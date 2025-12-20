@@ -295,6 +295,9 @@ function Ware_StripPlayer(player, give_default_melee)
 	player.RemoveCond(TF_COND_DISGUISED)
 	player.RemoveCond(TF_COND_TAUNTING)
 	player.RemoveCond(TF_COND_ZOOMED)
+	
+	if(!Ware_Minigame || !Ware_Minigame.allow_building)
+		Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 		
 	local data = player.GetScriptScope().ware_data
 	local melee = data.melee

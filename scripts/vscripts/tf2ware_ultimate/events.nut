@@ -435,6 +435,8 @@ function OnGameEvent_player_spawn(params)
 		player.SetHealth(player.GetMaxHealth())	
 		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
+		if(!Ware_Minigame || !Ware_Minigame.allow_building)
+			Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 		
 		if (Ware_SpecialRound)
 		{

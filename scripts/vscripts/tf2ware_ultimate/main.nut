@@ -1811,6 +1811,10 @@ function Ware_StartMinigameInternal(is_boss)
 		
 	if (Ware_Minigame.allow_damage)
 		Ware_ToggleTruce(false)
+	
+	if(!Ware_Minigame.allow_building)
+		foreach(player in Ware_MinigamePlayers)
+			Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 		
 	// bit hacky but does the job
 	Ware_BlockPassEffects = Ware_SpecialRound && Ware_SpecialRound.opposite_win

@@ -12,6 +12,7 @@ class Ware_MinigameData
 		start_pass      = false
 		allow_damage    = false
 		allow_suicide   = false
+		allow_building  = false
 		force_backstab  = false
 		start_freeze    = 0.0
 		fail_on_death   = false
@@ -71,6 +72,8 @@ class Ware_MinigameData
 	max_scale       = null
 	// Do suicides count for points? Default is false
 	allow_suicide   = null	
+	// Are buildings allowed? Default is false
+	allow_building = null
 	// Allow backstabs with any weapon
 	force_backstab  = null
 	// Freeze players when minigame starts, default is 0 seconds (don't freeze)

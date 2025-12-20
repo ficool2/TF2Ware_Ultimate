@@ -24,6 +24,7 @@ minigame <- Ware_MinigameData
 	music          = "goodtimes"
 	custom_overlay = mode_infos[Ware_MinigameMode][1]
 	allow_damage   = false
+	allow_building = true
 	convars        = 
 	{
 		tf_damageforcescale_self_soldier_badrj = 10
