@@ -22,8 +22,33 @@ MICRO_WAVE3  <- 15  // re-taunt
 MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
+chrises <-
+[
+	"tf2ware_ultimate/gioca/sleep"
+	"tf2ware_ultimate/gioca/wave"
+	"tf2ware_ultimate/gioca/hitch"
+	"tf2ware_ultimate/gioca/sneeze"
+	"tf2ware_ultimate/gioca/walk"
+	"tf2ware_ultimate/gioca/swim"
+	"tf2ware_ultimate/gioca/ski"
+	"tf2ware_ultimate/gioca/spray"
+	"tf2ware_ultimate/gioca/macho"
+	"tf2ware_ultimate/gioca/horn"
+	"tf2ware_ultimate/gioca/ring"
+	"tf2ware_ultimate/gioca/ok"
+	"tf2ware_ultimate/gioca/kiss"
+	"tf2ware_ultimate/gioca/comb"
+	"tf2ware_ultimate/gioca/wave2nd"
+	"tf2ware_ultimate/gioca/wave3rd"
+	"tf2ware_ultimate/gioca/super"
+]
+
 micro <- null        // microgame tracker
+micro_num <- 0        // microgame num
+min_score <- 16      // minimum score to win. Only the players with the highest score win, might change this to just check min_score, and increase min_score.
 micro_grace <- false // tracks grace period for certain microgames.
+
+micro_rotation <- [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
 
 minigame <- Ware_MinigameData
 ({
@@ -33,45 +58,59 @@ minigame <- Ware_MinigameData
 	duration      = 140.0
 	end_delay     = 1.0
 	location      = "boxarena"
-	music         = "giocajouer"
+	music         = "giocajourer-inst"
 	start_pass    = false
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
 fail_sound <- "TF2Ware_Ultimate.Fail"
 
+announcements <-
+[
+	["tf2ware_ultimate/gioca/123.mp3", 5.511],
+	["tf2ware_ultimate/gioca/yaa.mp3", 80.727],
+	["tf2ware_ultimate/gioca/1232.mp3", 83.05],
+	["tf2ware_ultimate/gioca/superdance.mp3", 87.403],
+	["tf2ware_ultimate/gioca/alright.mp3", 132.380],
+]
+
 microgame_info <-
 [
-	// description                   overlay                                                absolute times
-	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move",            22.394, 101.723 ], // MICRO_SLEEP
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                25.671, 103.255 ], // MICRO_WAVE
-	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump",                 29.103, 105.039 ], // MICRO_HITCH
-	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch",               33.147, 106.812 ], // MICRO_SNEEZE
-	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move",                 36.428, 108.627 ], // MICRO_WALK
-	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim",     40.368, 110.264 ], // MICRO_SWIM
-	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left",              43.908, 112.206 ], // MICRO_SKI
-	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray",    47.361, 114.010 ], // MICRO_SPRAY
-	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab",              50.563, 115.689 ], // MICRO_MACHO
-	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn",     53.875, 117.515 ], // MICRO_HORN
-	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell",     58.288, 119.372 ], // MICRO_BELL
-	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay",     61.402, 121.146 ], // MICRO_OKAY
-	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic",           65.550, 123.182 ], // MICRO_KISS
-	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise", 68.572, 124.682 ], // MICRO_COMB
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                72.226, 126.529 ], // MICRO_WAVE2
-	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt",              75.954, 128.775 ], // MICRO_WAVE3
-	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump",          79.432, 130.411 ], // MICRO_SUPER
-	[ null,                          null,                                                  82.961, 132.342 ], // MICRO_RESET
+	// description                   overlay                                             
+	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            ], // MICRO_SLEEP
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                ], // MICRO_WAVE
+	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 ], // MICRO_HITCH
+	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               ], // MICRO_SNEEZE
+	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 ], // MICRO_WALK
+	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     ], // MICRO_SWIM
+	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              ], // MICRO_SKI
+	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    ], // MICRO_SPRAY
+	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              ], // MICRO_MACHO
+	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     ], // MICRO_HORN
+	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     ], // MICRO_BELL
+	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     ], // MICRO_OKAY
+	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           ], // MICRO_KISS
+	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" ], // MICRO_COMB
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                ], // MICRO_WAVE2
+	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              ], // MICRO_WAVE3
+	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          ], // MICRO_SUPER
+	[ null,                          null                                                  ], // MICRO_RESET
 ]
 
 function OnPrecache()
 {
 	PrecacheScriptSound(pass_sound)
+	foreach(announcement in announcements)
+	{
+		PrecacheSound(announcement[0])
+	}
+	foreach(sound in chrises)
+	{
+		PrecacheSound(format("%s.mp3", sound))
+		PrecacheSound(format("%s2.mp3", sound))
+	}
 }
 
-function OnPick()
-{
-	return Ware_TimeScale == 1.0 // gioca doesnt really work at other timescales
-}
 
 function OnStart()
 {
@@ -84,14 +123,27 @@ function OnStart()
 	// TODO: incorporate into array somehow?
 	GiocaJouer_Countdown(5.43) // first round
 	GiocaJouer_Countdown(83.05) // second round
+
+	Shuffle(micro_rotation)
+
+	micro_rotation.append(MICRO_WAVE2)
+	micro_rotation.append(MICRO_WAVE3)
+	micro_rotation.append(MICRO_SUPER)
+	micro_rotation.append(MICRO_RESET)
+	
+	foreach(announcement in announcements)
+	{
+		local sound = announcement[0] //squirrel
+		Ware_CreateTimer(@() Ware_PlaySoundOnAllClients(sound), announcement[1])
+	}
 	
 	// set a timer for each microgame. each tick of
 	// the "clock" ends the previous microgame,
 	// increments "micro", and starts the next one.
-	foreach (microgame in microgame_info)
+	for (local i = 0; i < 18; i++)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2] * Ware_GetPitchFactor())
-		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3] * Ware_GetPitchFactor())
+		Ware_CreateTimer(@() GiocaJouer_Clock(), 22.394 + (3.5820886 * i))
+		Ware_CreateTimer(@() GiocaJouer_Clock(), 101.723 + (1.791044 * i))
 	}
 }
 
@@ -105,24 +157,28 @@ function GiocaJouer_Countdown(delay)
 			// count up to 8
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, format("hud/tf2ware_ultimate/countdown_%s", timer.tostring()))
 			timer++
-			return 0.489 * Ware_GetPitchFactor()
+			return 0.489
 		}
 		else
 		{
 			// kill the overlay
 			Ware_ShowScreenOverlay(Ware_MinigamePlayers, null)
 		}
-	}, delay * Ware_GetPitchFactor())
+	}, delay)
 }
 
 function GiocaJouer_Clock()
 {
 	if (micro == null)
+	{
 		micro = 0
+		if(micro_num > 0)
+			micro_num++
+	}
 	else
 	{
 		OnMicroEnd()
-		micro++
+		micro_num++
 	}
 	OnMicroStart()
 }
@@ -162,16 +218,22 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
+	micro = micro_rotation[micro_num%18]
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
-	
+
 	// if we consider reset a microgame, we dont have to make a separate function
 	if (micro == MICRO_RESET)
 	{
 		micro = null
 		return
 	}
-	
+
+	local sound = chrises[micro]
+	if(micro_num > 16) sound += "2"
+	sound += ".mp3"
+	Ware_PlaySoundOnAllClients(sound)
+
 	// start passed? and also any microgames that need setup
 	foreach(player in Ware_MinigamePlayers)
 	{
@@ -215,6 +277,10 @@ function OnMicroStart()
 	}
 	// do this one a minigame early bcuz original did it. otherwise move to MICRO_SUPER
 	else if (micro == MICRO_WAVE3)
+	{
+		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
+	}
+	else if (micro == MICRO_SUPER)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
 	}
@@ -284,7 +350,7 @@ function OnUpdate()
 					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SUPER:
-				if (player.GetOrigin().z > -6800.0)
+				if (player.GetOrigin().z > -6900.0)
 					GiocaJouer_PassPlayer(player, true)
 				break
 		}
