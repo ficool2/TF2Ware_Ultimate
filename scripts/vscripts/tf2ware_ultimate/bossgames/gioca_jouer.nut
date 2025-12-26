@@ -248,7 +248,7 @@ function OnMicroStart()
 			case MICRO_WALK:
 				GiocaJouer_PassPlayer(player, true)
 				micro_grace <- true
-				Ware_CreateTimer(function() {micro_grace <- false}, 1.0) // can't be more than about 2sec
+				Ware_CreateTimer(function() {micro_grace <- false}, 1.2) // can't be more than about 2sec
 				break
 			case MICRO_SWIM:
 				player.AddCond(TF_COND_SWIMMING_CURSE)
