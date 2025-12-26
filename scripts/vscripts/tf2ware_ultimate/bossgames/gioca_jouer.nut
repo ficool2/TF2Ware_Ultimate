@@ -24,23 +24,23 @@ MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont ha
 
 chrises <-
 [
-	"tf2ware_ultimate/gioca/sleep"
-	"tf2ware_ultimate/gioca/wave"
-	"tf2ware_ultimate/gioca/hitch"
-	"tf2ware_ultimate/gioca/sneeze"
-	"tf2ware_ultimate/gioca/walk"
-	"tf2ware_ultimate/gioca/swim"
-	"tf2ware_ultimate/gioca/ski"
-	"tf2ware_ultimate/gioca/spray"
-	"tf2ware_ultimate/gioca/macho"
-	"tf2ware_ultimate/gioca/horn"
-	"tf2ware_ultimate/gioca/ring"
-	"tf2ware_ultimate/gioca/ok"
-	"tf2ware_ultimate/gioca/kiss"
-	"tf2ware_ultimate/gioca/comb"
-	"tf2ware_ultimate/gioca/wave2nd"
-	"tf2ware_ultimate/gioca/wave3rd"
-	"tf2ware_ultimate/gioca/super"
+	"tf2ware_ultimate/v3/gioca/sleep"
+	"tf2ware_ultimate/v3/gioca/wave"
+	"tf2ware_ultimate/v3/gioca/hitch"
+	"tf2ware_ultimate/v3/gioca/sneeze"
+	"tf2ware_ultimate/v3/gioca/walk"
+	"tf2ware_ultimate/v3/gioca/swim"
+	"tf2ware_ultimate/v3/gioca/ski"
+	"tf2ware_ultimate/v3/gioca/spray"
+	"tf2ware_ultimate/v3/gioca/macho"
+	"tf2ware_ultimate/v3/gioca/horn"
+	"tf2ware_ultimate/v3/gioca/ring"
+	"tf2ware_ultimate/v3/gioca/ok"
+	"tf2ware_ultimate/v3/gioca/kiss"
+	"tf2ware_ultimate/v3/gioca/comb"
+	"tf2ware_ultimate/v3/gioca/wave2nd"
+	"tf2ware_ultimate/v3/gioca/wave3rd"
+	"tf2ware_ultimate/v3/gioca/super"
 ]
 
 micro <- null        // microgame tracker
@@ -67,11 +67,11 @@ fail_sound <- "TF2Ware_Ultimate.Fail"
 
 announcements <-
 [
-	["tf2ware_ultimate/gioca/123.mp3", 5.511],
-	["tf2ware_ultimate/gioca/yaa.mp3", 80.727],
-	["tf2ware_ultimate/gioca/1232.mp3", 83.05],
-	["tf2ware_ultimate/gioca/superdance.mp3", 87.403],
-	["tf2ware_ultimate/gioca/alright.mp3", 132.380],
+	["tf2ware_ultimate/v3/gioca/123.mp3", 5.511],
+	["tf2ware_ultimate/v3/gioca/yaa.mp3", 80.727],
+	["tf2ware_ultimate/v3/gioca/1232.mp3", 83.05],
+	["tf2ware_ultimate/v3/gioca/superdance.mp3", 87.403],
+	["tf2ware_ultimate/v3/gioca/alright.mp3", 132.380],
 ]
 
 microgame_info <-
