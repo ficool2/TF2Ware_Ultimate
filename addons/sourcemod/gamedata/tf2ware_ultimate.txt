@@ -8,18 +8,18 @@
 			// loadout whitelister
 			"CTFPlayer::InitClass"	
 			{
-				"windows"	"488"
-				"windows64"	"488"
-				"linux"		"495"
-				"linux64"	"495"
+				"windows"	"489"
+				"windows64"	"489"
+				"linux"		"496"
+				"linux64"	"496"
 			}
 			// temporary to track down weapon bug
 			"CBaseEntity::FVisible"	
 			{
-				"windows"	"148"
-				"windows64"	"148"
-				"linux"		"148"
-				"linux64"	"148"
+				"windows"	"149"
+				"windows64"	"149"
+				"linux"		"149"
+				"linux64"	"149"
 			}
 		}
 		"Signatures"

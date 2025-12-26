@@ -3,7 +3,7 @@ screenspace_general
 	$pixshader "ware_logozoom_ps20"
 
 	$basetexture "_rt_FullFrameFB"
-	$texture1    "hud/tf2ware_ultimate/__logo_text"
+	$texture1    "hud/tf2ware_ultimate/__logo"
 	$texture2    ""
 	$texture3    ""
 

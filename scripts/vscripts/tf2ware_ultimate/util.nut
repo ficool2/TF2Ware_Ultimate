@@ -104,7 +104,7 @@ function VectorDistance(a, b)
 // Converts forward vector to euler angles
 function VectorAngles(forward)
 {
-	local yaw, pitch;
+	local yaw, pitch
 	if (forward.y == 0.0 && forward.x == 0.0)
 	{
 		yaw = 0.0
@@ -412,7 +412,7 @@ function ReverseString(str)
 		{
 			// TODO this doesn't work right, no color markers for now
 			//stack.push(str.slice(i, i + 7))
-			i += 6;
+			i += 6
 		} 
 		else 
 		{
@@ -574,11 +574,17 @@ function PrecacheOverlay(overlay)
 	return true
 }
 
-// Precache a particle
+// Precache a particle and returns index
 function PrecacheParticle(name)
 {
-	PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
-	return true
+	local particle = SpawnEntityFromTableSafe("info_particle_system", 
+	{
+		effect_name  = name
+		start_active = false
+	})
+	local index = GetPropInt(particle, "m_iEffectIndex")
+	particle.Destroy()
+	return index
 }
 
 // Create an entity that doesn't leak the stringtable
@@ -692,7 +698,7 @@ function SetEntityColor(entity, r, g, b, a)
 // Convenience wrapper for EntFireByHandle
 function EntityEntFire(entity, input, parameter = "", delay = 0.0, activator = null, caller = null)
 {
-	EntFireByHandle(entity, input, parameter, delay, activator, caller);
+	EntFireByHandle(entity, input, parameter, delay, activator, caller)
 }
 
 // Convenience wrapper for AcceptInput
@@ -858,7 +864,7 @@ function GetPlayerSteamID3(player)
 // Gets a player's latency in seconds
 function GetPlayerLatency(player)
 {
-	return GetPropIntArray(PlayerMgr, "m_iPing", player.entindex()) * 0.001;
+	return GetPropIntArray(PlayerMgr, "m_iPing", player.entindex()) * 0.001
 }
 
 // Prevents a player's score from counting towards stranges

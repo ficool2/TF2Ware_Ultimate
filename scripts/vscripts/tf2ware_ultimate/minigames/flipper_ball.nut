@@ -1,13 +1,13 @@
-mode <- RandomInt(0, 1)
 
 minigame <- Ware_MinigameData
 ({
 	name           = "Flipper Ball"
 	author         = ["TonyBaretta", "ficool2"]
 	description    = "Get to the end!"
-	duration       = mode == 0 ? 27.0 : 28.0
+	modes          = 2
+	duration       = Ware_MinigameMode == 0 ? 27.0 : 28.0
 	end_delay      = 0.5	
-	music          = mode == 0 ? "fastbros" : "letsgetquirky"
+	music          = Ware_MinigameMode == 0 ? "fastbros" : "letsgetquirky"
 	location       = "pinball"
 	custom_overlay = "get_end"
 })
@@ -25,7 +25,7 @@ function OnPrecache()
 
 function OnTeleport(players)
 {
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		Ware_TeleportPlayersRow(players,
 			Ware_MinigameLocation.center_bottom,
@@ -33,7 +33,7 @@ function OnTeleport(players)
 			1000.0,
 			65.0, 65.0)
 	}
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 	{
 		Ware_TeleportPlayersRow(players,
 			Ware_MinigameLocation.center_top,
@@ -45,7 +45,7 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_SCOUT)
 	else
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO)
@@ -104,7 +104,7 @@ function OnTakeDamage(params)
 function OnUpdate()
 {
 	local win_threshold
-	if (mode == 0)
+	if (Ware_MinigameMode == 0)
 	{
 		local win_y = Ware_MinigameLocation.center_top.y + 64.0
 		foreach (player in Ware_MinigamePlayers)
@@ -114,7 +114,7 @@ function OnUpdate()
 		}
 
 	}
-	else if (mode == 1)
+	else if (Ware_MinigameMode == 1)
 	{
 		local win_y = Ware_MinigameLocation.center_bottom.y - 400.0
 				

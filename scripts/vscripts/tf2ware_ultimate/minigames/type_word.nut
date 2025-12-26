@@ -100,6 +100,8 @@ words <-
 	"Raiden"
 	"Freaky"
 	"Banana"
+	"Hawk"
+	"Tuah"
 	
 	// these two are evil but rare
 	"Bombinomicon"

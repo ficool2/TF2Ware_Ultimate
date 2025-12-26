@@ -3,6 +3,7 @@ special_round <- Ware_SpecialRoundData
 	name         = "Wheelchair"
 	author       = ["ficool2", "AlreadyADemon"] // https://gamebanana.com/mods/299091
 	description  = "Everyone is confined to a wheelchair!"
+	category     = ""
 })
 
 wheelchair_model <- "models/tf2ware_ultimate/heavy_wheelchair.mdl"

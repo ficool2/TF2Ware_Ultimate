@@ -9,6 +9,7 @@ minigame <- Ware_MinigameData
 	music          = "boxfight"
 	custom_overlay = "knockout"
 	min_players    = 2
+	max_scale      = 1.5
 	start_freeze   = 0.5
 	allow_damage   = true
 	fail_on_death  = true

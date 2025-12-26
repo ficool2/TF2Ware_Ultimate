@@ -133,7 +133,7 @@ function Ware_IsPlayerPassed(player)
 	return player.GetScriptScope().ware_data.passed
 }
 
-// Awards bonus points for certain objectives in minigames (first, fastest, etc.)
+// Give bonus points for certain objectives in minigames (first, fastest, etc.)
 // This only functions if Ware_BonusPoints is true, or in the bonus points special round, otherwise it does nothing.
 // If multiple players are to be awarded please pass an array of players, to avoid spamming the chat.
 function Ware_GiveBonusPoints(target, points = 1)
@@ -141,7 +141,16 @@ function Ware_GiveBonusPoints(target, points = 1)
 	local award = true
 	if (!Ware_BonusPoints && !(Ware_SpecialRound && Ware_SpecialRound.bonus_points))
 		award = false
-	
+		
+	local name = Ware_Minigame ? Ware_Minigame.name : ""
+	local file_name = Ware_Minigame ? Ware_Minigame.file_name : ""
+	Ware_AwardBonusPoints(target, points, award, name, file_name)
+}
+
+// Direct version of awarding bonus points
+// Intended for usage when awarding points outside of a minigame
+function Ware_AwardBonusPoints(target, points, award, name, file_name)
+{
 	// even if there's no award, this is still tracked for the event	
 	local player_indices_awarded = ""
 	local awarded = target
@@ -168,7 +177,7 @@ function Ware_GiveBonusPoints(target, points = 1)
 		else
 		{
 			local text = ""
-			local params = [this, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
+			local params = [this, null, text, points == 1 ? "point" : format("%d points", points), TF_COLOR_RED]
 			foreach (player in target)
 			{
 				local data = player.GetScriptScope().ware_data
@@ -181,8 +190,7 @@ function Ware_GiveBonusPoints(target, points = 1)
 				params.append(TF_COLOR_RED)
 			}
 			text += "{color}!"
-			params += TF_COLOR_DEFAULT
-			params[1] = text
+			params[2] = text
 			
 			Ware_ChatPrint.acall(params)
 		}
@@ -190,8 +198,8 @@ function Ware_GiveBonusPoints(target, points = 1)
 	
 	Ware_EventCallback("bonus_points", 
 	{
-		minigame_name      = Ware_Minigame ? Ware_Minigame.name : ""
-		minigame_file_name = Ware_Minigame ? Ware_Minigame.file_name : ""
+		minigame_name      = name
+		minigame_file_name = file_name
 		players_awarded    = player_indices_awarded
 	})
 }
@@ -233,7 +241,7 @@ function Ware_SetPlayerLoadout(player, player_class, items = null, item_attribut
 		{
 			local last_item = items[items.len() - 1]
 			foreach (item in items)
-				Ware_GivePlayerWeapon(player, item, {}, switch_weapon && item == last_item)
+				Ware_GivePlayerWeapon(player, item, item_attributes, switch_weapon && item == last_item)
 		}
 		else
 		{
@@ -287,6 +295,9 @@ function Ware_StripPlayer(player, give_default_melee)
 	player.RemoveCond(TF_COND_DISGUISED)
 	player.RemoveCond(TF_COND_TAUNTING)
 	player.RemoveCond(TF_COND_ZOOMED)
+	
+	if(!Ware_Minigame || !Ware_Minigame.allow_building)
+		Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 		
 	local data = player.GetScriptScope().ware_data
 	local melee = data.melee
@@ -320,10 +331,10 @@ function Ware_StripPlayer(player, give_default_melee)
 			if (active_weapon != use_melee)
 			{
 				if (active_weapon != null)
-				{								
+				{
 					// force switch fixes
 					local classname = active_weapon.GetClassname()
-					if (classname == "tf_weapon_minigun")
+					if (classname == "tf_weapon_minigun" || classname == "tf_weapon_buff_item")
 					{
 						SetPropEntity(player, "m_hActiveWeapon", null)
 					}
@@ -347,6 +358,11 @@ function Ware_StripPlayer(player, give_default_melee)
 						local viewmodel = GetPropEntity(player, "m_hViewModel")
 						if (viewmodel)
 							viewmodel.SetBodygroup(1, 0)
+					}
+					// beggar's bazooka
+					else if (active_weapon.GetAttribute("auto fires full clip", 0) != 0)
+					{
+						active_weapon.SetClip1(0)
 					}
 				}
 				
@@ -578,6 +594,14 @@ function Ware_DestroySpecialMelee(player)
 	}
 }
 
+// TF2 won't correctly update refresh HUD meters when given weapons such as Buff Banners, Soda Popper etc
+// Call this to fix that
+function Ware_UpdateWeaponMeters()
+{
+	// delay to account for ping
+	EntityEntFire(World, "CallScriptFunction", "Ware_UpdateWeaponMetersInternal", 0.25)
+}
+
 // Players that are force switched to PDAs not show the menu unless given with a delay
 // Set this to true and revert back to false before giving a weapon if you want to show the menu
 // Note this is not reliable depending on lag, and may sometimes still not show the menu
@@ -586,7 +610,6 @@ Ware_DelayPDASwitch <- false
 // Sets the player's class, and regenerates their health, ammo, melee etc
 // If "switch_melee" is true, the player will be switched to their new melee
 // Does nothing if the player is already the given class
-local Ware_CheckTeleportEffectTimer // Ignore this
 function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 {
 	if (player.GetPlayerClass() == player_class)
@@ -603,22 +626,6 @@ function Ware_SetPlayerClass(player, player_class, switch_melee = true)
 		
 	player.SetHealth(player.GetMaxHealth())
 	
-	// teleport effect gets cleared on class change, need to recreate it here
-	// creating timers is expensive so avoid doing that for every player
-	player.RemoveCond(TF_COND_TELEPORTED)
-	if (!Ware_CheckTeleportEffectTimer || !Ware_CheckTeleportEffectTimer.IsValid())
-	{
-		Ware_CheckTeleportEffectTimer = CreateTimer(function()
-		{
-			local top_scorers = Ware_MinigameTopScorers
-			foreach (player in Ware_MinigamePlayers)
-			{
-				if (top_scorers.find(player) != null)
-					player.AddCond(TF_COND_TELEPORTED)
-			}
-		}, 0.25)
-	}
-
 	if (melee != null)
 	{
 		// not sure why this is needed
@@ -673,6 +680,9 @@ function Ware_TogglePlayerWearables(player, toggle)
 {
 	for (local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer())
 	{
+        if (wearable.GetClassname() == "tf_viewmodel")
+            continue
+		
 		MarkForPurge(wearable)
 		Ware_ToggleWearable(wearable, toggle)
 	}
@@ -693,15 +703,15 @@ function Ware_GetTeamPlayers(team)
 	return Ware_MinigamePlayers.filter(@(i, player) player.GetTeam() == team)
 }
 
-// Gets a list of players that haven't been passed
-// Optionally it will only fetch alive unpassed players
-function Ware_GetUnpassedPlayers(alive_only = false)
+// Gets a list of players that have or haven't been passed
+// Optionally it will only fetch alive players
+function Ware_GetPassedPlayers(passed = true, alive_only = false)
 {
 	// Ware_MinigamePlayersData.filter(@(i, data) data.passed
 	local players = []
 	foreach (data in Ware_MinigamePlayersData)
 	{
-		if (data.passed)
+		if (data.passed != passed)
 			continue
 		local player = data.player
 		if (alive_only && !player.IsAlive())
@@ -1004,6 +1014,10 @@ function Ware_ShowScreenOverlay(players, name)
 {
 	if (typeof(players) != "array")
 		players = [players]
+	
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_show_overlay.IsValid())
+		name = Ware_SpecialRound.cb_on_show_overlay(players, name)
+	
 	foreach (player in players)
 		player.SetScriptOverlayMaterial(name ? name : "")
 }

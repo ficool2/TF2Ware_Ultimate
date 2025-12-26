@@ -51,11 +51,12 @@ function OnTeleport(players)
 function SpawnBot(angles)
 {
     local line = RemoveRandomElement(lines)
-	local origin = Lerp(line[0], line[1], RandomFloat(0.0, 1.0))
+	local origin = Lerp(line[0], line[1], RandomFloat(0.3, 0.7))
 	if (origin.y > Ware_MinigameLocation.center.y)
 		origin.y -= 64.0
 	else
 		origin.y += 64.0
+	origin.z += 10.0
 		
 	local class_idx = RandomInt(TF_CLASS_FIRST, TF_CLASS_LAST)
     local bot = Ware_SpawnEntity("prop_dynamic_override",
@@ -70,8 +71,8 @@ function SpawnBot(angles)
 	bot.SetSize(bot.GetBoundingMins(), bot.GetBoundingMaxs())
 	bot.AcceptInput("SetAnimation", "airwalk_MELEE", null, null)
 	bot.SetMoveType(MOVETYPE_FLYGRAVITY, 0)
-	bot.SetGravity(1.0)
-	bot.SetAbsVelocity(Vector(RandomFloat(-300, 300), 0, RandomFloat(800, 1100)))
+	bot.SetGravity(0.6)
+	bot.SetAbsVelocity(Vector(RandomFloat(-300, 300), 0, RandomFloat(500, 600)))
 	bot.SetAngularVelocity(0.0, 135.0, 0.0)
 	bot.ValidateScriptScope()
 	bot.GetScriptScope().hit_sound <- bot_data[class_idx][1]

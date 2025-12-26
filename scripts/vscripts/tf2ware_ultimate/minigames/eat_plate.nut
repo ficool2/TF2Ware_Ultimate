@@ -59,9 +59,10 @@ function OnStart()
 	{
 		local prop = Ware_SpawnEntity("prop_dynamic",
 		{
-			origin     = pos
-			model      = item[3]
-			modelscale = 1.5
+			origin      = pos
+			model       = item[3]
+			modelscale  = 1.5
+			defaultanim = "idle"
 		})
 		local trigger = Ware_SpawnEntity("trigger_multiple",
 		{

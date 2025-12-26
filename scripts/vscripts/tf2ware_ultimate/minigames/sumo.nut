@@ -10,7 +10,7 @@ minigame <- Ware_MinigameData
 	author        = ["TonyBaretta", "pokemonPasta"]
 	music         = "underwater"
 	duration      = 14.0
-	end_delay     = 0.5
+	end_delay     = 1.0
 	description   = "Push Away the Enemies!"
 	location      = RandomElement(arenas)
 	min_players   = 2

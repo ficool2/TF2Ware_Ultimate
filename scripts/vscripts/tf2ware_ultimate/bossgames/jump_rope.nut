@@ -28,8 +28,8 @@ function OnStart()
 	Ware_CreateTimer(@() IncreaseRopeSpeed(), 5.0)
 	Ware_CreateTimer(@() CheckPlayerZones(), 5.0)
 	
-	jumprope_mins = Ware_MinigameLocation.center + Vector(-225, -113, 0)
-	jumprope_maxs = Ware_MinigameLocation.center + Vector(225, 113, 128)
+	jumprope_mins = Ware_MinigameLocation.center + Vector(-220, -108, 0)
+	jumprope_maxs = Ware_MinigameLocation.center + Vector(220, 108, 128)
 }
 
 function IncreaseRopeSpeed()

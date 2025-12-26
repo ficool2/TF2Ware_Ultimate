@@ -122,8 +122,9 @@ function OnScriptHook_OnTakeDamage(params)
 					local viewmodel = GetPropEntity(attacker, "m_hViewModel")
 					if (viewmodel)
 						viewmodel.ResetSequence(viewmodel.LookupSequence("ACT_MELEE_VM_SWINGHARD"))
-						
-					params.damage       = victim.GetHealth() * 2.0
+					
+					if(victim.GetClassname() != "merasmus")
+						params.damage       = victim.GetHealth() * 2.0
 					params.damage_stats = TF_DMG_CUSTOM_BACKSTAB
 					params.damage_type  = params.damage_type | DMG_CRIT
 				}			
@@ -169,6 +170,8 @@ function OnGameEvent_teamplay_round_start(params)
 		if (data.start_sound)
 			Ware_PlayGameSound(player, "lets_get_started", SND_STOP)
 		player.SetScriptOverlayMaterial("")
+		if(player.GetTeam() & TF_TEAM_MASK)
+			player.SetMoveType(MOVETYPE_WALK, MOVECOLLIDE_DEFAULT)
 		cmd.AcceptInput("Command", "r_screenoverlay off", player, null)
 		cmd.AcceptInput("Command", "r_cleardecals", player, null)
 		BrickPlayerScore(player)
@@ -227,12 +230,13 @@ function OnGameEvent_teamplay_round_start(params)
 	Ware_ToggleTruce(true)
 
 	Ware_MinigameRotation.clear()
-	foreach (minigame in Ware_Minigames)
-		Ware_MinigameRotation.append(minigame)
+	Ware_ReloadMinigameRotation(false)
 	
 	// special rounds always occur every N rounds
 	// don't do two special rounds in a row (checks for special round from last round and then clears it, unless it's forced)
 	local begin_intermission = true
+	
+	local skybox = "tf2ware_sky"
 	
 	if (Ware_DebugNextSpecialRound.len() > 0 ||
 		Ware_SpecialRoundNext ||
@@ -242,22 +246,30 @@ function OnGameEvent_teamplay_round_start(params)
 		Ware_SpecialRoundNext = false
 		if (Ware_BeginSpecialRound())
 			begin_intermission = false
+			
+		if (Ware_Skyboxes.len() > 0)
+			skybox = RandomElement(Ware_Skyboxes)
 	}
 	else
 	{
 		Ware_SpecialRoundPrevious = false
 	}
 	
+	SetSkyboxTexture(skybox)
+	
 	// special rounds decide their own intermission delay
 	if (begin_intermission)
 		CreateTimer(@() Ware_BeginIntermission(false), 0.0)
+		
+	CreateTimer(Ware_ShowRoundCounter, 0.1)
 }
 
 // called only on mp_restartgame
 function OnGameEvent_scorestats_accumulated_reset(params)
 {
-	// save current timelimit
+	// save current timelimit and rounds play
 	Ware_MapResetTimer = GetPropFloat(GameRules, "m_flMapResetTime")
+	Ware_MapRoundsPlayed = GetPropInt(GameRules, "m_nRoundsPlayed")
 }
 
 // called right before the map is reset for a new round
@@ -268,6 +280,13 @@ function OnGameEvent_scorestats_accumulated_update(params)
 		// restore timelimit
 		SetPropFloat(GameRules, "m_flMapResetTime", Ware_MapResetTimer)
 		Ware_MapResetTimer = null
+	}
+	
+	if (Ware_MapRoundsPlayed != null)
+	{
+		// restore rounds played (for mp_maxrounds)
+		SetPropInt(GameRules, "m_nRoundsPlayed", Ware_MapRoundsPlayed)
+		Ware_MapRoundsPlayed = null		
 	}
 	
 	if (Ware_Minigame) // when restarted mid-minigame
@@ -399,39 +418,25 @@ function OnGameEvent_player_spawn(params)
 	}
 	
 	local data = player.GetScriptScope().ware_data
-
-	// this is to fix persisting attributes if restarting mid-minigame
-	local melee = data.melee
-	if (melee && melee.IsValid())
-	{
-		foreach (attribute, value in data.melee_attributes)
-			melee.RemoveAttribute(attribute)
-	}
 	data.attributes.clear()
-	data.melee_attributes.clear()
 	
 	if (params.team & TF_TEAM_MASK)
 	{
 		data.spawn_time = Time()
 		data.lerp_time = GetPropFloat(player, "m_fLerpTime")
 		
-		if (Ware_MinigameTopScorers.find(player) != null)
-			player.AddCond(TF_COND_TELEPORTED)
-		
 		if (!data.start_sound)
 			EntityEntFire(player, "CallScriptFunction", "Ware_PlayStartSound", 1.0)
 		
-		local melee = Ware_ParseLoadout(player)		
-		if (melee && !Ware_Finished)
-			Ware_ModifyMeleeAttributes(melee)
-			
 		EntityEntFire(player, "CallScriptFunction", "Ware_PlayerPostSpawn")
 		
 		player.AddHudHideFlags(HIDEHUD_BUILDING_STATUS|HIDEHUD_CLOAK_AND_FEIGN|HIDEHUD_PIPES_AND_CHARGE)
 		player.SetCustomModel("")		
 		player.SetHealth(player.GetMaxHealth())	
-		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY);
+		player.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
 		SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
+		if(!Ware_Minigame || !Ware_Minigame.allow_building)
+			Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0)
 		
 		if (Ware_SpecialRound)
 		{
@@ -444,6 +449,8 @@ function OnGameEvent_player_spawn(params)
 			
 			Ware_SpecialRound.cb_on_player_spawn(player)
 		}
+		
+		Ware_CheckPlayerTopScoreEffect(player, Ware_MinigameTopScorers)		
 	}
 }
 
@@ -452,7 +459,24 @@ function OnGameEvent_post_inventory_application(params)
 	local player = GetPlayerFromUserID(params.userid)
 	if (player == null)
 		return
-	
+		
+	// this is to fix persisting attributes if restarting mid-minigame
+	local data = player.GetScriptScope().ware_data
+	local melee = data.melee
+	if (melee && melee.IsValid())
+	{
+		foreach (attribute, value in data.melee_attributes)
+			melee.RemoveAttribute(attribute)
+	}
+	data.melee_attributes.clear()	
+		
+	local melee = Ware_ParseLoadout(player)		
+	if (melee && !Ware_Finished)
+		Ware_ModifyMeleeAttributes(melee)
+					
+	if (Ware_Minigame != null)
+		Ware_Minigame.cb_on_player_inventory(player)
+		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_player_inventory(player)
 }
@@ -500,13 +524,14 @@ function OnGameEvent_player_death(params)
 			player.GetScriptScope().ware_data.suicided = true
 	}
 		
-	if (Ware_Minigame.fail_on_death == true)
+	if (Ware_Minigame.fail_on_death == true && !Ware_MinigameEnded)
 	{
 		if (player)
 			Ware_PassPlayer(player, false)
 	}
 	
-	Ware_Minigame.cb_on_player_death(player, GetPlayerFromUserID(params.attacker), params)
+	local attacker = GetPlayerFromUserID(params.attacker)
+	Ware_Minigame.cb_on_player_death(player, attacker, params)
 }
 
 function OnGameEvent_player_disconnect(params)
@@ -546,6 +571,13 @@ function OnGameEvent_teamplay_game_over(params)
 	KillTimer(Ware_RoundEndMusicTimer)
 	Ware_PlayGameSound(null, "results", SND_STOP)
 	Ware_PlayGameSound(null, "mapend")
+}
+
+function OnGameEvent_localplayer_pickup_weapon(params)
+{
+	// used to fix status meters not showing up in minigames
+	// this event is clientside and server won't allow sending it.. usually
+	// workaround: define this empty listener
 }
 
 if (!Ware_Plugin) // plugin calls Ware_PlayerSay directly

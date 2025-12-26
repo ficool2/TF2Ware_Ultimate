@@ -13,7 +13,6 @@ minigame <- Ware_MinigameData
 	duration       = 130.0
 	end_delay      = 1.1
 	location       = RandomElement(arenas)
-	music          = "beepblockskyway"
 	fail_on_death  = true
 	start_freeze   = 0.5
 	convars =
@@ -30,13 +29,9 @@ bgm_offset       <- 0.0
 interrupted      <- false
 interrupt_timer  <- FLT_MAX
 
-// audio
-if (RandomInt(0, 9) == 0)
-	minigame.music = "beepblockskyway-twelve"
-
-beep_sound <- "tf2ware_ultimate/beep_block_beep.mp3"
-swap_sound <- "tf2ware_ultimate/beep_block_door.mp3"
-hurryup_sound <- "tf2ware_ultimate/hurryup.mp3"
+beep_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_beep.mp3")
+swap_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/beep_block_door.mp3")
+hurryup_sound <- Ware_FixupMP3("tf2ware_ultimate/v%d/hurryup.mp3")
 tele_sound <- "Building_Teleporter.Send"
 
 // brushes
@@ -63,17 +58,6 @@ function OnPrecache()
 
 function OnStart()
 {
-	if (minigame.music == "beepblockskyway")
-	{
-		BeepBlock_SetTempo(120.0)
-		bgm_offset = 0.028
-	}
-	else
-	{
-		BeepBlock_SetTempo(140.0)
-		bgm_offset = -0.097
-	}
-	
 	Ware_SetGlobalLoadout(TF_CLASS_ENGINEER)
 	
 	// fixes tilting from fall damage on ramp near the end of _ultimate arena
@@ -108,6 +92,25 @@ function OnStart()
 	tele2.GetScriptScope().OnStartTouch <- OnTele2Touch
 	tele2.GetScriptScope().tele_sound <- tele_sound
 	tele2.ConnectOutput("OnStartTouch", "OnStartTouch")
+	
+	Ware_CreateTimer(function(){StartBlocks()}, 0.7)
+}
+
+function StartBlocks()
+{
+	if (RandomInt(0, 9) != 0)
+	{
+		minigame.music = "beepblockskyway"
+		BeepBlock_SetTempo(120.0)
+		bgm_offset = 0.028
+	}
+	else
+	{
+		minigame.music = "beepblockskyway-twelve"
+		BeepBlock_SetTempo(140.0)
+		bgm_offset = -0.097
+	}
+	Ware_PlayMinigameMusic(null, minigame.music)
 	
 	// using return in the timer for each subsequent sequence seems to add up a lot of processing delays over time
 	// instead, we create all the sequences at the start, offset every 2 bars using i
@@ -183,7 +186,7 @@ function BeepBlock_Interrupt()
 	Ware_PlaySoundOnAllClients(hurryup_sound)
 	
 	Ware_CreateTimer(function() {
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MUSIC_VERSION, minigame.music),
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_bossgame/%s.mp3", WARE_MP3_VERSION, minigame.music),
 		1.0, 100 * Ware_GetPitchFactor() * tempo_increase)
 		
 		BeepBlock_SetTempo(tempo * tempo_increase)
@@ -292,5 +295,5 @@ function OnCheckEnd()
 
 function BeepBlock_CheckEnd()
 {
-	return Ware_GetUnpassedPlayers(true).len() == 0
+	return Ware_GetPassedPlayers(false, true).len() == 0
 }

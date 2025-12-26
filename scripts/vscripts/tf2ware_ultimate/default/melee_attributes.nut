@@ -2,7 +2,11 @@
 buffer<-@"// atomizer
 [450] = { ""air dash count"" : 0 },
 // sandman
-[44] = { ""max health additive penalty"" : 0 },
+[44] =
+{
+	""max health additive penalty"" : 0,
+	""mod bat launches balls"" : 0,
+},
 // candy cane
 [317] = 
 { 
@@ -37,6 +41,7 @@ buffer<-@"// atomizer
 { 
 	""honorbound"" : 0
 	""restore health on kill"" : 0
+	""is_a_sword"" : 0
 },
 // equalizer
 [128] = 
@@ -56,27 +61,51 @@ buffer<-@"// atomizer
 // powerjack
 [214] = { ""move speed bonus"" : 1 },	
 // eyelander
-[132] = { ""max health additive penalty"" : 0 },
+[132] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // festive eyelander
-[1082] = { ""max health additive penalty"" : 0 },
+[1082] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // nessie's nine iron
-[482] = { ""max health additive penalty"" : 0 },
+[482] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},
 // HHH axe
-[266] = { ""max health additive penalty"" : 0 },	
+[266] = 
+{
+	""max health additive penalty"" : 0,
+	""is_a_sword"" : 0
+},	
 // scotman's skullcutter
-[172] = { ""move speed penalty"" : 1 },	
+[172] = 
+{
+	""move speed penalty"" : 1,
+	""is_a_sword"" : 0
+},	
 // persian persuader
 [404] = 
 {
 	""maxammo primary reduced"" : 1,
 	""maxammo secondary reduced"" : 1,
+	""is_a_sword"" : 0
 },	
 // claidheamohmor
 [327] = 
 {
 	""dmg taken increased"" : 1,
 	""maxammo secondary reduced"" : 1,
+	""is_a_sword"" : 0
 },	
+// caber
+[307] = { ""single wep deploy time increased"" : 1},
 // killing gloves of boxing
 [43] =
 { 
@@ -131,9 +160,7 @@ buffer<-@"// atomizer
 	""crit does no damage"" : 0,
 	""tickle enemies wielding same weapon"" : 0,
 	""crit forces victim to laugh"" : 0,
-},
-// HHH axe
-[266] = { ""max health additive penalty"" : 0 },		
+},	
 // gunslinger
 [142] = 
 { 
@@ -143,7 +170,12 @@ buffer<-@"// atomizer
 // eureka effect
 [589] = { ""alt fire teleport to spawn"" : 0 },
 // southern hospitality
-[155] = { ""dmg taken from fire increased"" : 1 },	
+[155] = {
+	""dmg taken from fire increased"" : 1,
+	""bleeding duration"": 0
+},	
+// jag
+[329] = { ""fire rate bonus"" : 1.0 },
 // amputator
 [304] =
 { 

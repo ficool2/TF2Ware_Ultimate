@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 4
+buffer<-@"VERSION 8
 adrenaline_shot
 all_in
 barrels
@@ -14,28 +14,35 @@ double_trouble
 extended_round
 fov
 hale
+hunger_update
 inclinity_problem
-//invisible  TODO need a better performance implementation
 low_gravity
 math_only
+merasmus
 mirrored_world
+noclip
 no_movingback
+no_text
 non_stop
 nostalgia
 opposite_day
 random_score
 reversed_text
 simon
+singleplayer
 size_matters
+skates
 skull
+silent_hill
 slow_mo
 speedrun
 squid_game
 sudden_death
+swap_madness
 team_battles
 thirdperson
 time_attack
-two_bosses
 up_down
 wheelchair
-//wipeout 	TODO need to complete the missing stuff first"
+//wipeout 	TODO need to complete the missing stuff first
+"

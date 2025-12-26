@@ -1,4 +1,8 @@
 
+// NEW REWORK IDEA!!
+// This will use the Smash Arena location as a home
+// and have a big TV with 4 sides showing live feed of the minigame (func_monitor)
+
 // TODO: More testing/fixes when players join or leave mid-round
 // TODO: Make spectators more interesting (use actual spectating stuff?)
 // TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging.

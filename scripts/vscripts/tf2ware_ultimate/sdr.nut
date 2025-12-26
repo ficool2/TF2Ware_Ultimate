@@ -1,10 +1,7 @@
 // by ficool2
 
-// bunch of hacks to fix -enablefakeip for a better lobby hosting experience until TF2 fixes them on the C++ side
-// 1) item server connection doesn't work on first map load, restart the map to fix this
-// 2) Create Server dialog sets LAN mode, revert that so internet connections work
-//
-// this also fetches the server IP/password for easy copypasting via !ware_ip
+// this file was originally intended to workaround steam networking bugs, before the TF2 sdk update
+// now it only remains to fetch the server IP/password for easy copypasting via !ware_ip
 // note: this code is intentionally disabled for dedicated servers
 
 if (!("Ware_HostPresent" in this))
@@ -27,13 +24,6 @@ function Ware_SDRUpdate()
 	Ware_HostPresent = true
 	if (!IsDedicatedServer())
 	{	
-		if (!Ware_Plugin && Convars.GetStr("sv_password").len() == 0)
-		{
-			// leaving the server open without the plugin is dangerous
-			// this will generate a random password
-			SendToConsole("sv_password " + GenerateHash(8))
-		}
-		
 		// TODO add these tags on dedicated
 		local tags = Convars.GetStr("sv_tags")
 		if (tags.find("ware") == null)
@@ -65,17 +55,6 @@ function Ware_SDRCheck()
 	SendToConsole(format("con_logfile \"%s\"", logfile))
 	SendToConsole("script Ware_SDRInit()")
 }
-
-function Ware_SDRRestartMap()
-{
-	// safety check: only allow this if SendToConsole changed the parameter
-	if (Convars.GetStr("ai_debug_loners") == "-1")
-	{		
-		printl("[TF2Ware] Restarting map to workaround LAN and -enablefakeip item server bug")
-		SendToConsole("sv_lan 0")
-		SendToConsole("map " + GetMapName())	
-	}
-}
 	
 function Ware_SDRInit()
 {
@@ -101,15 +80,7 @@ function Ware_SDRInit()
 			{
 				local idx
 				if (line.find(prefix_sdr) != null && (idx = line.find(prefix_ip)) != null)
-				{					
-					// use this dummy convar to track across map sessions if the session was restarted already						
-					if (Convars.GetStr("ai_debug_loners") == "0")
-					{
-						// note: this generates a new IP
-						SendToConsole("ai_debug_loners -1")
-						SendToConsole("script Ware_SDRRestartMap()")
-					}
-					
+				{
 					local ip_start = line.slice(idx + prefix_ip.len())
 					Ware_ServerIP = ip_start.slice(0, ip_start.find(" "))
 					Ware_SDR = true

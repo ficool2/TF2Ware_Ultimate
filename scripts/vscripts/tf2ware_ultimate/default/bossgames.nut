@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 0
+buffer<-@"VERSION 2
 beep_block
 cuddly_heavies
 escape_factory
@@ -13,5 +13,8 @@ mercenary_kart
 monoculus
 obstacle_course
 slender
+smash_arena
 typing
-wild_west"
+wega_challenge
+wild_west
+"

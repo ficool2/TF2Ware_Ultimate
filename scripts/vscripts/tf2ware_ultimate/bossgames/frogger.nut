@@ -127,6 +127,20 @@ function SetupMap()
 	EntityOutputs.AddOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
 	EntityOutputs.AddOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100", 0.0, -1)
 	EntityOutputs.AddOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500", 0.0, -1)
+
+	foreach(box in [box1, box2])
+	{
+		box.ValidateScriptScope()
+
+		box.GetScriptScope().OnClose <- OnBoxClose
+		box.ConnectOutput("OnClose", "OnClose")
+
+		box.GetScriptScope().OnOpen <- OnBoxOpen
+		box.ConnectOutput("OnOpen", "OnOpen")
+	}
+	box1.GetScriptScope().hurt <- FindByName(null, "frogger_hurt2")
+	box2.GetScriptScope().hurt <- FindByName(null, "frogger_hurt3")
+
 	MarkForPurge(box1)
 	MarkForPurge(box2)
 }
@@ -169,6 +183,10 @@ function CleanupMap()
 	EntityOutputs.RemoveOutput(box1, "OnFullyOpen", "!self", "SetSpeed", "500")
 	EntityOutputs.RemoveOutput(box2, "OnFullyClosed", "!self", "SetSpeed", "100")
 	EntityOutputs.RemoveOutput(box2, "OnFullyOpen", "!self", "SetSpeed", "500")
+	box1.DisconnectOutput("OnOpen", "OnOpen")
+	box1.DisconnectOutput("OnClose", "OnClose")
+	box2.DisconnectOutput("OnOpen", "OnOpen")
+	box2.DisconnectOutput("OnClose", "OnClose")
 }
 
 function OpenDoors()
@@ -210,6 +228,16 @@ function OnUpdate()
 	}
 }
 
+function OnBoxClose()
+{
+	EntityAcceptInput(hurt, "Enable")
+}
+
+function OnBoxOpen()
+{
+	EntityAcceptInput(hurt, "Disable")
+}
+
 function OnEnd()
 {
 	CleanupMap()
@@ -226,5 +254,5 @@ function OnCleanup()
 
 function OnCheckEnd()
 {
-	return Ware_GetUnpassedPlayers(true).len() == 0
+	return Ware_GetPassedPlayers(false, true).len() == 0
 }

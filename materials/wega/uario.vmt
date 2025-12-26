@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "wega/uario"
+	"$alphatest"	"1"
+	"$spriteorientation" "vp_parallel"	
+	"$spriterendermode" 5
+}

@@ -1,6 +1,0 @@
-"UnlitGeneric"
-{
-	"$basetexture" "hud/tf2ware_ultimate/__logo_text"
-	"$basetexturetransform" "center .5 -0.0 scale 2.0 1.2 rotate 0 translate 0 0"
-	"$translucent" 1
-}

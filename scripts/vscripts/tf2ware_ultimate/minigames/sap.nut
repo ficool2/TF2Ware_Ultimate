@@ -17,6 +17,7 @@ minigame <- Ware_MinigameData
 	min_players    = 2
 	// allow damage so sappers work, but prevent player damage
 	allow_damage   = true
+	allow_building = true
 	friendly_fire  = false
 })
 

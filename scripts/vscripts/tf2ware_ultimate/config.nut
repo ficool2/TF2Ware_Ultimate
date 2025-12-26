@@ -1,15 +1,19 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 3
-const WARE_BOSSGAME_VERSION     = 0
-const WARE_SPECIALROUND_VERSION = 4
-const WARE_THEME_VERSION        = 2
+const WARE_MINIGAME_VERSION     = 8
+const WARE_BOSSGAME_VERSION     = 2
+const WARE_SPECIALROUND_VERSION = 8
+const WARE_THEME_VERSION        = 4
 
-// everytime music is changed AND the map is *publicly* updated
-// this must be incremented to prevent caching errors
-const WARE_MUSIC_VERSION = 3
+// everytime any mp3 sound is changed AND the map is *publicly* updated
+// this must be incremented to prevent mp3 caching errors due to an engine bug
+// DEPRECATED: this is bumped automatically when uploading to workshop
+// a workaround for this issue has since been found, which involves not compressing mp3 files via a hacked bsppack
+// too late for us though, we need to preserve backwards compatibility with clients who have the bugged sound cache
+// see https://github.com/ficool2/bsphack
+const WARE_MP3_VERSION = 3
 
 // keep in sync with sourcemod plugin
-WARE_PLUGIN_VERSION <- [1, 2, 7]
+WARE_PLUGIN_VERSION <- [1, 4, 0]
 
 Ware_CfgPath <- "tf2ware_ultimate/%s.cfg"
 
@@ -61,6 +65,7 @@ function Ware_LoadConfigSettings()
 		points_minigame        = "Ware_PointsMinigame"
 		points_bossgame        = "Ware_PointsBossgame"
 		bonus_points           = "Ware_BonusPoints"
+		// removed: max_miniweight         = "Ware_MaxMinigameWeight"
 	}
 	
 	local file = Ware_LoadConfigFile("settings")
@@ -129,6 +134,33 @@ function Ware_LoadConfigMinigames()
 					AppendElementIfUnique(lines, "wanted")
 					AppendElementIfUnique(lines, "pickup_can")
 					break
+				case 4:
+					RemoveElementIfFound(lines, "heavy_medic")
+					AppendElementIfUnique(lines, "buff")
+					AppendElementIfUnique(lines, "cap")
+					AppendElementIfUnique(lines, "dove")
+					AppendElementIfUnique(lines, "floppy")
+					AppendElementIfUnique(lines, "intel")
+					AppendElementIfUnique(lines, "needle_jump")
+					AppendElementIfUnique(lines, "time_jump")		
+					AppendElementIfUnique(lines, "uber")
+					AppendElementIfUnique(lines, "upgrade")			
+					break
+				case 5:
+					AppendElementIfUnique(lines, "spectate")
+					AppendElementIfUnique(lines, "trampoline")
+					break
+				case 6:
+					// this caused edict issues due to busted valve upgrade code
+					// I'm not bothered to try fix this anymore
+					RemoveElementIfFound(lines, "upgrade")
+					break
+				case 7:
+					AppendElementIfUnique(lines, "market_garden")
+					break
+				case 8:
+					AppendElementIfUnique(lines, "pirate_war")
+					break					
 			}
 		}
 	})
@@ -142,7 +174,16 @@ function Ware_LoadConfigBossgames()
 	{
 		for (local v = version + 1; v <= latest_version; v++)
 		{
-			// nothing yet...
+			switch (v)
+			{
+				case 1:
+					// we winga
+					AppendElementIfUnique(lines, "wega_challenge")
+					break
+				case 2:
+					AppendElementIfUnique(lines, "smash_arena")
+					break			
+			}
 		}
 	})
 }
@@ -176,8 +217,24 @@ function Ware_LoadConfigSpecialRounds()
 					AppendElementIfUnique(lines, "cramped_quarters")
 					// v3 had the wrong name
 					local idx = lines.find("speed_run")
-					if (idx != null) lines[idx] = "speedrun"		
+					if (idx != null) lines[idx] = "speedrun"
 					break
+				case 5:
+					AppendElementIfUnique(lines, "hunger_update")
+					AppendElementIfUnique(lines, "merasmus")
+					AppendElementIfUnique(lines, "singleplayer")
+					AppendElementIfUnique(lines, "swap_madness")
+					break
+				case 6:
+					AppendElementIfUnique(lines, "no_text")
+					break
+				case 7:
+					AppendElementIfUnique(lines, "silent_hill")
+					AppendElementIfUnique(lines, "skates")
+					break	
+				case 8:
+					AppendElementIfUnique(lines, "noclip")
+					break					
 			}
 		}
 	})
@@ -294,6 +351,15 @@ function Ware_LoadConfigThemes()
 					WriteTheme("wii_tinywario")
 					WriteTheme("switch_moveit_wario")
 					break
+				case 3:
+					WriteTheme("mw_pandora")
+					WriteTheme("mw_starlight")
+					WriteTheme("switch_moveit_cricket")
+					WriteTheme("switch_moveit_jimmyt")
+					break
+				case 4:
+					WriteTheme("mw")
+					break
 			}
 		}
 		
@@ -329,6 +395,7 @@ function Ware_LoadConfig()
 	Ware_SpecialRounds     <- []
 	Ware_FakeSpecialRounds <- []
 	Ware_GameOverlays      <- []
+	Ware_Skyboxes          <- []
 	
 	Ware_LoadConfigSettings()
 	Ware_LoadConfigMinigames()
@@ -336,6 +403,7 @@ function Ware_LoadConfig()
 	Ware_LoadConfigSpecialRounds()
 	Ware_LoadConfigList("fake_specialrounds", Ware_FakeSpecialRounds)	
 	Ware_LoadConfigList("overlays", Ware_GameOverlays)	
+	Ware_LoadConfigList("skyboxes", Ware_Skyboxes)
 	Ware_LoadConfigThemes()
 	Ware_LoadConfigMeleeAttributes()
 }

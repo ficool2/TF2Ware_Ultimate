@@ -42,6 +42,18 @@ function OnPrecache()
 	PrecacheParticle(gold_particle)
 }
 
+function OnTeleport(players)
+{
+	local center = Ware_MinigameLocation.center * 1.0
+	center.y = 11200
+	
+	Ware_TeleportPlayersRow(players,
+		center,
+		QAngle(0, 90, 0),
+		900.0,
+		64.0, 64.0)
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_HEAVYWEAPONS)
@@ -70,7 +82,7 @@ function OnStart()
 	
 	local lighting_origin = Ware_SpawnEntity("info_teleport_destination", 
 	{ 
-		origin = Ware_MinigameLocation.center + Vector(0, 500, 256)
+		origin = Ware_MinigameLocation.center + Vector(0, -200, 256)
 	})
 	
 	local box_angles = 
@@ -144,6 +156,7 @@ function OnTakeDamage(params)
 		{
 			if (victim.IsEFlagSet(EFL_USER))
 			{			
+				Ware_PassPlayer(attacker, true)
 				Ware_GiveBonusPoints(attacker)
 				
 				DispatchParticleEffect(break_particle, victim.GetOrigin(), Vector(90, 0, 0))

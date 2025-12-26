@@ -21,7 +21,7 @@ mexican_standoff <- false
 game_over <- false
 shootout <- false
 music <- "staredown"
-sound_standoff <- "tf2ware_ultimate/mexican_standoff.mp3"
+sound_standoff <- Ware_FixupMP3("tf2ware_ultimate/v%d/mexican_standoff.mp3")
 sound_bell <- "player/taunt_sfx_bell_single.wav"
 sound_winner <- "player/taunt_bell.wav"
 

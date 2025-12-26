@@ -4,8 +4,8 @@ minigame <- Ware_MinigameData
 	author         = ["TonyBaretta", "ficool2"]
 	description    = 
 	[
-		"You are the Shark. Kill 3 players!"
 		"Get on the beach and avoid the Shark!"
+		"You are the Shark. Kill 3 players!"
 	]
 	duration       = 23.5
 	end_delay      = 1.0

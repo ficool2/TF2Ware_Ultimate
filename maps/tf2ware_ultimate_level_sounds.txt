@@ -1,5 +1,86 @@
 // - vanilla overrides
 
+CaptureFlag.EnemyStolen
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyDropped
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyCaptured
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.EnemyReturned
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamStolen
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamDropped
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamCaptured
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.TeamReturned
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
+CaptureFlag.FlagSpawn
+{
+	channel		CHAN_VOICE2
+	volume		0
+	pitch		0
+	soundlevel	SNDLVL_NONE
+	wave		common/null.wav
+}
+
 Crocs.JumpOut
 {
 	channel		CHAN_STATIC
@@ -29,20 +110,76 @@ Crocs.JumpBite
 
 BaseCombatCharacter.AmmoPickup
 {
-	channel			CHAN_AUTO
-	volume			0.0
-	pitch			0
-	soundlevel		SNDLVL_60dB
-	wave			common/null.wav
+	channel		CHAN_AUTO
+	volume		0.0
+	pitch		0
+	soundlevel	SNDLVL_60dB
+	wave		common/null.wav
 }
 
 TFPlayer.MedicChargedDeath
 {
 	channel		CHAN_STATIC
-	volume		0.6
+	volume		0.5
 	soundlevel	SNDLVL_60dB
 	pitch		PITCH_NORM
 	wave		player/medic_charged_death.wav
+}
+
+Player.ResistanceLight
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90,110
+
+	rndwave
+	{
+		wave	)player/resistance_light1.wav
+		wave	)player/resistance_light2.wav
+		wave	)player/resistance_light3.wav
+		wave	)player/resistance_light4.wav
+	}
+}
+
+Player.ResistanceMedium
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90,110
+
+	rndwave
+	{
+		wave	)player/resistance_medium1.wav
+		wave	)player/resistance_medium2.wav
+		wave	)player/resistance_medium3.wav
+		wave	)player/resistance_medium4.wav
+	}
+}
+
+Player.ResistanceHeavy
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_75dB	
+	pitch		90,110
+
+	rndwave
+	{
+		wave	)player/resistance_heavy1.wav
+		wave	)player/resistance_heavy2.wav
+		wave	)player/resistance_heavy3.wav
+		wave	)player/resistance_heavy4.wav
+	}
+}
+
+Medic.AutoCallerAnnounce
+{
+	channel		CHAN_VOICE
+	volume		0.6
+	soundlevel	SNDLVL_60dB
+	wave		)ui/medic_alert.wav
 }
 
 Weapon_RocketPack.BoostersExtend
@@ -81,20 +218,44 @@ DisciplineDevice.PowerDown
 	wave		common/null.wav
 }
 
-WeaponMedigun_Vaccinator.Charged_tier_01
+WeaponMedigun.Charged
 {
 	channel		CHAN_STATIC
 	soundlevel	SNDLVL_60dB
 	volume		0.5
+	wave		weapons/medigun_charged.wav
+}
+
+WeaponMedigun_Vaccinator.Charged_tier_01
+{
+	channel		CHAN_STATIC
+	soundlevel	SNDLVL_60dB
+	volume		0.3
 	wave		)weapons/vaccinator_charge_tier_01.wav
 }
 
 WeaponMedigun_Vaccinator.InvulnerableOn
 {
 	channel		CHAN_WEAPON
-	volume		0.6
+	volume		0.3
 	soundlevel 	SNDLVL_60dB
 	wave		)player/invuln_on_vaccinator.wav
+}
+
+WeaponMedigun_Vaccinator.InvulnerableOff
+{
+	channel		CHAN_WEAPON
+	volume		0.3
+	soundlevel  SNDLVL_60dB
+	wave		)player\invuln_off_vaccinator.wav
+}
+
+WeaponMedigun_Vaccinator.Toggle
+{
+	channel		CHAN_STATIC
+	volume		0.5
+	soundlevel  SNDLVL_60dB
+	wave		)weapons\vaccinator_toggle.wav
 }
 
 WeaponGrapplingHook.ImpactDefault
@@ -308,7 +469,7 @@ TF2Ware_Ultimate.Pass
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_70dB
-	wave			tf2ware_ultimate/pass.mp3
+	wave			tf2ware_ultimate/v3/pass.mp3
 }
 
 TF2Ware_Ultimate.PassMe
@@ -317,7 +478,7 @@ TF2Ware_Ultimate.PassMe
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/pass_me.mp3
+	wave			tf2ware_ultimate/v3/pass_me.mp3
 }
 
 TF2Ware_Ultimate.Hadoken
@@ -326,7 +487,7 @@ TF2Ware_Ultimate.Hadoken
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_80dB
-	wave			tf2ware_ultimate/kenryu.mp3
+	wave			tf2ware_ultimate/v3/kenryu.mp3
 }
 
 TF2Ware_Ultimate.Sharkbite
@@ -344,7 +505,7 @@ TF2Ware_Ultimate.BalloonPop
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_90dB
-	wave			tf2ware_ultimate/balloon.mp3
+	wave			tf2ware_ultimate/v3/balloon.mp3
 }
 
 TF2Ware_Ultimate.GeavyLove
@@ -355,7 +516,7 @@ TF2Ware_Ultimate.GeavyLove
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave	tf2ware_ultimate/heavy_ilu.mp3
+		wave	tf2ware_ultimate/v3/heavy_ilu.mp3
 		wave	vo/heavy_specialcompleted08.mp3
 		wave	vo/heavy_award04.mp3	
 	}
@@ -415,7 +576,7 @@ TF2Ware_Ultimate.SlenderIntro
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/slender_intro.mp3
+	wave			tf2ware_ultimate/v3/slender_intro.mp3
 }
 
 TF2Ware_Ultimate.SlenderPage
@@ -433,7 +594,7 @@ TF2Ware_Ultimate.FroggerHop
 	volume			0.5
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_60dB
-	wave			tf2ware_ultimate/frogger_hop.mp3
+	wave			tf2ware_ultimate/v3/frogger_hop.mp3
 }
 
 TF2Ware_Ultimate.FroggerSquash
@@ -442,7 +603,7 @@ TF2Ware_Ultimate.FroggerSquash
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_80dB
-	wave			tf2ware_ultimate/frogger_squash.mp3
+	wave			tf2ware_ultimate/v3/frogger_squash.mp3
 }
 
 TF2Ware_Ultimate.KartHorn
@@ -453,13 +614,13 @@ TF2Ware_Ultimate.KartHorn
 	soundlevel		SNDLVL_80dB
 	rndwave
 	{
-		wave	 tf2ware_ultimate/kart_horns/beepbeep.mp3
-		wave	 tf2ware_ultimate/kart_horns/hazzard.mp3
-		wave	 tf2ware_ultimate/kart_horns/horn1.mp3
-		wave	 tf2ware_ultimate/kart_horns/horn2.mp3
-		wave	 tf2ware_ultimate/kart_horns/horn3.mp3
-		wave	 tf2ware_ultimate/kart_horns/horn4.mp3
-		wave	 tf2ware_ultimate/kart_horns/horn5.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/beepbeep.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/hazzard.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/horn1.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/horn2.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/horn3.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/horn4.mp3
+		wave	 tf2ware_ultimate/v3/kart_horns/horn5.mp3
 	}
 }
 
@@ -480,10 +641,10 @@ TF2Ware_Ultimate.WitchCry
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave	 tf2ware_ultimate/witch/cry_1.mp3
-		wave	 tf2ware_ultimate/witch/cry_2.mp3
-		wave	 tf2ware_ultimate/witch/cry_3.mp3
-		wave	 tf2ware_ultimate/witch/cry_4.mp3
+		wave	 tf2ware_ultimate/v3/witch/cry_1.mp3
+		wave	 tf2ware_ultimate/v3/witch/cry_2.mp3
+		wave	 tf2ware_ultimate/v3/witch/cry_3.mp3
+		wave	 tf2ware_ultimate/v3/witch/cry_4.mp3
 	}
 }
 
@@ -495,8 +656,8 @@ TF2Ware_Ultimate.WitchScream
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave	 tf2ware_ultimate/witch/scream_1.mp3
-		wave	 tf2ware_ultimate/witch/scream_2.mp3
+		wave	 tf2ware_ultimate/v3/witch/scream_1.mp3
+		wave	 tf2ware_ultimate/v3/witch/scream_2.mp3
 	}
 }
 
@@ -508,8 +669,8 @@ TF2Ware_Ultimate.WitchShriek
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave	 tf2ware_ultimate/witch/shriek_1.mp3
-		wave	 tf2ware_ultimate/witch/shriek_2.mp3
+		wave	 tf2ware_ultimate/v3/witch/shriek_1.mp3
+		wave	 tf2ware_ultimate/v3/witch/shriek_2.mp3
 	}
 }
 
@@ -537,7 +698,7 @@ TF2Ware_Ultimate.TypingBossStart
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/bossstart.mp3
+	wave			tf2ware_ultimate/v3/typing/bossstart.mp3
 }
 
 TF2Ware_Ultimate.TypingDescentBegin
@@ -546,7 +707,7 @@ TF2Ware_Ultimate.TypingDescentBegin
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/descentbegin.mp3
+	wave			tf2ware_ultimate/v3/typing/descentbegin.mp3
 }
 
 TF2Ware_Ultimate.TypingSpiralInward
@@ -555,7 +716,7 @@ TF2Ware_Ultimate.TypingSpiralInward
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/spiralinward.mp3
+	wave			tf2ware_ultimate/v3/typing/spiralinward.mp3
 }
 
 TF2Ware_Ultimate.TypingBadEnd
@@ -564,7 +725,7 @@ TF2Ware_Ultimate.TypingBadEnd
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/badend.mp3
+	wave			tf2ware_ultimate/v3/typing/badend.mp3
 }
 
 TF2Ware_Ultimate.TypingGoodEnd
@@ -573,7 +734,7 @@ TF2Ware_Ultimate.TypingGoodEnd
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/goodend.mp3
+	wave			tf2ware_ultimate/v3/typing/goodend.mp3
 }
 
 TF2Ware_Ultimate.TypingLevelUp
@@ -582,7 +743,7 @@ TF2Ware_Ultimate.TypingLevelUp
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/levelup.mp3
+	wave			tf2ware_ultimate/v3/typing/levelup.mp3
 }
 
 TF2Ware_Ultimate.TypingDifficultyUp
@@ -600,7 +761,7 @@ TF2Ware_Ultimate.TypingOverviewStart
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/overviewstart.mp3
+	wave			tf2ware_ultimate/v3/typing/overviewstart.mp3
 }
 
 TF2Ware_Ultimate.TypingWordFail
@@ -611,8 +772,8 @@ TF2Ware_Ultimate.TypingWordFail
 	soundlevel		SNDLVL_NONE
 	rndwave
 	{
-		wave		tf2ware_ultimate/typing/wordfail_1.mp3
-		wave		tf2ware_ultimate/typing/wordfail_2.mp3
+		wave		tf2ware_ultimate/v3/typing/wordfail_1.mp3
+		wave		tf2ware_ultimate/v3/typing/wordfail_2.mp3
 	}
 }
 
@@ -622,7 +783,7 @@ TF2Ware_Ultimate.TypingWordStart
 	volume			VOL_NORM
 	pitch			PITCH_NORM
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/typingstart.mp3
+	wave			tf2ware_ultimate/v3/typing/typingstart.mp3
 }
 
 TF2Ware_Ultimate.TypingWordSuccess
@@ -633,10 +794,10 @@ TF2Ware_Ultimate.TypingWordSuccess
 	soundlevel		SNDLVL_NONE
 	rndwave
 	{
-		wave		tf2ware_ultimate/typing/wordsuccess_pinch1.mp3
-		wave		tf2ware_ultimate/typing/wordsuccess_pinch2.mp3
-		wave		tf2ware_ultimate/typing/wordsuccess_pinch3.mp3
-		wave		tf2ware_ultimate/typing/wordsuccess_pinch4.mp3
+		wave		tf2ware_ultimate/v3/typing/wordsuccess_pinch1.mp3
+		wave		tf2ware_ultimate/v3/typing/wordsuccess_pinch2.mp3
+		wave		tf2ware_ultimate/v3/typing/wordsuccess_pinch3.mp3
+		wave		tf2ware_ultimate/v3/typing/wordsuccess_pinch4.mp3
 	}
 }
 
@@ -646,7 +807,7 @@ TF2Ware_Ultimate.TypingWordRelax
 	volume			VOL_NORM
 	pitch			95,105
 	soundlevel		SNDLVL_NONE
-	wave			tf2ware_ultimate/typing/wordsuccess_relax.mp3
+	wave			tf2ware_ultimate/v3/typing/wordsuccess_relax.mp3
 }
 
 TF2Ware_Ultimate.HaleStart
@@ -657,11 +818,11 @@ TF2Ware_Ultimate.HaleStart
 	soundlevel		SNDLVL_NONE
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_start5.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_start1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_start2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_start3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_start4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_start5.mp3
 	}
 }
 
@@ -673,10 +834,10 @@ TF2Ware_Ultimate.HaleJump
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_jump_1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_jump_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_jump1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_jump2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_jump_1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_jump_2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_jump1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_jump2.mp3
 	}
 }
 
@@ -688,10 +849,10 @@ TF2Ware_Ultimate.HaleRage
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_rage4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_rage1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_rage2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_rage3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_rage4.mp3
 	}
 }
 
@@ -703,35 +864,35 @@ TF2Ware_Ultimate.HaleRamble
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_demo.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_engie_1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_engie_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_heavy.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_scout.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_spie.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_toy.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kill_w_and_m1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kspree_1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_kspree_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_last.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_132_stub_4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_eggineer1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_eggineer2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_medic.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_sniper1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_sniper2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_spy1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_kill_spy2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_spree5.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_demo.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_engie_1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_engie_2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_heavy.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_scout.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_spie.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_toy.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kill_w_and_m1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kspree_1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_kspree_2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_last.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_stub_1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_stub_2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_stub_3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_132_stub_4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_eggineer1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_eggineer2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_medic.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_sniper1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_sniper2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_spy1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_kill_spy2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_spree1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_spree2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_spree3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_spree4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_spree5.mp3
 	}
 }
 
@@ -743,17 +904,17 @@ TF2Ware_Ultimate.HaleDeath
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_fail3.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman4.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman5.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman5.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_fail1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_fail1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_fail2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_fail3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_fail3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman4.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman5.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman5.mp3
 	}
 }
 
@@ -765,10 +926,10 @@ TF2Ware_Ultimate.HaleWin
 	soundlevel		SNDLVL_90dB
 	rndwave
 	{
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_win1.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_win2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman2.mp3
-		wave		tf2ware_ultimate/saxton_hale/saxton_hale_responce_lastman3.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_win1.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_win2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman2.mp3
+		wave		tf2ware_ultimate/v3/saxton_hale/saxton_hale_responce_lastman3.mp3
 	}
 }
 

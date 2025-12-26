@@ -26,7 +26,6 @@ flamethrower_particle <- "flamethrower"
 
 function OnStart()
 {
-	local resist = RandomInt(0,2)
 	foreach (player in Ware_MinigamePlayers)
 	{
 		Ware_SetPlayerClass(player, TF_CLASS_MEDIC)
@@ -37,8 +36,6 @@ function OnStart()
 
 		//Doesn't work
 		//SetPropFloat(weapon, "m_flNextPrimaryAttack", 1e100)
-
-		Ware_CreateTimer(@() SetPropInt(weapon, "m_nChargeResistType", resist), 0.05)
 	}
 	
 	local pos = Ware_MinigameLocation.center
@@ -54,7 +51,7 @@ function OnStart()
 	killicon_dummy = Ware_CreateEntity("handle_dummy")
 
 	Ware_ShowAnnotation(pos + Vector(0, 0, 150), "Resist Me!")
-	Ware_ChatPrint(null, "{color}HINT:{color} Press R to swap resistance type", COLOR_GREEN, TF_COLOR_DEFAULT)
+	Ware_ChatPrint(null, "{color}HINT:{color} Press R to swap resistance type and right click to activate!", COLOR_GREEN, TF_COLOR_DEFAULT)
 	
 	local name = class_names[class_idx] + format(".Taunts%02d", RandomInt(1,19))
 

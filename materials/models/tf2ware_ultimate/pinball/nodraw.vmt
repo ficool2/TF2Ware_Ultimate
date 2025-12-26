@@ -1,4 +1,5 @@
 UnlitGeneric
 {
 	$no_draw 1
+	$model 1
 }

@@ -34,7 +34,10 @@ MISSION_SLENDER  <- 1
 fog <- null
 slenders <- []
 pages <- []
+
 debug_pages <- false
+debug_page_ent <- null
+debug_pressed <- false
 
 sound_intro <- "TF2Ware_Ultimate.SlenderIntro"
 sound_page <- "TF2Ware_Ultimate.SlenderPage"
@@ -43,44 +46,68 @@ page_model <- "models/slender/sheet.mdl"
 
 local pages_info =
 [
-	[
+	[ // 0
 		[Vector(-3582, 14, -195),  272.0],
 		[Vector(-3552, 447, -195), 270.0],
 		[Vector(-3177, 423, -139), 180.0],
+		[Vector(-3273, -182, -200), 90.0],
+		[Vector(-3330, 165, -201), 180.0],
 	],
-	[
+	[ // 1
 		[Vector(-2618, -710, -239), 180.0],
 		[Vector(-3291, -210, -195), 180.0],
-		[Vector(-2446, -436, -288), 180.0],
+		[Vector(-2489, -436, -288), 180.0],
+		[Vector(-3053, -428, -199), 90.0 ],
+		[Vector(-3673, -498, -203), 270.0],
+		[Vector(-2572, -182, -203), 90.0 ],
 	],
-	[
+	[ // 2
 		[Vector(-2276, -297, -203), 270.0],
 		[Vector(-2033, 323, -350),  180.0],
 		[Vector(-2119, 756, -370),  0.0  ],
+		[Vector(-2127, 42, -406),   90.0 ],
+		[Vector(-1803, 1384, -396), 225.0],
+		[Vector(-1602, 658, -394),  180.0],
 	],
-	[
+	[ // 3
 		[Vector(-3158, 522, 77),    0.0  ],
 		[Vector(-2490, -104, 193),  180.0],
 		[Vector(-2495, 632, 35),    0.0  ],
+		[Vector(-3158, 184, -78),   0.0  ],
+		[Vector(-2885, 798, -207),  270.0],
+		[Vector(-2490, 148, 69),    180.0],
+		[Vector(-2426, 446, 63),    270.0],
+		[Vector(-3062, 84, 135),    0.0  ],
+		[Vector(-2934, 168, -209),  0.0  ],
 	],
-	[
+	[ // 4
 		[Vector(-1982, 118, 21),    0.0  ],
 		[Vector(-2010, 84, 91),     180.0],
 		[Vector(-2072, 466, 89),    90.0 ],
+		[Vector(-1390, 466, 71),    90.0 ],
 	],
-	[
-		[Vector(-520, 850, -143),   90.0  ],
+	[ // 5
+		[Vector(-520, 850, -143),   90.0 ],
 		[Vector(-88, 908, 77),      185.0],
 		[Vector(-70, 580, 67),      6.0  ],
+		[Vector(-135, 718, 65),     270.0],
+		[Vector(-817, 466, 74),     90.0 ],
+		[Vector(-1516, 718, 69),    270.0],
 	],
-	[
+	[ // 6
 		[Vector(-906, 56, -209),    0.0  ],
 		[Vector(642, 14, -3),       180.0],
 		[Vector(-646, 656, -205),   271.0],
+		[Vector(-42, -262, -201),   90.0 ],
+		[Vector(476, 254, -201),    270.0],
 	],
-	[
+	[ // 7
 		[Vector(-952, -362, -213),  276.0],
 		[Vector(-1419, -778, -199), 4.0  ],
+		[Vector(-1204, -838, -238), 90.0 ],
+		[Vector(-1374, -192, -207), 0.0  ],
+		[Vector(-399, -582, -97),   90.0 ],
+		[Vector(-1576, -362, -175), 270.0],
 	],
 ]
 
@@ -108,8 +135,9 @@ function OnStart()
 		fogcolor = "0 0 0",
 		fogcolor2 = "20 20 20",
 		fogstart = 100,
-		fogend = 384,
-		fogmaxdensity = 1.0,
+		fogend = 484,
+		fogmaxdensity = 0.999,
+		fogRadial = true,
 	})
 	
 	foreach (player in Ware_MinigamePlayers)
@@ -132,27 +160,31 @@ function OnStart()
 			Ware_StripPlayer(player, true)
 			Ware_SetPlayerTeam(player, TF_TEAM_RED)
 			Ware_PassPlayer(player, false)
-			SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
+			if (!debug_pages)
+				SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 			Ware_GetPlayerMiniData(player).pages_collected <- 0
 		}
 	}
 	
 	foreach (i, group in pages_info)
 	{
-		local info = RandomElement(group)
-		local page = Ware_SpawnEntity("prop_dynamic_override",
+		local infos = debug_pages ? group : [RandomElement(group)]
+		foreach (j, info in infos)
 		{
-			origin  = Ware_MinigameLocation.center + info[0]
-			angles  = QAngle(0, info[1], 0)
-			model   = page_model
-			solid   = SOLID_BBOX
-			skin    = i
-			teamnum = TF_TEAM_RED
-			disableshadows = true
-		})
-		page.SetTeam(TF_TEAM_RED) // glow only shows to survivors
-		page.SetModelScale(1.1, 0.0) // dont't scale collision
-		pages.append(page)
+			local page = Ware_SpawnEntity("prop_dynamic_override",
+			{
+				origin  = Ware_MinigameLocation.center + info[0]
+				angles  = QAngle(0, info[1], 0)
+				model   = page_model
+				solid   = SOLID_BBOX
+				skin    = i
+				teamnum = TF_TEAM_RED
+				disableshadows = true
+			})
+			page.SetTeam(TF_TEAM_RED) // glow only shows to survivors
+			page.SetModelScale(1.1, 0.0) // dont't scale collision
+			pages.append(page)
+		}
 	}
 	
 	Ware_PlaySoundOnAllClients(sound_intro)
@@ -232,15 +264,64 @@ function OnUpdate()
 	
 	if (debug_pages)
 	{
-		foreach (page in pages)
+		Debug()
+	}
+}
+
+function Debug()
+{	
+	local host = GetListenServerHost()
+	if (host)
+	{
+		if (!debug_page_ent)
 		{
-			if (page.IsValid())
+			debug_page_ent = Ware_SpawnEntity("prop_dynamic_override",
 			{
-				DebugDrawText(
-					page.GetOrigin(), 
-					(page.GetOrigin() - Ware_MinigameLocation.center).tostring(), 
-					false, 0.03)
+				model          = page_model
+				skin           = 0
+				teamnum        = TF_TEAM_RED
+				disableshadows = true
+			})
+		}
+		
+		local trace = 
+		{
+			start      = host.EyePosition()
+			end        = host.EyePosition() + host.EyeAngles().Forward() * 1024
+			mask       = MASK_PLAYERSOLID_BRUSHONLY
+			ignore     = host
+		}	
+		TraceLineEx(trace)
+		
+		if (trace.hit)
+		{
+			local normal = trace.plane_normal
+			local page_origin = VectorSnap(trace.endpos + normal * 2.0, 1.0)
+			local page_angles = VectorAngles(normal)
+			debug_page_ent.SetAbsOrigin(page_origin)
+			debug_page_ent.SetAbsAngles(page_angles)
+			
+			local pressed = GetPropInt(host, "m_nButtons") & IN_RELOAD
+			if (pressed)
+			{
+				if (!debug_pressed)
+				{
+					local relative_origin = page_origin - Ware_MinigameLocation.center
+					printf("[Vector(%g, %g, %g), %g],\n",
+						relative_origin.x, relative_origin.y, relative_origin.z, page_angles.y)
+				}
 			}
+			
+			debug_pressed = pressed
+		}
+	}		
+		
+	foreach (i, page in pages)
+	{
+		if (page.IsValid())
+		{
+			local text = format("%d - %s", page.GetSkin(), (page.GetOrigin() - Ware_MinigameLocation.center).ToKVString())			
+			DebugDrawText(page.GetOrigin(), text, false, 0.03)
 		}
 	}
 }

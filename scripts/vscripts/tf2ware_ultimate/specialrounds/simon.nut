@@ -1,5 +1,27 @@
 
 simon <- RandomBool()
+friends <- [
+	"Salmon"
+	"Samuel"
+	"Simothy"
+	"Samantha"
+	"Sam"
+	"Cerberus"
+	"Simone"
+	"Simeon"
+	"Samson"
+	"Sinéad"
+	"SCP-079"
+	"Silvester"
+	"Sensal"
+	"Soldine"
+	"Saxton Hale"
+	"Scout"
+	"Soldier"
+	"Sniper"
+	"Spy"
+	"Sebastian"
+]
 
 special_round <- Ware_SpecialRoundData
 ({
@@ -31,8 +53,20 @@ function OnBeginIntermission(is_boss)
 
 function OnMinigameStart()
 {
-	local text = (simon ? "Simon" : "Someone") + " Says:"
+	local someone = GetSomeone()
+	local text = (simon ? "Simon" : someone) + " Says:"
 	Ware_ShowText(Ware_Players, CHANNEL_MISC, text, Ware_GetMinigameRemainingTime(), "255 255 255", -1.0, 0.13)
+	
+	local description = Ware_Minigame.description
+	local is_array = typeof(description) == "array"
+	local desc_len = Ware_Minigame.description.len()
+	foreach(player in Ware_MinigamePlayers)
+	{
+		if(is_array)
+			description = Ware_Minigame.description[Min(Ware_GetPlayerMission(player), desc_len - 1)]
+		
+		Ware_ChatPrint(player, "{color}{str} {color}{str}", COLOR_GREEN, text, TF_COLOR_DEFAULT, description)
+	}
 }
 
 function OnCalculateScore(data)
@@ -59,4 +93,12 @@ function OnCalculateScore(data)
 			description = description[Min(data.mission, description.len() - 1)]
 		Ware_ChatPrint(player, text, TF_COLOR_DEFAULT, TF_COLOR_RED, description, TF_COLOR_DEFAULT, COLOR_GREEN, TF_COLOR_DEFAULT)
 	}
+}
+
+function GetSomeone()
+{
+	if(RandomInt(0,2) != 0)
+		return "Someone"
+	
+	return RandomElement(friends)
 }

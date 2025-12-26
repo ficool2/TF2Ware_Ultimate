@@ -125,7 +125,7 @@ entity
 	"fadescale" "1"
 	"lightmapresolutionx" "32"
 	"lightmapresolutiony" "32"
-	"model" "models/tf2ware_ultimate/pinball/boost_0.mdl"
+	"model" "models/tf2ware_ultimate/pinball/panel_0.mdl"
 	"solid" "6"
 	"origin" "9425.51 4125 -3631.76"
 	editor
@@ -145,7 +145,7 @@ entity
 	"fadescale" "1"
 	"lightmapresolutionx" "32"
 	"lightmapresolutiony" "32"
-	"model" "models/tf2ware_ultimate/pinball/boost_1.mdl"
+	"model" "models/tf2ware_ultimate/pinball/panel_1.mdl"
 	"solid" "6"
 	"origin" "-10496.3 1826.93 2179.85"
 	editor
@@ -165,7 +165,7 @@ entity
 	"fadescale" "1"
 	"lightmapresolutionx" "32"
 	"lightmapresolutiony" "32"
-	"model" "models/tf2ware_ultimate/pinball/boost_2.mdl"
+	"model" "models/tf2ware_ultimate/pinball/panel_2.mdl"
 	"solid" "6"
 	"origin" "80.3448 -2250 399.594"
 	editor

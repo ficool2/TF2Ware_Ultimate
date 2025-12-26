@@ -44,18 +44,19 @@ function OnStart()
 {
 	local loadouts =
 	[
-		[ TF_CLASS_SCOUT,        "Sandman"          , @(player) SuicideLine(player, 64.0)    ],
-		[ TF_CLASS_SOLDIER,      "Equalizer"        , @(player) SuicideSphere(player, 100.0) ],
-		[ TF_CLASS_PYRO,         "Flare Gun"        , @(player) SuicideLine(player, 64.0)    ],
-		[ TF_CLASS_PYRO,         "Rainblower"       , @(player) SuicideSphere(player, 100.0) ],
-		[ TF_CLASS_PYRO,         "Scorch Shot"      , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_DEMOMAN,      "Eyelander"        , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_HEAVYWEAPONS, "Fists"            , @(player) SuicideLine(player, 500.0)   ],
-		[ TF_CLASS_ENGINEER,     "Frontier Justice" , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_ENGINEER,     "Gunslinger"       , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_MEDIC,        "Ubersaw"          , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_SNIPER,       "Huntsman"         , @(player) SuicideLine(player, 128.0)   ],
-		[ TF_CLASS_SPY,          "Knife"            , @(player) SuicideLine(player, 64.0)    ],
+		[ TF_CLASS_SCOUT,        "Sandman"          	  , @(player) SuicideLine(player, 64.0)    ],
+		[ TF_CLASS_SOLDIER,      "Equalizer"        	  , @(player) SuicideSphere(player, 100.0) ],
+		[ TF_CLASS_PYRO,         "Flare Gun"        	  , @(player) SuicideLine(player, 64.0)    ],
+		[ TF_CLASS_PYRO,         "Rainblower"       	  , @(player) SuicideSphere(player, 100.0) ],
+		[ TF_CLASS_PYRO,         "Scorch Shot"      	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_DEMOMAN,      "Eyelander"        	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_HEAVYWEAPONS, "Fists"            	  , @(player) SuicideLine(player, 500.0)   ],
+		[ TF_CLASS_ENGINEER,     "Frontier Justice" 	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_ENGINEER,     "Gunslinger"       	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_ENGINEER,     "Taunt: Texan Trickshot" , @(player) SuicideLine(player, 500.0)   ],
+		[ TF_CLASS_MEDIC,        "Ubersaw"          	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_SNIPER,       "Huntsman"         	  , @(player) SuicideLine(player, 128.0)   ],
+		[ TF_CLASS_SPY,          "Knife"            	  , @(player) SuicideLine(player, 64.0)    ],
 	]
 	local loadout = RandomElement(loadouts)
 	

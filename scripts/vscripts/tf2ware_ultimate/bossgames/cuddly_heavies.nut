@@ -33,6 +33,7 @@ heavy_model <- "models/player/geavy.mdl"
 vo_love_sound <- "TF2Ware_Ultimate.GeavyLove"
 vo_disgust_sound <- "TF2Ware_Ultimate.ScoutDisgust"
 vo_kiss_sound <- "Heavy.Generic01"
+love_particle <- "utaunt_hearts_bubbling"
 
 function OnPrecache()
 {
@@ -40,6 +41,7 @@ function OnPrecache()
 	PrecacheScriptSound(vo_love_sound)
 	PrecacheScriptSound(vo_disgust_sound)
 	PrecacheScriptSound(vo_kiss_sound)
+	PrecacheParticle(love_particle)
 }
 
 function OnStart()
@@ -159,7 +161,21 @@ function OnPlayerTouch(player, other_player)
 function OnPlayerDeath(player, attacker, params)
 {
 	if (player.GetPlayerClass() == TF_CLASS_SCOUT)
+	{
 		Ware_PassPlayer(player, false)
+		
+		if (attacker && attacker.IsPlayer())
+		{
+			local particle = SpawnEntityFromTableSafe("info_particle_system",
+			{
+				effect_name  = love_particle
+				origin       = player.GetOrigin()
+				angles       = player.GetAbsAngles()
+				start_active = true
+			})	
+			EntityEntFire(particle, "Kill", "", 1.0)	
+		}		
+	}
 }
 
 function OnEnd()

@@ -2,4 +2,5 @@
 {
 	"file" "!particles/tf2ware_ultimate.pcf"
 	"file" "!particles/mariokart.pcf"
+	"file" "!particles/microtf2_v9.pcf"
 }

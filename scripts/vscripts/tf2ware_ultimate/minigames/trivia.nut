@@ -14,7 +14,8 @@ minigame <- Ware_MinigameData
 	suicide_on_end = true
 	convars        = 
 	{
-		tf_avoidteammates = 0
+		tf_avoidteammates   = 0
+		mp_show_voice_icons = 0
 	}
 })
 
@@ -63,8 +64,8 @@ function OnStart()
 	Ware_SetGlobalAttribute("voice pitch scale", 0, -1)
 	foreach (player in Ware_MinigamePlayers)
 	{
+		SetPropBool(player, "m_bGlowEnabled", false)
 		player.AddCond(TF_COND_GRAPPLED_TO_PLAYER) // prevent taunting
-		player.RemoveCond(TF_COND_TELEPORTED)
 		player.AddHudHideFlags(HIDEHUD_TARGET_ID)
 		SetPropInt(player, "m_nRenderMode", kRenderNone)
 		Ware_TogglePlayerWearables(player, false)

@@ -39,9 +39,15 @@ function Ware_PlayGameSound(player, name, flags = 0, volume = 1.0)
 	}
 	
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MUSIC_VERSION, path), volume, 100, flags)
+	{
+		// Temporary workaround to fix channel volume difference in RECIPIENT_FILTER_SINGLE_PLAYER vs RECIPIENT_FILTER_GLOBAL
+		foreach(target in Ware_Players)
+			Ware_PlaySoundOnClient(target, format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
+			
+		// Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_game/%s.mp3", WARE_MP3_VERSION, path), volume, 100, flags)
+	}
 }
 
 // Plays minigame music to the target player
@@ -52,9 +58,9 @@ function Ware_PlayMinigameMusic(player, name, flags = 0, volume = 1.0)
 {
 	local gametype = Ware_Minigame.boss ? "bossgame" : "minigame"
 	if (player)
-		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnClient(player, format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MP3_VERSION, gametype, name), volume, 100, flags)
 	else
-		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, gametype, name), volume, 100, flags)
+		Ware_PlaySoundOnAllClients(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MP3_VERSION, gametype, name), volume, 100, flags)
 }
 
 // Gets the duration of a sound under the given theme, and also compensating for timescale
@@ -64,4 +70,11 @@ function Ware_GetThemeSoundDuration(sound)
 		return Ware_CurrentThemeSounds[sound].duration * Ware_GetPitchFactor()
 	else
 		return Ware_Themes[0].sounds[sound] * Ware_GetPitchFactor()
+}
+
+// Helper version to resolve version for MP3 files
+// See comment above WARE_MP3_VERSION for why this is necessary
+function Ware_FixupMP3(name)
+{
+	return format(name, WARE_MP3_VERSION)
 }

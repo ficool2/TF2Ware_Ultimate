@@ -13,6 +13,11 @@ minigame <- Ware_MinigameData
 
 merasmus <- null
 
+function OnPick()
+{
+	return !Ware_IsSpecialRoundSet("merasmus")
+}
+
 function OnPrecache()
 {
 	PrecacheEntityFromTable({classname = "merasmus"})

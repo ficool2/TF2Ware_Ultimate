@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "hud/tf2ware_ultimate/_logo_bomb"
+	"$translucent" 1
+}

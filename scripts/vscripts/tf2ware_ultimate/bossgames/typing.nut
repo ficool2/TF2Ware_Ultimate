@@ -43,7 +43,17 @@ else
 
 overlay_announcement <- "hud/tf2ware_ultimate/minigames/announcement"
 
-music_choices <- ["hga", "hvd", "lod", "pta", "spc", "tuh"]
+music_choices <- 
+[
+	// easy
+	["hga", "tuh"],
+	// medium
+	["spc", "pta"],
+	// hard
+	["hvd", "lod"]
+]
+music_playlist <- [[], [], []]
+
 current_music <- null
 
 difficulty <- 0
@@ -84,8 +94,16 @@ function OnPrecache()
 	PrecacheOverlay(overlay_difficulty)
 	PrecacheOverlay(overlay_announcement)
 	
-	foreach (choice in music_choices)
-		Ware_PrecacheMinigameMusic("typing-" + choice, true)
+	foreach (choices in music_choices)
+	{
+		foreach (difficulty in choices)
+			Ware_PrecacheMinigameMusic("typing-" + difficulty, true)
+	}
+}
+
+function OnPick()
+{
+	return !Ware_IsSpecialRoundSet("no_text")
 }
 
 function OnStart()
@@ -118,8 +136,13 @@ function Descent()
 	Ware_PlaySoundOnAllClients(sound_descent_begin)
 	Ware_ShowScreenOverlay(Ware_Players, null)
 	Ware_ShowMinigameText(Ware_Players, "")
-	current_music = "typing-" + RemoveRandomElement(music_choices)
+	
+	local music_difficulty = Min(difficulty, 2)
+	if (music_playlist[music_difficulty].len() == 0)
+		music_playlist[music_difficulty] = clone(music_choices[music_difficulty])
+	current_music = "typing-" + RemoveRandomElement(music_playlist[music_difficulty])
 	Ware_PlayMinigameMusic(null, current_music)
+	
 	CreateTimer(Prepare, 3.5)
 }
 

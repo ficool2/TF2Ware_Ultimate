@@ -7,7 +7,8 @@ minigame <- Ware_MinigameData
 		"Jump over the RED ship!"
 		"Jump over the BLUE ship!"
 	]
-	duration       = 12.0
+	duration       = 7.5
+	end_delay      = 0.5
 	max_scale      = 1.0
 	music          = "piper"
 	location       = "beach"
@@ -18,7 +19,7 @@ minigame <- Ware_MinigameData
 	]	
 })
  
-ship_model <- "models/marioragdoll/super mario galaxy/bj ship/bjship.mdl"
+ship_model <-  "models/tf2ware_ultimate/pirate_ship.mdl"
 
 red_ship  <- null
 blue_ship <- null
@@ -46,14 +47,24 @@ function OnStart()
 	{
 		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? -500 : 300, -136),
 		model       = ship_model
-		rendercolor = "255 0 0",
+		skin		= 0
+		modelscale  = 0.3
 	})
 	blue_ship = Ware_SpawnEntity("prop_dynamic_override",
 	{
 		origin      = Ware_MinigameLocation.center + Vector(2200, swap ? 300 : -500, -136),
 		model       = ship_model
-		rendercolor = "0 255 255",
+		skin		= 1
+		modelscale  = 0.3
 	})
+	
+	local hurt = Ware_SpawnEntity("func_croc",
+	{
+		origin     = Ware_MinigameLocation.center - Vector(0, 0, 88)
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS
+	})
+	hurt.SetSolid(SOLID_BBOX)
+	hurt.SetSize(Vector(-4096, -2048, -256), Vector(4096, 2048, 0))
 }
 
 function OnUpdate()
@@ -66,12 +77,6 @@ function OnUpdate()
 	{
 		if (!player.IsAlive())
 			continue
-		
-		if (player.GetFlags() & FL_INWATER)
-		{
-			Ware_TeleportPlayer(player, Ware_MinigameLocation.center, ang_zero, vec3_zero)
-			continue
-		}
 		
 		local target = player // squirrel needs this to be happy
 		local origin = player.GetOrigin()
@@ -99,7 +104,7 @@ function OnUpdate()
 		{
 			if (origin.z > blue_point.z && VectorDistance2D(origin, blue_point) < 150.0)
 			{
-				Ware_ShowScreenOverlay(player, null);	
+				Ware_ShowScreenOverlay(player, null)
 				Ware_CreateTimer(function()
 				{
 					if (target.IsValid())
@@ -115,4 +120,9 @@ function OnUpdate()
 			}			
 		}
 	}
+}
+
+function OnCheckEnd()
+{
+	return Ware_GetAlivePlayers().len() == 0
 }

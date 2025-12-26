@@ -72,6 +72,8 @@ Ware_Location.circlepit <-
 {
 	center   = Vector(-1952, -872, 720)
 	radius   = 288.0
+	mins     = Vector(-2750, -1620, -700)
+	maxs     = Vector(-1210, -110, 3580)
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
 
@@ -79,6 +81,8 @@ Ware_Location.circlepit_big <-
 {
 	center   = Vector(-3304, 2400, 1056)
 	radius   = 600.0
+	mins     = Vector(-4130, 1450, -500)
+	maxs     = Vector(-2450, 3200, 3580)
 	Teleport = Ware_Location.circlepit.Teleport
 }
 
@@ -86,6 +90,8 @@ Ware_Location.sawrun <-
 {
 	center   = Vector(4480, -4000, -4495)
 	finish   = Vector(4480, -3056, -4495)
+	mins     = Vector(3890, -4430, -4500)
+	maxs     = Vector(4950, -2500, -4125)
 	Teleport = function(players) 
 	{
 		local spacing_x = -50.0, spacing_y = 50.0
@@ -106,6 +112,8 @@ Ware_Location.sawrun_micro <-
 {
 	center   = Vector(-160, 5546, -11887)
 	finish   = Vector(-160, 5948, -11887)
+	mins     = Vector(-450, 4790, -11890)
+	maxs     = Vector(125 , 6295, -11630)
 	Teleport = function(players) 
 	{
 		local spacing_x = -50.0, spacing_y = 50.0
@@ -251,6 +259,8 @@ Ware_Location.kart_containers <-
 {
 	center         = Vector(-1200, 3450, -6718)
 	cameras        = ["kartcontainers_camera"]
+	mins           = Vector(-5120, 2500, -6720)
+	maxs           = Vector(-380, 5950, -5120)
 	Teleport = function(players)
 	{
 		local pos = center * 1.0
@@ -301,6 +311,8 @@ Ware_Location.kart_paths <-
 Ware_Location.kart_ramp <-
 {
 	center   = Vector(-7000, -10400, -6494)
+	mins           = Vector(-7900, -10650, -6500)
+	maxs           = Vector(-6230, -5700, -5320)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(Ware_GetSortedScorePlayers(true), 
@@ -315,6 +327,8 @@ Ware_Location.frogger <-
 {
 	center   = Vector(11488, -6150, -6447)
 	cameras  = ["frogger_camera1", "frogger_camera2", "frogger_camera3"]
+	mins           = Vector(10450, -6950, -6450)
+	maxs           = Vector(12510, 1500, -5660)
 	Teleport = function(players)
 	{
 		local spacing = 50.0
@@ -460,7 +474,7 @@ Ware_Location.beepblockskyway_ultimate <-
 
 Ware_Location.warehouse <-
 {
-	center = Vector(1000, 11200, -4159)
+	center = Vector(1000, 11900, -4159)
 	mins   = Vector(480, 11664, -4160)
 	maxs   = Vector(1560, 12592, -3648)
 	cameras = ["warehouse_camera"]	
@@ -540,6 +554,57 @@ Ware_Location.inventoryday <-
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersCircle(players, center, radius)
+	}
+}
+
+Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location, recommend collisions stay off
+{
+	center   = Vector(3615, 2630, -11880)
+	radius   = 300.0
+	cameras  = ["FallingFloor_Camera"]
+	respawns = 
+	[
+		Vector(4365, 2630, -11400)
+		Vector(2865, 2630, -11400)
+		Vector(3615, 3380, -11400)
+		Vector(3615, 1880, -11400)
+	]
+	Init = function(){this.PlatformToggle(false, false)}
+	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
+	PlatformToggle = function(enable_platform, enable_boxingring = false) {
+		local trigger = FindByName(null, "smasharena_trigger") // microtf2 logic starts when anyone is in this
+		local platform = FindByName(null, "smasharena_platform")
+		if(enable_platform)
+		{
+			EntityEntFire(trigger, "EndTouch")
+			EntityEntFire(trigger, "Disable")
+			EntityEntFire(platform, "Enable")
+		}
+		else
+		{
+			EntityEntFire(platform, "Disable")
+			EntityEntFire(trigger, "Enable")
+		}
+		
+		if(enable_boxingring)
+		{
+			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
+			{
+				EntityEntFire(ent, "Enable")
+				if(ent.GetClassname() == "prop_dynamic")
+					EntityEntFire(ent, "EnableCollision")
+			}
+		}
+		else
+		{
+			for (local ent; ent = FindByName(ent, "smasharena_boxingring");)
+			{
+				if(ent.GetClassname() == "prop_dynamic")
+					EntityEntFire(ent, "DisableCollision")
+				
+				EntityEntFire(ent, "Disable")
+			}
+		}
 	}
 }
 
@@ -760,5 +825,16 @@ Ware_Location.waluigi_pinball <-
 			flipper.SetSize(flipper.GetBoundingMinsOriented(), flipper.GetBoundingMaxsOriented())
 			flipper.KeyValueFromString("classname", "pinball_flipper")
 		}
+	}
+}
+
+Ware_Location.wega_challenge <-
+{
+	center = Vector(-482, -13730, -12580)
+	start   = Vector(-32, -13280, -12580)
+	cameras  = ["wega_camera"]
+	Teleport = function(players)
+	{
+		Ware_TeleportPlayersRow(players, start, ang_zero, 192, 32, 32)
 	}
 }

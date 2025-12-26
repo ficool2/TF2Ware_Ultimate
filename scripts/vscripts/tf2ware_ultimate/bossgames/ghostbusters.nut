@@ -341,12 +341,21 @@ function OnTakeDamage(params)
 		
 		if (victim_class == TF_CLASS_SPY && attacker_class == TF_CLASS_HEAVYWEAPONS)
 			return false
+			
 		if (victim_class == TF_CLASS_SPY && attacker_class == TF_CLASS_MEDIC)
+		{
 			params.inflictor = kill_icon
+			// needed for team battles
+			params.force_friendly_fire = true
+		}
 		else if (victim_class == TF_CLASS_MEDIC && attacker_class == TF_CLASS_HEAVYWEAPONS)
+		{
 			params.damage = 125.0
+		}
 		else if (victim_class == TF_CLASS_HEAVYWEAPONS)
+		{
 			return false
+		}
 	}
 }
 

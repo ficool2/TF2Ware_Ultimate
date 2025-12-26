@@ -1,13 +1,13 @@
 local charactersConst = [
-    "scout",    // 1
-    "sniper",   // 2
-    "soldier",  // 3
-    "demoman",  // 4
-    "medic",    // 5
-    "heavy",    // 6
-    "pyro",     // 7
-    "spy",      // 8
-    "engineer"  // 9
+    "Scout",    // 1
+    "Sniper",   // 2
+    "Soldier",  // 3
+    "Demoman",  // 4
+    "Medic",    // 5
+    "Heavy",    // 6
+    "Pyro",     // 7
+    "Spy",      // 8
+    "Engineer"  // 9
 ]
 characters <- clone(charactersConst)
 character_selected <- RemoveRandomElement(characters)
@@ -16,10 +16,10 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Wanted"
 	author         = ["PedritoGMG"]
-	description    = "Find the Character"
+	description    = format("Find %s!", character_selected)
 	duration       = 10.0
     location       = "dirtsquare"
-    custom_overlay = "wanted_"+character_selected
+    custom_overlay = "wanted_"+character_selected.tolower()
     music          = "wanted"
 })
 
@@ -40,7 +40,7 @@ function OnPrecache()
 {
 	PrecacheModel(prop_model)
 	foreach (character in charactersConst)
-		PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character)
+		PrecacheOverlay("hud/tf2ware_ultimate/minigames/wanted_" + character.tolower())
 }
 
 function OnTeleport(players)
@@ -57,15 +57,24 @@ function CreateCharacter()
 	if (character_queue.len() == 0)
 		return CreateLastCharacter()
 
-	return CreateGenericCharacter(character_queue.remove(0), false)
+	return CreateGenericCharacter()
 }
 
 function CreateLastCharacter()
 {
-	return CreateGenericCharacter(character_selected, true)
+	local prop = CreateCharacterProp(character_selected)
+	prop.SetSolid(SOLID_BBOX)
+    prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
+	return null
+}
+function CreateGenericCharacter()
+{
+	local prop = CreateCharacterProp(character_queue.remove(0))
+	prop.SetSolid(SOLID_NONE)
+	return 0.01
 }
 
-function CreateGenericCharacter(name, isLast)
+function CreateCharacterProp(name)
 {
     yPos += 0.1
 	local pos = Ware_MinigameLocation.center * 1.0
@@ -91,14 +100,7 @@ function CreateGenericCharacter(name, isLast)
 	prop.SetAbsVelocity(vel)
 
 	props.append(prop)
-    if (!isLast) 
-	{
-        prop.SetSolid(SOLID_NONE)
-        return 0.01
-    }
-    prop.SetSolid(SOLID_BBOX)
-    prop.SetSize(Vector(-boxSize, -boxSize, -boxSize), Vector(boxSize, boxSize, boxSize))
-    return null
+	return prop
 }
 
 
@@ -122,36 +124,36 @@ function OnStart()
 	Ware_CreateTimer(@() CreateCharacter(), 0.0)
 }
 
-function OnUpdate() 
+function OnUpdate()
 {
     local minigameLocation = Ware_MinigameLocation.center
     local margin = 0.1
 
-    foreach (prop in props) 
+    foreach (prop in props)
 	{
         local vel = prop.GetAbsVelocity()
         local pos = prop.GetOrigin()
 
-        if (pos.x - minigameLocation.x > xRange[1]) 
+        if (pos.x - minigameLocation.x > xRange[1])
 		{
             vel.x = -abs(vel.x)
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
+			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[1] - margin, pos.y, pos.z))
         }
-		else if (pos.x - minigameLocation.x < xRange[0]) 
+		else if (pos.x - minigameLocation.x < xRange[0])
 		{
             vel.x = abs(vel.x)
-            prop.SetOrigin(Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
+			prop.KeyValueFromVector("origin", Vector(minigameLocation.x + xRange[0] + margin, pos.y, pos.z))
         }
 
-        if (pos.z - minigameLocation.z > zRange[1]) 
+        if (pos.z - minigameLocation.z > zRange[1])
 		{
             vel.z = -abs(vel.z)
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
+			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[1] - margin))
         }
-		else if (pos.z - minigameLocation.z < zRange[0]) 
+		else if (pos.z - minigameLocation.z < zRange[0])
 		{
             vel.z = abs(vel.z)
-            prop.SetOrigin(Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
+			prop.KeyValueFromVector("origin", Vector(pos.x, pos.y, minigameLocation.z + zRange[0] + margin))
         }
 
         prop.SetAbsVelocity(vel)

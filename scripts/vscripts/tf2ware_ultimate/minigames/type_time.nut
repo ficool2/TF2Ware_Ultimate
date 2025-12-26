@@ -21,6 +21,11 @@ function OnPrecache()
 	PrecacheModel(clock_model)
 }
 
+function GetClockPosition()
+{
+	return Ware_MinigameLocation.center + Vector(0, 600, 320)
+}
+
 function OnTeleport(players)
 {
 	Ware_TeleportPlayersRow(players, 
@@ -28,6 +33,19 @@ function OnTeleport(players)
 		QAngle(-10, 90, 0), 
 		700.0, 
 		69.0, 64.0)
+		
+	local clock_pos = GetClockPosition()
+	foreach (player in players)
+	{
+		local eye_pos = player.EyePosition()
+		local dir = clock_pos - eye_pos
+		dir.Norm()
+		
+		local angles = VectorAngles(dir)
+		angles.x = AngleNormalize(angles.x)
+		angles.y = AngleNormalize(angles.y)
+		player.SnapEyeAngles(angles)
+	}
 }
 
 function OnStart()
@@ -77,7 +95,7 @@ function OnStart()
 
 	local clock = Ware_SpawnEntity("prop_dynamic_override",
 	{
-		origin = Ware_MinigameLocation.center + Vector(0, 600, 320)
+		origin = GetClockPosition()
 		angles = QAngle(0, 270, 0)
 		model  = clock_model
 	})

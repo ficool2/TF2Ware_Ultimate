@@ -438,33 +438,43 @@ function OnEnd()
 {
 	local high_score = 0
 	local winners = []
+	local threshold = 28
+	local reached_threshold = false
 	foreach(player in Ware_MinigamePlayers)
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
 		local score = minidata.gj_score
 		
-		if (score > high_score)
+		if (score >= threshold)
+		{
+			if (!reached_threshold)
+			{
+				reached_threshold = true
+				winners.clear()
+			}
+			winners.append(player)
+		}
+		else if (!reached_threshold && score > high_score)
 		{
 			high_score = score
 			winners.clear()
 			winners.append(player)
-			continue
 		}
-		
-		if (score == high_score)
+		else if (score == high_score)
 		{
 			winners.append(player)
-			continue
 		}
 	}
-	if (high_score >= min_score)
+	
+	foreach(player in winners)
 	{
-		foreach(player in winners)
-		{
-			Ware_PassPlayer(player, true)
-			Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
-				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
-		}
+		Ware_PassPlayer(player, true)
+		Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
+			COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
+	}
+	
+	if(!reached_threshold)
+	{
 		foreach(player in Ware_MinigamePlayers)
 		{
 			if (!Ware_IsPlayerPassed(player))
@@ -483,7 +493,7 @@ function OnEnd()
 			{
 				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
-					COLOR_LIME, min_score)
+					COLOR_LIME, threshold)
 			}
 		}
 	}

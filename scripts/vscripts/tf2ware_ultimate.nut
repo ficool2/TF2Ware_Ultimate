@@ -27,39 +27,3 @@ IncludeScript("tf2ware_ultimate/events", Ware_Events)
 __CollectGameEventCallbacks(Ware_Events)
 
 MarkForPurge(self)
-
-function OnPostSpawn()
-{
-	FixTypingCameras()
-}
-
-function FixTypingCameras()
-{
-	// hack to allow parented point_viewcontrols in typing boss 
-	// (can't place these from Hammer)
-	local kill = []
-	for (local entity; entity = FindByName(entity, "DRBoss_*");)
-	{
-		MarkForPurge(entity)
-		if (entity.GetClassname() == "info_observer_point")
-		{
-			local camera = SpawnEntityFromTableSafe("point_viewcontrol",
-			{
-				classname  = "ware_viewcontrol" // don't preserve
-				targetname = entity.GetName()
-				origin     = entity.GetOrigin()
-				angles     = entity.GetAbsAngles()
-				spawnflags = 8
-			})
-			camera.SetMoveType(0, 0)
-			
-			local parent = entity.GetMoveParent()
-			if (parent)
-				SetEntityParent(camera, parent)
-			
-			kill.append(entity)
-		}
-	}
-	foreach (entity in kill)
-		entity.Kill()
-}

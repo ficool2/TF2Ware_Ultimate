@@ -72,27 +72,47 @@ Ware_DevCommands <-
 	"nextspecial": function(player, text)
 	{
 		local args = split(text, " ")
+		local text = ""
 		if (args.len() >= 1)
 		{
-			if (args.len() >= 2)
+			Ware_DebugNextSpecialRound = clone(args)
+			
+			local len = Ware_DebugNextSpecialRound.len()
+			for (local i = 0; i < len; i++)
 			{
-				Ware_DebugNextSpecialRound = "double_trouble"
-				Ware_DebugNextSpecialRound2 = [args[0], args[1]]
-			}
-			else if (args[0] == "any")
-			{
-				Ware_ForceSpecialRound()
-			}
-			else
-			{
-				Ware_DebugNextSpecialRound = args[0]
+				text += Ware_DebugNextSpecialRound[i]
+				if (i < len - 1)
+					text += " "
 			}
 		}
 		else
 		{
-			Ware_DebugNextSpecialRound = ""
+			Ware_DebugNextSpecialRound.clear()
 		}
-		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextSpecialRound)
+		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), text)
+	}
+	
+	"forcemode": function(player, text)
+	{
+		local args = split(text, " ")
+		if (args.len() >= 1)
+		{
+			local mode = StringToInteger(args[0])
+			if (mode != null && mode >= 0)
+			{
+				Ware_DebugForceMode = mode
+				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
+			}
+			else
+			{
+				Ware_ChatPrint(player, "Arguments: <mode>, where mode >= 0")
+			}
+		}
+		else
+		{
+			Ware_DebugForceMode = null
+			Ware_ChatPrint(null, "{str} cleared forced mode for moded minigames", Ware_DevCommandTitle(player))
+		}	
 	}
 	"shownext": function(player, text)
 	{
@@ -103,7 +123,8 @@ Ware_DevCommands <-
 			"Ware_DebugForceBossgameOnce",
 			"Ware_DebugNextTheme",
 			"Ware_DebugForceTheme",
-			"Ware_DebugNextSpecialRound"
+			"Ware_DebugNextSpecialRound",
+			"Ware_DebugForceMode"
 		]
 		foreach(var in vars)
 		{
@@ -112,8 +133,25 @@ Ware_DevCommands <-
 				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = \"%s\"", var, value))
 			else if (typeof(value) == "bool")
 				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = %s", var, value ? "true" : "false"))
+			else if (typeof(value) == "integer")
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = %d", var, value))
+			else if (value == null)
+				ClientPrint(player, HUD_PRINTCONSOLE, format("* %s = null", var))
 		}
 		Ware_ChatPrint(player, "Values printed to console.")
+	}
+	"clearall": function(player, text)
+	{
+		Ware_DebugForceMinigame   	= ""
+		Ware_DebugForceBossgame   	= ""
+		Ware_DebugForceMinigameOnce = false
+		Ware_DebugForceBossgameOnce = false
+		Ware_DebugNextSpecialRound  = []
+		Ware_DebugForceMode         = null
+		Ware_DebugNextTheme         = ""
+		Ware_DebugForceTheme        = ""
+		
+		Ware_ChatPrint(player, "All debug variables reset.")
 	}
 	"restart" : function(player, text)
 	{
@@ -207,11 +245,18 @@ Ware_DevCommands <-
 				target = Ware_FindPlayerByName(args[arg++])
 			if (target)
 			{
-				local points = args[arg].tointeger()
-				Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
-				if (target != player)
-					Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
-				Ware_GetPlayerData(target).score += points
+				local points = StringToInteger(args[arg])
+				if (points != null)
+				{
+					Ware_ChatPrint(player, "Gave {int} points to {player}", points, target)
+					if (target != player)
+						Ware_ChatPrint(target, "{str} has given you {int} points", Ware_DevCommandTitle(player), points)
+					Ware_GetPlayerData(target).score += points
+				}
+				else
+				{
+					Ware_ChatPrint(player, "Invalid score")
+				}
 			}
 			else
 			{

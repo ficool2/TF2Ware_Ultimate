@@ -26,7 +26,7 @@ function OnStart()
 	if (minigame.location == "rocketjump_micro")
 		minigame.duration += 5.0
 	
-	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Jumper")
+	Ware_SetGlobalLoadout(TF_CLASS_SOLDIER, "Rocket Launcher", {"blast dmg to self increased": 0.02})
 	
 	// this gets very difficult with higher timescale so make the train start later
 	EntFire("rocketjump_train", "StartForward", "", RemapValClamped(Ware_GetTimeScale(), 1.0, 2.0, 3.0, 10.0))
@@ -85,5 +85,5 @@ function OnCleanup()
 
 function OnCheckEnd()
 {
-	return Ware_GetUnpassedPlayers(true).len() == 0
+	return Ware_GetPassedPlayers(false, true).len() == 0
 }

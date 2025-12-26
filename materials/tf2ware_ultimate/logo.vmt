@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "hud/tf2ware_ultimate/__logo"
+	"$translucent" 1
+	"$nodecal" 1
+}

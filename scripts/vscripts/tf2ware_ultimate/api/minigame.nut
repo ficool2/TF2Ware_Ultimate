@@ -8,9 +8,11 @@ class Ware_MinigameData
 		location        = "home"
 		min_players     = 0
 		max_players     = 256
+		modes           = 1
 		start_pass      = false
 		allow_damage    = false
 		allow_suicide   = false
+		allow_building  = false
 		force_backstab  = false
 		start_freeze    = 0.0
 		fail_on_death   = false
@@ -51,7 +53,7 @@ class Ware_MinigameData
 	// == Optional settings ==
 	
 	// Music to play when the minigame starts
-	// If you are going to be playing music yourself, make sure to precache it in OnPrecache with Ware_PrecacheMinigameMusic
+	// If you are going to be playing music separate from this parameter, make sure to precache it in OnPrecache with Ware_PrecacheMinigameMusic
 	music			= null
 	// Map location to teleport to (Ware_Location enum), default is home
 	location		= null
@@ -59,6 +61,9 @@ class Ware_MinigameData
 	min_players		= null
 	// Maximum amount of players needed to start, default is 256
 	max_players     = null
+	// Number of modes the minigame has, default is 1. This is used for minigames that share code but have variations such as Simon Says.
+	// Setting a higher value than 1 will randomly assign a value between 0 and (value - 1) to Ware_MinigameMode every time the minigame starts, which can be referred to for different modes
+	modes           = null
 	// Whether players will be flagged as passed when minigame starts, default is false
 	start_pass		= null
 	// Is damage to other players allowed? Default is false
@@ -67,6 +72,8 @@ class Ware_MinigameData
 	max_scale       = null
 	// Do suicides count for points? Default is false
 	allow_suicide   = null	
+	// Are buildings allowed? Default is false
+	allow_building = null
 	// Allow backstabs with any weapon
 	force_backstab  = null
 	// Freeze players when minigame starts, default is 0 seconds (don't freeze)
@@ -159,6 +166,9 @@ class Ware_MinigameData
 	cb_on_player_horn		= null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch		= null
+	// OnPlayerInventory(player)  - Called by OnGameEvent_post_inventory_application.
+	//                            - This happens when a player spawns, but is intended for manipulating loadouts.
+	cb_on_player_inventory     = null
 }
 
 // Global variables
@@ -188,7 +198,7 @@ function Ware_GetMinigameRemainingTime()
 // This is done automatically if specified in the minigame's "music" setting
 function Ware_PrecacheMinigameMusic(name, is_boss)
 {
-	PrecacheSound(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MUSIC_VERSION, is_boss ? "bossgame" : "minigame", name))
+	PrecacheSound(format("tf2ware_ultimate/v%d/music_%s/%s.mp3", WARE_MP3_VERSION, is_boss ? "bossgame" : "minigame", name))
 }
 
 // Sets the value of a convar

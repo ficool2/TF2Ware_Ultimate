@@ -37,7 +37,9 @@ This script will automatically place all the materials and textures in the corre
 
 For the overlay text, try be as concise as possible - remember most minigames are only a few seconds long, even before speedup. For example **GET TO THE END!** is better than **GET TO THE END OF THE COURSE!**. The convention is white text with an exclamation mark at the end, though exceptions can be made for emphasis. Any "failure" overlays, such as the one used in [Double Jump](scripts/vscripts/tf2ware_ultimate/minigames/double_jump.nut) are typically red and in brackets.
 
-For longer overlays or those using multiple colours, manual editing is required - longer overlays in particular will need to have a line break to prevent going off the screen, which is *not* handled by the script. To achieve this, comment out the lines `os.remove(name1)` and `os.remove(name2)` in the python script. This will preserve the created `.png` files, which can be processed in any graphics editor such as [GIMP](https://www.gimp.org/). Make sure to uncomment these lines again before submitting a PR.
+Longer overlays will need to have a line break to prevent going off the screen, ex. `GET TO\nTHE END!`.
+
+For overlays using multiple colours, manual editing is required - To achieve this, comment out the lines `os.remove(name1)` and `os.remove(name2)` in the python script. This will preserve the created `.png` files, which can be processed in any graphics editor such as [GIMP](https://www.gimp.org/). Make sure to uncomment these lines again before submitting a PR.
 
 The processed files can then be converted using VTFEdit and manually imported into the repo. One of the generated `.png`s is a reversed text version which must be added to the VTF as a separate frame by importing both into VTFEdit simultaneously.
 
@@ -95,8 +97,6 @@ When adding audio to the repo, a certain level of quality is expected. Audio sho
 Any required cuts should be made, with at most a small gap at the start. This should then be loudness normalised to -9 LUFS; this can easily be done in Audacity. Finally this should be exported as a 44.1kHz MP3 using the Standard Audacity preset for bitrate.
 
 For longer music that goes beyond the duration of a minigame/bossgame, the cut should be a few seconds longer than the minigame with a short fade at the end.
-
-Note: If you are editing existing audio within the versioned folder in [`sound/tf2ware_ultimate`](sound/tf2ware_ultimate/), you MUST bump the version number in the directory name, as well as WARE_MUSICVERSION in [`config.nut`](scripts/vscripts/tf2ware_ultimate/config.nut). This is due to audio with identical paths not being updated if it's already cached.
 
 ## Mapping
 Mapping changes are welcome, however VMF changes are more involved to merge (especially if the map has been changed in the meantime). To help with this, please be descriptive about changes made, and test your compile before submitting a PR.

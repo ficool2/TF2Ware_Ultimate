@@ -2,6 +2,7 @@ UnlitGeneric
 {
     $basetexture models/tf2ware_ultimate/pinball/pin_dashj
 	$model 1
+
 	Proxies
 	{
 		TextureScroll

@@ -1,4 +1,3 @@
-mode <- RandomInt(0, 4)
 
 minigame <- Ware_MinigameData
 ({
@@ -11,6 +10,8 @@ minigame <- Ware_MinigameData
 	music          = "keepitup"
 	custom_overlay = "survive"
 	min_players    = 2
+	// removed: don't put it multiple times in rotation
+	//modes          = 5
 	// small players fly into the air and i have no idea why - pokepasta
 	max_scale      = 1.0
 	start_pass     = true
@@ -29,6 +30,7 @@ minigame <- Ware_MinigameData
 function OnStart()
 {
 	local attributes = { "mod see enemy health" : 1.0 }
+	local mode = RandomInt(0, 4) // Ware_MinigameMode
 	if (mode == 0)
 		Ware_SetGlobalLoadout(TF_CLASS_MEDIC, null, attributes)
 	else if (mode == 1)
