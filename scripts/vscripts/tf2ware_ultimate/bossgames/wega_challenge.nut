@@ -417,9 +417,10 @@ function Generate()
 		CellArray[i] = array(Size)
 	}
 
-	CellArray[0][0] = 8
-	CellArray[Size-1][Size-1] = 8
-	CellArray[Size-1][0] = 5
+    CellArray[0][0] = 8
+    CellArray[0][Size-1] = 8
+    CellArray[Size-1][Size-1] = 8
+    CellArray[Size-1][0] = 8
 
 	// Phase 1 Connect to the other spawn first
 	local x = 1
@@ -429,8 +430,8 @@ function Generate()
 	{
 		if (x < Size-1 && y < Size-1)
 		{
-			local rnd = RandomInt(0, 1)
-			if (rnd == 0)
+			local rnd = RandomInt(0, 4)
+			if (rnd > 1)
 				direction = DIRECTION.UP
 			else
 				direction = DIRECTION.RIGHT
@@ -500,6 +501,11 @@ function Generate()
 			{
 				local rnd = RandomInt(0, possibleList.len()-1)
 				selectedChunk = possibleList[rnd]
+					
+            	//Prevent impossible layouts
+            	if (selectedChunk == 0)
+                	selectedChunk = 8
+					
 				CellArray[x][y] = selectedChunk 
 			}
 		} 
@@ -655,8 +661,9 @@ function Generate()
 		}
 	}
 	
-	CellArray[0][Size-1] = 8
-	CellArray[Size-1][Size-2] = 8
+    CellArray[0][0] = 8
+    CellArray[0][Size-1] = 8
+    CellArray[Size-1][Size-2] = 8
 
 	// Phase 6, spawn templates
 	x = 0
@@ -799,13 +806,13 @@ function AddWegas()
 	// Above 20
 	if (playerCount > 20)
 	{
-		extraWegas = ceil(playerCount / 2.5)
+		extraWegas = ceil(playerCount / 2.6)
 		extraWegas++
 	}
 
 	local buffer = Size
-	if (buffer > 6)
-		buffer = 7
+	if (buffer > 7)
+		buffer = 8
 
 	for (local i = 0; i < extraWegas ; i++)
 	{
