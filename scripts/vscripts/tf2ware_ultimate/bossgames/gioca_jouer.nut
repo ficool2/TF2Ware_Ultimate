@@ -58,7 +58,7 @@ minigame <- Ware_MinigameData
 	duration      = 140.0
 	end_delay     = 1.0
 	location      = "boxarena"
-	music         = "giocajourer-inst"
+	music         = "giocajouer-inst"
 	start_pass    = false
 })
 
