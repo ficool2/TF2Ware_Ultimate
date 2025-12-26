@@ -23,30 +23,18 @@ MICRO_SUPER  <- 16  // rocket jump
 MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont have to make a separate reset function, and we get previous OnMicroEnd call for free.
 
 micro <- null        // microgame tracker
-
-micro_time_start <- 0.0
-micro_second_phase <- false
-
-TIMER_FIRST <- 3.5820886
-TIMER_SECOND <- 1.791044
-
-min_score <- 4000
+micro_grace <- false // tracks grace period for certain microgames.
 
 minigame <- Ware_MinigameData
 ({
 	name          = "Gioca Jouer"
-	author        = ["TonyBaretta", "pokemonPasta", "tilderain"]
+	author        = ["TonyBaretta", "pokemonPasta"]
 	description   = "Gioca Jouer!"
-	duration      = 135.0
-	end_delay     = 5.0
+	duration      = 140.0
+	end_delay     = 1.0
 	location      = "boxarena"
 	music         = "giocajouer"
 	start_pass    = false
-	convars = 
-	{
-		tf_max_voice_speak_delay   = -1
-		tf_avoidteammates_pushaway = 0	
-	}
 })
 
 pass_sound <- "Halloween.PumpkinDrop"
@@ -54,25 +42,25 @@ fail_sound <- "TF2Ware_Ultimate.Fail"
 
 microgame_info <-
 [
-	// description                   overlay                                        custom score scaling
-	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move"            1, 1], // MICRO_SLEEP
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1, 1], // MICRO_WAVE
-	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump"                 1, 1], // MICRO_HITCH
-	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch"               1, 1], // MICRO_SNEEZE
-	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move"                 1, 1], // MICRO_WALK
-	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim"     1, 1], // MICRO_SWIM
-	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left"              1, 1], // MICRO_SKI
-	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray"    1, 1], // MICRO_SPRAY
-	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab"              1, 1], // MICRO_MACHO
-	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn"     1, 1], // MICRO_HORN
-	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell"     1, 1], // MICRO_BELL
-	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay"     1, 1], // MICRO_OKAY
-	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic"           1, 1], // MICRO_KISS
-	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise" 0.9, 0.7], // MICRO_COMB
-	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt"                1, 0.8], // MICRO_WAVE2
-	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt"              1, 0.8], // MICRO_WAVE3
-	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump"          0.85, 0.5], // MICRO_SUPER
-	[ null,                          null,                                                 null, null], // MICRO_RESET
+	// description                   overlay                                                absolute times
+	[ "Don't Move!",                 "hud/tf2ware_ultimate/minigames/dont_move",            22.394, 101.723 ], // MICRO_SLEEP
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                25.671, 103.255 ], // MICRO_WAVE
+	[ "Jump!",                       "hud/tf2ware_ultimate/minigames/jump",                 29.103, 105.039 ], // MICRO_HITCH
+	[ "Crouch!",                     "hud/tf2ware_ultimate/minigames/crouch",               33.147, 106.812 ], // MICRO_SNEEZE
+	[ "Move!",                       "hud/tf2ware_ultimate/minigames/move",                 36.428, 108.627 ], // MICRO_WALK
+	[ "Swimming!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_swim",     40.368, 110.264 ], // MICRO_SWIM
+	[ "Go Left!",                    "hud/tf2ware_ultimate/minigames/go_left",              43.908, 112.206 ], // MICRO_SKI
+	[ "Look Down and Hit Spray!",    "hud/tf2ware_ultimate/minigames/gioca_jouer_spray",    47.361, 114.010 ], // MICRO_SPRAY
+	[ "Spycrab!",                    "hud/tf2ware_ultimate/minigames/spycrab",              50.563, 115.689 ], // MICRO_MACHO
+	[ "Use Kart Horn! (Left Click)", "hud/tf2ware_ultimate/minigames/gioca_jouer_horn",     53.875, 117.515 ], // MICRO_HORN
+	[ "Jump + Crouch!",              "hud/tf2ware_ultimate/minigames/gioca_jouer_bell",     58.288, 119.372 ], // MICRO_BELL
+	[ "Say Cheers! (C+3)",           "hud/tf2ware_ultimate/minigames/gioca_jouer_okay",     61.402, 121.146 ], // MICRO_OKAY
+	[ "Call Medic!",                 "hud/tf2ware_ultimate/minigames/call_medic",           65.550, 123.182 ], // MICRO_KISS
+	[ "Disguise!",                   "hud/tf2ware_ultimate/minigames/gioca_jouer_disguise", 68.572, 124.682 ], // MICRO_COMB
+	[ "Taunt!",                      "hud/tf2ware_ultimate/minigames/taunt",                72.226, 126.529 ], // MICRO_WAVE2
+	[ "Re-Taunt!",                   "hud/tf2ware_ultimate/minigames/retaunt",              75.954, 128.775 ], // MICRO_WAVE3
+	[ "Rocket Jump!",                "hud/tf2ware_ultimate/minigames/rocket_jump",          79.432, 130.411 ], // MICRO_SUPER
+	[ null,                          null,                                                  82.961, 132.342 ], // MICRO_RESET
 ]
 
 function OnPrecache()
@@ -91,88 +79,19 @@ function OnStart()
 	{
 		local minidata = Ware_GetPlayerMiniData(player)
 		minidata.gj_score <- 0
-		minidata.gj_passed <- 0
-		minidata.gj_is_pass <- false
-		minidata.gj_combo <- 0
-		minidata.gj_highest_combo <- 0
+		minidata.gj_passed <- false
 	}
 	// TODO: incorporate into array somehow?
 	GiocaJouer_Countdown(5.43) // first round
 	GiocaJouer_Countdown(83.05) // second round
-	Ware_CreateTimer(@() PrintScorers(true), 83.05)
 	
 	// set a timer for each microgame. each tick of
 	// the "clock" ends the previous microgame,
 	// increments "micro", and starts the next one.
-	for (local i = 0; i < 18; i++)
+	foreach (microgame in microgame_info)
 	{
-		Ware_CreateTimer(@() GiocaJouer_Clock(), 22.394 + (TIMER_FIRST * i))
-		Ware_CreateTimer(@() GiocaJouer_Clock(), 101.723 + (TIMER_SECOND * i))
-	}
-}
-
-function GetWinThreshhold()
-{
-	local win_threshold
-	local ware_players_len = Ware_Players.len()
-	if (ware_players_len > 64)
-		win_threshold = 24
-	else if (ware_players_len > 32)
-		win_threshold = 12
-	else if (ware_players_len > 24)
-		win_threshold = 10
-	else if (ware_players_len > 3)
-		win_threshold = 3
-	else
-		win_threshold = 1
-
-	return win_threshold
-}
-
-function GetScoreList()
-{
-	local playerScoreList = []
-	foreach (player in Ware_MinigamePlayers) 
-	{
-		local minidata = Ware_GetPlayerMiniData(player)
-	    playerScoreList.append
-		({
-	        player = player
-	        score = minidata.gj_score
-			combo = minidata.gj_highest_combo
-	    })
-	}
-
-	playerScoreList.sort(@(a, b) b.score <=> a.score)
-
-	return playerScoreList
-}
-
-function PrintScorers(printyou)
-{
-	local win_threshold = GetWinThreshhold()
-	local playerScoreList = GetScoreList()
-	local topPlayers = []
-	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
-	{
-		local player = playerScoreList[i].player
-		topPlayers.append(player)
-		
-	    Ware_ChatPrint(null, "{player}{color} has {int} points, with a combo high of {int}! ", 
-			player, TF_COLOR_DEFAULT, playerScoreList[i].score,  playerScoreList[i].combo)
-	}
-
-	if (!printyou) 
-		return
-
-	foreach (player in Ware_Players)
-	{
-		if (topPlayers.find(player) == null)
-		{
-			local minidata = Ware_GetPlayerMiniData(player)
-			if ("gj_score" in minidata)
-				Ware_ChatPrint(player, "You achieved {int} points!", minidata.gj_score)
-		}
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[2] * Ware_GetPitchFactor())
+		Ware_CreateTimer(@() GiocaJouer_Clock(), microgame[3] * Ware_GetPitchFactor())
 	}
 }
 
@@ -199,9 +118,7 @@ function GiocaJouer_Countdown(delay)
 function GiocaJouer_Clock()
 {
 	if (micro == null)
-	{
 		micro = 0
-	}
 	else
 	{
 		OnMicroEnd()
@@ -210,117 +127,11 @@ function GiocaJouer_Clock()
 	OnMicroStart()
 }
 
-// calculates score every tick in microgame
 function GiocaJouer_PassPlayer(player, pass)
 {
 	local minidata = Ware_GetPlayerMiniData(player)
-	if ("gj_passed" in minidata)
-	{
-		if (pass)
-			minidata.gj_passed += micro_second_phase ? 2 : 1
-		
-		//local text = pass ? "^" : "X"
-		//Ware_ShowText(player, CHANNEL_BACKUP, text, 0.25, "255 255 255", -1, -0.5)
-	}
-}
-
-// calculates score only once per microgame
-function GiocaJouer_PassPlayerWithSpeed(player)
-{
-	local minidata = Ware_GetPlayerMiniData(player)
-	if ("gj_passed" in minidata && "gj_is_pass" in minidata)
-	{
-		if (!minidata.gj_is_pass)
-		{
-			minidata.gj_is_pass = true
-			
-			local timer = micro_second_phase ? TIMER_SECOND*2 : TIMER_FIRST
-			local sub_time = (Time() - micro_time_start)
-			if (micro_second_phase) 
-				sub_time *= 2
-				
-			local score = (timer - sub_time) * 75
-			minidata.gj_passed += score
-			
-			ComboCheck(player)
-			
-			ShowScores(player, minidata.gj_passed)		
-		}
-	}
-
-}
-
-function GetScoreThreshhold(gj_passed)
-{
-	local scores = [230, 205, 170, 140, 100]
-	local sel = micro_second_phase ? 3 : 2
-	
-	for (local i = 0; i < scores.len(); i++) 
-		scores[i] = scores[i] * microgame_info[micro][sel]
-		
-	for (local i = 0; i < scores.len(); i++) 
-		if (gj_passed > scores[i])
-			return i
-	
-	return 5
-}
-
-function GetScoreTextAndColor(gj_passed)
-{
-	local score = GetScoreThreshhold(gj_passed)
-	local text, color
-
-	switch (score)
-	{
-		case 0:  { text = "PERFECT!!";	color = "253 61 181"	} break
-		case 1:  { text = "GREAT!";		color = "0 255 255"		} break 
-		case 2:  { text = "GOOD";		color = "0 255 0"		} break
-		case 3:  { text = "OK";			color = "255 255 255"	} break 
-		case 4:  { text = "BAD";		color = "200 200 200"	} break 
-		default: { text = "AWFUL";		color = "255 0 0"		} break
-	}
-	
-	return [text, color]
-}
-
-function ShowScores(player, gj_passed)
-{
-	local scores = GetScoreTextAndColor(gj_passed)
-	local timer = micro_second_phase ? TIMER_SECOND / 2 : TIMER_FIRST / 2
-	
-	local text = scores[0] + " +" + floor(gj_passed).tostring()
-	Ware_ShowText(player, CHANNEL_MINIGAME, text, timer, scores[1], -1, -0.65)
-	
-	local minidata = Ware_GetPlayerMiniData(player)	
-	if (minidata.gj_combo > 1)
-	{
-		Ware_ShowText(player, CHANNEL_BACKUP,
-			minidata.gj_combo + " COMBO",
-			timer, scores[1], -1, -0.7)
-	}
-}
-
-function ComboCheck(player)
-{
-	local minidata = Ware_GetPlayerMiniData(player)
-	local score = GetScoreThreshhold(minidata.gj_passed)
-	if (score == 0)
-	{
-		minidata.gj_combo += 1
-		if (minidata.gj_combo > minidata.gj_highest_combo)
-			minidata.gj_highest_combo = minidata.gj_combo
-	}
-	else
-	{
-		minidata.gj_combo = 0
-	}
-}
-
-function DisplayNextMicro(micro)
-{
-	if (micro > 16) 
-		return
-	Ware_ShowText(Ware_Players, CHANNEL_MISC, "NEXT: " + microgame_info[micro][0], 4, "128 128 128", -1, -0.70)
+	if ("gj_passed" in  minidata)
+		minidata.gj_passed = pass
 }
 
 function GiocaJouer_CheckTauntableMelee(player)
@@ -351,18 +162,13 @@ function GiocaJouer_CheckTauntableMelee(player)
 
 function OnMicroStart()
 {
-	//DisplayNextMicro(micro + 1)
-	
 	minigame.description = microgame_info[micro][0]
 	Ware_ShowScreenOverlay(Ware_MinigamePlayers, microgame_info[micro][1])
-
-	micro_time_start = Time()
 	
 	// if we consider reset a microgame, we dont have to make a separate function
 	if (micro == MICRO_RESET)
 	{
 		micro = null
-		micro_second_phase = true
 		return
 	}
 	
@@ -379,6 +185,8 @@ function OnMicroStart()
 			case MICRO_SLEEP:
 			case MICRO_WALK:
 				GiocaJouer_PassPlayer(player, true)
+				micro_grace <- true
+				Ware_CreateTimer(function() {micro_grace <- false}, 1.0) // can't be more than about 2sec
 				break
 			case MICRO_SWIM:
 				player.AddCond(TF_COND_SWIMMING_CURSE)
@@ -434,26 +242,26 @@ function OnUpdate()
 		switch (micro)
 		{
 			case MICRO_SLEEP:
-				if (player.GetAbsVelocity().Length() < 5.0)
-					GiocaJouer_PassPlayer(player, true)
+				if (player.GetAbsVelocity().Length() > 5.0 && !micro_grace)
+					GiocaJouer_PassPlayer(player, false)
 				break
 			case MICRO_WAVE:
 			case MICRO_WAVE2:
 			case MICRO_WAVE3:
 				if (player.IsTaunting())
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_HITCH:
 				if (GetPropBool(player, "m_Shared.m_bJumping"))
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SNEEZE:
 				if (player.GetFlags() & FL_DUCKING)
 					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_WALK:
-				if (player.GetAbsVelocity().Length() > 75.0)
-					GiocaJouer_PassPlayer(player, true)
+				if (player.GetAbsVelocity().Length() < 75.0 && !micro_grace)
+					GiocaJouer_PassPlayer(player, false)
 				break
 			case MICRO_SWIM:
 				if (player.GetAbsVelocity().Length() > 75.0)
@@ -465,7 +273,7 @@ function OnUpdate()
 				break
 			case MICRO_SPRAY:
 				if (sprayed_players.find(player) != null)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_MACHO:
 				if ((player.GetFlags() & FL_DUCKING) && (player.EyeAngles().x < -70.0))
@@ -473,19 +281,11 @@ function OnUpdate()
 				break
 			case MICRO_BELL:
 				if (GetPropBool(player, "m_Shared.m_bJumping") && (player.GetFlags() & FL_DUCKING))
-					GiocaJouer_PassPlayerWithSpeed(player)
-				break
-			case MICRO_COMB:
-				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
-				{
-					GiocaJouer_PassPlayerWithSpeed(player)
-					player.RemoveCond(TF_COND_DISGUISING)					
-					player.RemoveCond(TF_COND_DISGUISED)
-				}
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_SUPER:
-				if (player.GetOrigin().z > -6900.0)
-					GiocaJouer_PassPlayerWithSpeed(player)
+				if (player.GetOrigin().z > -6800.0)
+					GiocaJouer_PassPlayer(player, true)
 				break
 		}
 	}
@@ -494,7 +294,7 @@ function OnUpdate()
 function OnPlayerHorn(player)
 {
 	if (micro == MICRO_HORN)
-		GiocaJouer_PassPlayerWithSpeed(player)
+		GiocaJouer_PassPlayer(player, true)
 }
 
 function OnPlayerVoiceline(player, voiceline)
@@ -505,11 +305,11 @@ function OnPlayerVoiceline(player, voiceline)
 		{
 			case MICRO_OKAY:
 				if (VCD_MAP[voiceline].find(".Cheers") != null)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 			case MICRO_KISS:
 				if (VCD_MAP[voiceline].find(".Medic") != null)
-					GiocaJouer_PassPlayerWithSpeed(player)
+					GiocaJouer_PassPlayer(player, true)
 				break
 		}
 	}
@@ -539,20 +339,22 @@ function OnMicroEnd()
 				player.RemoveCond(TF_COND_HALLOWEEN_KART)
 				break
 			case MICRO_COMB:
+				if (player.InCond(TF_COND_DISGUISING) || player.InCond(TF_COND_DISGUISED))
+				{
+					GiocaJouer_PassPlayer(player, true)
+					player.RemoveCond(TF_COND_DISGUISING)					
+					player.RemoveCond(TF_COND_DISGUISED)
+				}
+				Ware_StripPlayer(player, true)
+				break
 			case MICRO_MACHO:
 			case MICRO_SUPER:
 				Ware_StripPlayer(player, true)
 				break
 		}
-		if (!minidata.gj_is_pass)
+		if (minidata.gj_passed)
 		{
-			ComboCheck(player)
-			ShowScores(player, minidata.gj_passed)
-
-		}
-			
-		if (minidata.gj_passed > 70)
-		{
+			minidata.gj_score++
 			// TODO: move emitsound to when you pass the objective for each microgame.
 			// For microgames that start false, play it ONCE when you call GiocaJouer_PassPlayer(player, true)
 			// For microgames that start true, keep it here in OnEnd()
@@ -563,53 +365,59 @@ function OnMicroEnd()
 		{
 			EmitSoundOnClient(fail_sound, player)
 		}
-
-		minidata.gj_score += minidata.gj_passed + minidata.gj_combo
-		minidata.gj_passed = 0
-		minidata.gj_is_pass = false
 	}
 }
 
 function OnEnd()
 {
+	local high_score = 0
 	local winners = []
-
-	local win_threshold = GetWinThreshhold()
-	local playerScoreList = GetScoreList()
-	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++) 
+	local threshold = 28
+	local reached_threshold = false
+	foreach(player in Ware_MinigamePlayers)
 	{
-	    Ware_ChatPrint(null, "{player}{color} has {int} points, with a combo high of {int}! ", 
-			playerScoreList[i].player, TF_COLOR_DEFAULT, playerScoreList[i].score,  playerScoreList[i].combo)
-	}
-
-	local low_score = min_score
-	for (local i = 0; i < win_threshold && i < playerScoreList.len(); i++)
-	{
-		if (playerScoreList[i].score >= min_score)
-	    	winners.append(playerScoreList[i].player)
-		low_score = playerScoreList[i].score
-	}
-
-
-	if (winners.len() >= 1)
-	{
-		foreach (player in winners)
+		local minidata = Ware_GetPlayerMiniData(player)
+		local score = minidata.gj_score
+		
+		if (score >= threshold)
 		{
-			Ware_PassPlayer(player, true)
-			Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
-				COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
+			if (!reached_threshold)
+			{
+				reached_threshold = true
+				winners.clear()
+			}
+			winners.append(player)
 		}
-		foreach (player in Ware_MinigamePlayers)
+		else if (!reached_threshold && score > high_score)
+		{
+			high_score = score
+			winners.clear()
+			winners.append(player)
+		}
+		else if (score == high_score)
+		{
+			winners.append(player)
+		}
+	}
+	
+	foreach(player in winners)
+	{
+		Ware_PassPlayer(player, true)
+		Ware_ChatPrint(player, "You won! Your score was {color}{int}",	
+			COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score)
+	}
+	
+	if(!reached_threshold)
+	{
+		foreach(player in Ware_MinigamePlayers)
 		{
 			if (!Ware_IsPlayerPassed(player))
 			{
-				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
+				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but the winning score was {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
-					COLOR_LIME, low_score)
+					COLOR_LIME, high_score)
 			}
 		}
-		
-		Ware_GiveBonusPoints(winners[0])
 	}
 	else
 	{
@@ -619,7 +427,7 @@ function OnEnd()
 			{
 				Ware_ChatPrint(player, "You lose! Your score was {color}{int}{color}, but you needed to get {color}{int}",
 					COLOR_LIME, Ware_GetPlayerMiniData(player).gj_score, TF_COLOR_DEFAULT
-					COLOR_LIME, min_score)
+					COLOR_LIME, threshold)
 			}
 		}
 	}
