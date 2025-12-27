@@ -153,6 +153,29 @@ Ware_DevCommands <-
 		
 		Ware_ChatPrint(player, "All debug variables reset.")
 	}
+	"killaudio": function(player, text)
+	{
+		local StopSound = function(path){
+			Ware_PlaySoundOnAllClients(path, 1.0, 100, SND_STOP)
+			foreach(player in Ware_Players)
+				Ware_PlaySoundOnClient(player, path, 1.0, 100, SND_STOP)
+		}
+		
+		foreach(theme in Ware_Themes)
+		{
+			local folder = theme.theme_name
+			foreach(sound, duration in theme.sounds)
+			{
+				local path = format("tf2ware_ultimate/v%d/music_game/%s/%s.mp3", WARE_MP3_VERSION, folder, sound)
+				StopSound(path)
+			}
+		}
+		
+		if(Ware_Minigame && Ware_Minigame.music != "")
+			StopSound(format("tf2ware_ultimate/v%d/music_minigame/%s.mp3", WARE_MP3_VERSION, Ware_Minigame.music))
+				
+		Ware_ChatPrint(player, "Attempted to kill all TF2Ware audio. You may need to run this again.")
+	}
 	"restart" : function(player, text)
 	{
 		SetConvarValue("mp_restartgame_immediate", 1)
