@@ -1,6 +1,6 @@
 minigame <- Ware_MinigameData
 ({
-	name           = "Bird & Beans"
+	name           = "Grapple Health Kit"
 	author         = ["GeeNoVoid"]
 	description    = "Grab a Health Kit"
 	duration       = 5.5
