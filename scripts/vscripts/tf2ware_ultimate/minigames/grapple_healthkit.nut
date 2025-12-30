@@ -11,9 +11,17 @@ prop_model <- "models/tf2ware_ultimate/dummy_sphere.mdl"
 healthkit_model <- "models/items/medkit_large.mdl"
 parachute_model <- "models/workshop/weapons/c_models/c_paratooper_pack/c_paratrooper_parachute.mdl"
 
+function OnPrecache()
+{
+	PrecacheModel(prop_model)
+	PrecacheModel(healthkit_model)
+	PrecacheModel(parachute_model)
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_UNDEFINED, "Grappling Hook")
+	Ware_ShowAnnotation(Ware_MinigameLocation.center, "Look up!")
 
 	local count = Ware_MinigamePlayers.len()
 	for(local i = 0; i < count; i++)
@@ -42,7 +50,7 @@ function OnStart()
 			solid       = SOLID_BBOX
 		})
 
-		local prop = Ware_SpawnEntity("prop_physics_override", 
+		local prop = Ware_SpawnEntity("prop_physics_override",
 		{
 			model          = prop_model
 			origin         = healthkit.GetOrigin()
