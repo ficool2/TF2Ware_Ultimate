@@ -281,6 +281,12 @@ delegated_callbacks <-
 			DelegatedCall(scope, "OnMinigameCleanup")
 	}
 
+	function GetEndEffects()
+	{
+		foreach(scope in scopes)
+			DelegatedCall(scope, "GetEndEffects")
+	}
+	
 	function OnBeginIntermission(is_boss)
 	{
 		// return true if either one wants to override logic
