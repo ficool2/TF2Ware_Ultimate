@@ -332,6 +332,12 @@ function OnDeclareWinners(top_players, top_score, winner_count)
 	}
 }
 
+function OnEnd()
+{
+	foreach(player in Ware_Players)
+		EnablePlayerVisibility(player)
+}
+
 // stolen from singleplayer.nut
 function DisablePlayerVisibility(player)
 {
