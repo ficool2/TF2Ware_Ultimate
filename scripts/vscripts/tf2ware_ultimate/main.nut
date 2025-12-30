@@ -1050,6 +1050,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
 	special_round.cb_on_minigame_cleanup     = Ware_Callback(scope, "OnMinigameCleanup")
+	special_round.cb_get_end_effects         = Ware_Callback(scope, "GetEndEffects")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
 	special_round.cb_on_begin_boss           = Ware_Callback(scope, "OnBeginBoss")
 	special_round.cb_on_show_chat_text       = Ware_Callback(scope, "OnShowChatText")
@@ -1546,30 +1547,15 @@ function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
 	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if (player.GetTeam() & TF_TEAM_MASK)
-		{
-			if (!player.IsAlive())
-			{
-				// only respawn everyone before the boss
-				// for minigames intentionally not respawning people
-				// as punishment for dying in certain special rounds (like Skull)
-				if (is_boss && Ware_CanPlayerRespawn(player))
-				{
-					player.ForceRespawn()
-					// safety check
-					if (player.IsAlive())
-						valid_players.append(player)	
-				}
-			}
-			else
-			{
-				valid_players.append(player)
-			}
-		}
-	}
+	// only respawn everyone before the boss
+	// for minigames intentionally not respawning people
+	// as punishment for dying in certain special rounds (like Skull)
+	if(is_boss)
+		foreach(player in Ware_Players)
+			if(!player.IsAlive() && Ware_CanPlayerRespawn(player))
+				player.ForceRespawn()
+	
+	local valid_players = Ware_GetValidPlayers()
 
 	Ware_MinigameScope.clear()
 	
@@ -2075,26 +2061,40 @@ function Ware_FinishMinigameInternal()
 			passed = false
 		}
 		
-		if (all_passed)
+		local special_ret = {}
+		if(Ware_SpecialRound && Ware_SpecialRound.cb_get_end_effects.IsValid())
 		{
-			overlay = "hud/tf2ware_ultimate/default_victory_all"
-			sound = "victory"
+			special_ret = Ware_SpecialRound.cb_get_end_effects(player, participated, passed)
+			if("overlay" in special_ret && "sound" in special_ret)
+			{
+				overlay = special_ret.overlay
+				sound = special_ret.sound
+			}
 		}
-		else if (all_failed)
+		
+		if(!overlay || !sound)
 		{
-			overlay = "hud/tf2ware_ultimate/default_failure_all"
-			sound = "failure_all"
+			if (all_passed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_victory_all"
+				sound = "victory"
+			}
+			else if (all_failed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_failure_all"
+				sound = "failure_all"
+			}
+			else if (passed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_victory"
+				sound = "victory"
+			}
+			else
+			{
+				overlay = "hud/tf2ware_ultimate/default_failure"
+				sound = "failure"
+			}		
 		}
-		else if (passed)
-		{
-			overlay = "hud/tf2ware_ultimate/default_victory"
-			sound = "victory"
-		}
-		else
-		{
-			overlay = "hud/tf2ware_ultimate/default_failure"
-			sound = "failure"
-		}		
 		
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)

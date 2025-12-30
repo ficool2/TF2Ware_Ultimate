@@ -228,6 +228,14 @@ Ware_Location.pinball <-
 	center_top    = Vector(-3840, -5344, -5679)
 	center_bottom = Vector(-3840, 1884, -7599)
 	cameras       = ["pinball_camera"]
+	Teleport      = function(players)
+	{
+		Ware_TeleportPlayersRow(players,
+			center_bottom,
+			QAngle(0, -90, 0),
+			1000.0,
+			65.0, 65.0)
+	}
 }
 
 Ware_Location.factoryplatform <-
