@@ -1,6 +1,6 @@
 UnlitGeneric
 {
-	$basetexture hud/tf2ware_ultimate/minigames/memorize_a_pair_fail
+	$basetexture hud/tf2ware_ultimate/minigames/memory
 	$basetexturetransform "center .5 .2 scale 1.5 14.0 rotate 0 translate 0 0"
 
     $translucent 1
