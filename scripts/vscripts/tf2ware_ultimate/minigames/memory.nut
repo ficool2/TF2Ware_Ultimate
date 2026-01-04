@@ -50,7 +50,7 @@ model_head  <- "models/mariokart/head.mdl"
 model_random  <- "models/class_menu/random_class_icon.mdl"
 sound_show1 <- "misc/halloween/spelltick_01.wav"
 sound_show2 <- "misc/halloween/spelltick_02.wav"
-overlay_fail <- "hud/tf2ware_ultimate/minigames/memorize_a_pair_fail"
+overlay_fail <- "hud/tf2ware_ultimate/minigames/memory_fail"
 
 function OnPrecache()
 {
