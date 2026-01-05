@@ -114,7 +114,7 @@ class Ware_SpecialRoundData
 	cb_on_minigame_end         = null
 	// OnMinigameCleanup()        - Called by Ware_EndMinigame when a minigame cleans up, before scores are calculated.
 	cb_on_minigame_cleanup     = null
-	// GetEndEffects(player, participated, passed)
+	// GetMinigameEndEffects(player, participated, passed)
 	//                              - Called by Ware_EndMinigame when determining what overlay and sounds to play for each player.
 	//                              - Called after OnMinigameCleanup, but before OnMinigameEnd.
 	//                              - Return an overlay and sound in a table to have that player see that instead.

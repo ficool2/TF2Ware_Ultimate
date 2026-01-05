@@ -66,6 +66,7 @@ function Wipeout_GetAlivePlayers()
 	
 	return alive_players
 }
+
 function OnStart()
 {
 	local max_lives = 2 // TODO: Find a different fix to the long rounds then set this back to 3.
@@ -269,13 +270,11 @@ function OnMinigameStart()
 	}
 }
 
-function GetEndEffects(player, participated, passed)
+function GetMinigameEndEffects(player, participated, passed)
 {
-	printl("getendeffects run!")
 	if(participated)
 		return {}
 	
-	printl("did not participate! returning what should be valid table")
 	return {overlay = "", sound = "victory"}
 }
 
