@@ -2,6 +2,9 @@
 // TODO: More testing/fixes when players join or leave mid-round
 // TODO: Give players that join mid-round 1 life, but avoid any cheesing from relogging. DONE, needs test
 
+// TODO: Fix any minigames where things fall from the sky bcuz the things collide with spectators.
+// TODO: Fix halloween bosses targeting spectators.
+
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
 player_thresholds <- [
