@@ -220,6 +220,21 @@ Ware_Location.manor <-
 {
 	center  	  = Vector(8048, -6440, -3615)
 	lobby		  = Vector(6048, -5516, -3822)
+	Teleport      = function(players)
+	{
+		local spacing_x = 64.0, spacing_y = 64.0
+		if (players.len() > 40)
+		{
+			spacing_x = 32.0
+			spacing_y = 48.0
+		}
+		
+		Ware_TeleportPlayersRow(players,
+			center,
+			QAngle(0, 180, 0),
+			400.0,
+			spacing_x, spacing_y)
+	}
 }
 
 Ware_Location.pinball <-
@@ -243,6 +258,18 @@ Ware_Location.factoryplatform <-
 	center        = Vector(4208, 1664, -5215)
 	center_left   = Vector(3708, 1664, -5271)
 	center_right  = Vector(4700, 1664, -5271)
+	Teleport      = function(players)
+	{
+		local spacing_x = 58.0, spacing_y = 65.0
+		if (players.len() > 40)
+			spacing_y *= 0.6
+		
+		Ware_TeleportPlayersRow(players,
+			center,
+			QAngle(0, 180, 0),
+			500.0,
+			spacing_x, spacing_y)
+	}
 }
 
 Ware_Location.love <-
@@ -250,6 +277,7 @@ Ware_Location.love <-
 	center         = Vector(5376, -1480, -5920)
 	center_left    = Vector(6160, -984, -5919)
 	center_right   = Vector(6080, -2100, -5919)
+	radius         = 750.0
 	cameras        = ["love_camera"]
 	walls          = []
 	Init           = function()
@@ -260,6 +288,10 @@ Ware_Location.love <-
 			wall.AddFlag(FL_UNBLOCKABLE_BY_PLAYER)
 			walls.append(wall)
 		}
+	}
+	Teleport       = function(players)
+	{
+		Ware_TeleportPlayersCircle(players, center, radius)
 	}
 }
 

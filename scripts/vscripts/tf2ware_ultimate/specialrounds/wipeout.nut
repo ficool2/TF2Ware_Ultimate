@@ -237,7 +237,18 @@ function OnMinigameStart()
 {
 	// valid players get passed through normal logic. handle invalid players here (teleport etc)
 	local Spectators = Ware_Players.filter(function(i,v){return !Ware_GetPlayerSpecialRoundData(v).is_playing})
+	foreach(player in Spectators)
+		Ware_ChatPrint(player, "The players are now playing {color}{str}{color}!", COLOR_GREEN, Ware_Minigame.name, TF_COLOR_DEFAULT)
+	
 	local location = Ware_MinigameLocation
+	if(location.name == "waluigi_pinball") // special case, make players use spectator
+	{
+		foreach(player in Spectators)
+			KillPlayerSilently(player)
+			
+		return
+	}
+	
 	location.Teleport(Spectators)
 	
 	if("maxs" in location && "mins" in location) // TODO: Remove this check once all locations have mins and maxs defined.
