@@ -169,9 +169,10 @@ Ware_ParticleSpawner      <- null
 
 Ware_SkyboxParticles <- 
 {
-	speedup  = "Micro_Skybox_SpeedUp"
-	slowdown = "Micro_Skybox_SpeedDown"
 	danger   = "Micro_Skybox_Danger"
+	icons    = "Micro_Skybox_Icons"
+	slowdown = "Micro_Skybox_SpeedDown"
+	speedup  = "Micro_Skybox_SpeedUp"
 }
 
 Ware_RespawnRooms         <- []
