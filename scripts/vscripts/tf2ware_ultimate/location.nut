@@ -133,6 +133,8 @@ Ware_Location.sawrun_micro <-
 Ware_Location.targetrange <-
 {
 	center    = Vector(2264, -3896, -3968)
+	mins      = Vector(1280, -5470, -4060)
+	maxs      = Vector(3330, -2320, -3100)
 	left      = Vector(2303, -5380, -3999)
 	right     = Vector(2303, -2410, -3999)
 	left_mid  = Vector(2240, -4670, -3999)
@@ -219,6 +221,8 @@ Ware_Location.beach <-
 Ware_Location.manor <-
 {
 	center  	  = Vector(8048, -6440, -3615)
+	mins          = Vector(4350, -7160, -3890)
+	maxs          = Vector(8700, -4935, -3200)
 	lobby		  = Vector(6048, -5516, -3822)
 	Teleport      = function(players)
 	{
@@ -240,6 +244,8 @@ Ware_Location.manor <-
 Ware_Location.pinball <-
 {
 	center        = Vector(-3840, -1280, -6792)
+	mins          = Vector(-5125, -5540, -7600)
+	maxs          = Vector(-2560, 2375, -4464)
 	center_top    = Vector(-3840, -5344, -5679)
 	center_bottom = Vector(-3840, 1884, -7599)
 	cameras       = ["pinball_camera"]
@@ -256,6 +262,8 @@ Ware_Location.pinball <-
 Ware_Location.factoryplatform <-
 {
 	center        = Vector(4208, 1664, -5215)
+	mins          = Vector(3470, 1360, -5790)
+	maxs          = Vector(4940, 1970, -3550)
 	center_left   = Vector(3708, 1664, -5271)
 	center_right  = Vector(4700, 1664, -5271)
 	Teleport      = function(players)
@@ -275,6 +283,8 @@ Ware_Location.factoryplatform <-
 Ware_Location.love <-
 {
 	center         = Vector(5376, -1480, -5920)
+	mins           = Vector(3838, -3075, -5920)
+	maxs           = Vector(6910, 0, -5374)
 	center_left    = Vector(6160, -984, -5919)
 	center_right   = Vector(6080, -2100, -5919)
 	radius         = 750.0
@@ -321,6 +331,8 @@ Ware_Location.kart_containers <-
 Ware_Location.kart_paths <-
 {
 	center         = Vector(-6688, 928, -5984)
+	mins           = Vector(-7777, -5570, -6751)
+	maxs           = Vector(-5950, 10753, -5565)
 	center_left    = Vector(-7095, -5300, -6046)
 	center_right   = Vector(-6520, -5300, -6046)
 	angles         = QAngle(0, 90, 0)
@@ -385,6 +397,8 @@ Ware_Location.frogger <-
 Ware_Location.sumobox <-
 {
 	center   = Vector(-4600, -9500, -6142)
+	mins     = Vector(-5630, -10500, -6650)
+	maxs     = Vector(-3580, -8450, -5215)
 	radius   = 480
 	cameras  = ["sumobox_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
@@ -393,6 +407,8 @@ Ware_Location.sumobox <-
 Ware_Location.mandrill <-
 {
 	center   = Vector(-1536, -13024, -5344)
+	mins     = Vector(-5630, -14970, -5340)
+	maxs     = Vector(3330, -11135, -4030)
 	start    = Vector(2240, -13562, -5343)
 	maze     = Vector(-3584, -14720, -5344)
 	cameras  = ["mandrill_camera"]
@@ -406,6 +422,8 @@ Ware_Location.mandrill <-
 Ware_Location.rocketjump <-
 {
 	center   = Vector(128, -3344, -7392)
+	mins     = Vector(-770, -4225, -7905)
+	maxs     = Vector(1025, -2430, -3550)
 	radius   = 400
 	cameras  = ["rocketjump_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
@@ -414,6 +432,8 @@ Ware_Location.rocketjump <-
 Ware_Location.rocketjump_micro <-
 {
 	center = Vector(1940, 4780, -6490)
+	mins   = Vector(-60, 3205, -9730)
+	maxs   = Vector(3365, 6270, -2630)
 	radius = 400
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
 }
@@ -421,6 +441,8 @@ Ware_Location.rocketjump_micro <-
 Ware_Location.hexplatforms <-
 {
 	center      = Vector(2304, -8448, -4880)
+	mins        = Vector(318, -10433, -5695)
+	maxs        = Vector(4225, -6463, -3134)
 	// TODO need to dynamically align this camera
 	//cameras     = ["hexplatforms_camera"]
 	plat_models = []
@@ -442,6 +464,8 @@ Ware_Location.hexplatforms <-
 Ware_Location.dirtsquare <-
 {
 	center      = Vector(1648, -1776, -511)
+	mins        = Vector(605, -2815, -580)
+	maxs        = Vector(2690, -735, 3586)
 	radius      = 768.0
 	cameras     = ["dirtsquare_camera"]
 	Teleport = function(players) { Ware_TeleportPlayersCircle(players, center, radius) }
@@ -450,6 +474,8 @@ Ware_Location.dirtsquare <-
 Ware_Location.jumprope <-
 {
 	center      = Vector(80, -1008, -4959)
+	mins        = Vector(-770, -1825, -4994)
+	maxs        = Vector(930, -190, -4310)
 	Teleport = function(players) 
 	{ 
 		local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
@@ -466,6 +492,8 @@ Ware_Location.jumprope <-
 Ware_Location.obstaclecourse <-
 {
 	center      = Vector(-1696, -3968, -3927)
+	mins        = Vector(-2498, -5569, -4385)
+	maxs        = Vector(-893, 1026, -3518)
 	cameras     = ["obstaclecourse_camera"]
 	Teleport = function(players) 
 	{ 
@@ -477,6 +505,8 @@ Ware_Location.obstaclecourse <-
 Ware_Location.ballcourt <-
 {
 	center      = Vector(5800, -2176, -7200)
+	mins        = Vector(5118, -3265, -7218)
+	maxs        = Vector(6465, -108, -6479)
 	left        = Vector(5792, -3064, -7199)
 	right       = Vector(5792, -1278, -7199)
 	cameras     = ["basketball_camera", "basketball_camera2"]
@@ -493,6 +523,8 @@ Ware_Location.ballcourt <-
 Ware_Location.beepblockskyway_micro <-
 {
 	center = Vector(-13285, -14470, -9760)
+	mins   = Vector(-15100, -15100, -11800)
+	maxs   = Vector(-7293, -765, -7762)
 	cameras = ["Beatblock_Camera1", "Beatblock_Camera2", "Beatblock_Camera3"	]
 	Teleport = function(players)
 	{
@@ -531,6 +563,8 @@ Ware_Location.warehouse <-
 Ware_Location.homerun_contest <-
 {
 	center = Vector(-12128, -5470, -14207)
+	mins   = Vector(-14754, -9817, -14400)
+	maxs   = Vector(-10080, 11305, -12350)
 	Teleport = function(players)
 	{
 		Ware_TeleportPlayersRow(players,
@@ -572,6 +606,8 @@ Ware_Location.typing <-
 Ware_Location.boxingring <-
 {
 	center      = Vector(-900, -400, -5645)
+	mins        = Vector(-1586, -1178, -5675)
+	maxs        = Vector(-45, 362, -5162)
 	Teleport = function(players) 
 	{ 
 		local red_players  = players.filter(@(i, player) player.GetTeam() == TF_TEAM_RED)
@@ -590,6 +626,8 @@ Ware_Location.inventoryday <-
 	side_left  = Vector(1800, 4500, -11630)
 	side_right = Vector(1800, 3400, -11630)
 	center     = Vector(1340, 3960, -11630)
+	mins       = Vector(110, 2840, -11980)
+	maxs       = Vector(2600, 5130, -10865)
 	radius     = 800.0
 	Teleport = function(players)
 	{
