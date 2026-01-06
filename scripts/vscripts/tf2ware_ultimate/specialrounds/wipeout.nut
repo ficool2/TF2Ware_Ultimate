@@ -134,23 +134,23 @@ function OnBeginIntermission(is_boss)
 	}
 	
 	// assemble valid players
-	local valid_players = alive_players.filter(function(i,v){return !Ware_GetPlayerSpecialRoundData(v).has_played})
-	if(valid_players.len() < player_count)
+	local player_rotation = alive_players.filter(function(i,v){return !Ware_GetPlayerSpecialRoundData(v).has_played})
+	if(player_rotation.len() < player_count)
 	{
-		Wipeout_ValidPlayers.extend(valid_players)
-		valid_players.clear()
+		Wipeout_ValidPlayers.extend(player_rotation)
+		player_rotation.clear()
 		foreach(player in alive_players)
 		{
 			local data = Ware_GetPlayerSpecialRoundData(player)
 			data.has_played = !data.has_played
 			if(!data.has_played)
-				valid_players.append(player)
+				player_rotation.append(player)
 		}
 	}
 	
 	while (Wipeout_ValidPlayers.len() < player_count)
 	{
-		local player = RemoveRandomElement(valid_players)
+		local player = RemoveRandomElement(player_rotation)
 		local data = Ware_GetPlayerSpecialRoundData(player)
 		Wipeout_ValidPlayers.append(player)
 		data.has_played = true
