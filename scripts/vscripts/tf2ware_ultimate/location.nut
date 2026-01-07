@@ -638,6 +638,8 @@ Ware_Location.inventoryday <-
 Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location, recommend collisions stay off
 {
 	center   = Vector(3615, 2630, -11880)
+	mins     = Vector(2420, 1430, -12250)
+	maxs     = Vector(4830, 3830, -10415)
 	radius   = 300.0
 	cameras  = ["FallingFloor_Camera"]
 	respawns = 
@@ -689,6 +691,8 @@ Ware_Location.smasharena <- // NOTE: this is a pretty tight space for a location
 Ware_Location.abcdeathpit <-  // NOTE: Players can get stuck if collisions are on (they will still die though)
 {
 	center = Vector(128, 1160, -4000)
+	mins   = Vector(0, 1280, -4800)
+	maxs   = Vector(256, 1024, -3645)
 	radius = 1.0
 	Teleport = function(players)
 	{
@@ -909,6 +913,8 @@ Ware_Location.waluigi_pinball <-
 Ware_Location.wega_challenge <-
 {
 	center = Vector(-482, -13730, -12580)
+	mins   = Vector(-6145, -15361, -15361)
+	maxs   = Vector(15361, -1533, -10238)
 	start   = Vector(-32, -13280, -12580)
 	cameras  = ["wega_camera"]
 	Teleport = function(players)
