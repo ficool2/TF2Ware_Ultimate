@@ -158,6 +158,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- []
+	Ware_DebugForceSpecialRound <- false
 	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
@@ -1151,7 +1152,8 @@ function Ware_BeginSpecialRoundInternal()
 		
 		local scope = Ware_LoadSpecialRound(round, player_count, is_forced)
 						
-		Ware_DebugNextSpecialRound.clear()
+		if(!Ware_DebugForceSpecialRound)
+			Ware_DebugNextSpecialRound.clear()
 		
 		if (scope)
 		{
@@ -1167,8 +1169,47 @@ function Ware_BeginSpecialRoundInternal()
 	}	
 	
 	printf("[TF2Ware] Starting special round '%s'\n", round)
-	
+	local special_round = Ware_SpecialRoundScope.special_round
 	Ware_SpecialRoundPrevious = true
+	
+	local end_initial_sequence = function(special_round){
+		Ware_CriticalZone = true
+				
+		Ware_SpecialRound = special_round
+			
+		Ware_SetupSpecialRoundCallbacks()	
+				
+		// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
+		foreach(name, value in special_round.convars)
+		{
+			Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
+			SetConvarValue(name, value)
+		}
+		
+		if ("OnStart" in Ware_SpecialRoundScope)
+			Ware_SpecialRoundScope.OnStart()
+			
+		if (special_round.allow_damage)
+			Ware_ToggleTruce(false)
+		
+		// TODO this doesn't work with double_trouble
+		Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
+		
+		Ware_CriticalZone = false
+			
+		CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
+		CreateTimer(function() 
+		{
+			Ware_BeginIntermission(false)
+		}, 0.0)
+	}
+	
+	if(Ware_DebugForceSpecialRound)
+	{
+		end_initial_sequence(special_round)
+		Ware_CriticalZone = false
+		return true
+	}
 	
 	// ingame sequence
 	Ware_PlayGameSound(null, "special_round")
@@ -1183,7 +1224,6 @@ function Ware_BeginSpecialRoundInternal()
 	local end_duration = duration - reveal_duration
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
-	local special_round = Ware_SpecialRoundScope.special_round
 		
 	CreateTimer(function() 
 	{	
@@ -1205,39 +1245,7 @@ function Ware_BeginSpecialRoundInternal()
 			
 			Ware_PlaySoundOnAllClients(Ware_FixupMP3("tf2ware_ultimate/v%d/pass.mp3"))
 			
-			CreateTimer(function()
-			{	
-				Ware_CriticalZone = true
-				
-				Ware_SpecialRound = special_round
-					
-				Ware_SetupSpecialRoundCallbacks()	
-						
-				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
-				foreach(name, value in special_round.convars)
-				{
-					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
-					SetConvarValue(name, value)
-				}
-				
-				if ("OnStart" in Ware_SpecialRoundScope)
-					Ware_SpecialRoundScope.OnStart()
-					
-				if (special_round.allow_damage)
-					Ware_ToggleTruce(false)
-				
-				// TODO this doesn't work with double_trouble
-				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
-				
-				Ware_CriticalZone = false
-					
-				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
-				CreateTimer(function() 
-				{
-					Ware_BeginIntermission(false)
-				}, 0.0)
-			
-			}, end_duration - 1.0) // hack: more closely syncs up with the theme
+			CreateTimer(end_initial_sequence(special_round), end_duration - 1.0) // hack: more closely syncs up with the theme
 		}
 		else
 		{
