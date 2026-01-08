@@ -262,8 +262,10 @@ function OnMinigameStart()
 			"beach": 0.75
 			"circlepit": 0.4
 			"circlepit-big": 0.4
+			"factoryplatform": 0.4
 			"home": 0.15
 			"home-big": 0.15
+			"love": 0.5
 			"rocketjump": 0.8
 			"rocketjump_micro": 0.8
 			"sawrun" : 0.6
