@@ -49,8 +49,9 @@ function OnPrecache()
 		PrecacheSound(v)
 }
 
-function Wipeout_SetupData(data, lives = 0)
+function Wipeout_SetupData(player, data, lives = 0)
 {
+	data.collision_group <- (player && player.IsPlayer() ? player.GetCollisionGroup() : null)
 	data.lives <- lives
 	data.is_playing <- false
 	data.has_played <- false
@@ -76,7 +77,7 @@ function OnStart()
 	foreach(player in Ware_Players)
 	{
 		local data = Ware_GetPlayerSpecialRoundData(player)
-		Wipeout_SetupData(data, max_lives)
+		Wipeout_SetupData(player, data, max_lives)
 		Ware_GetPlayerData(player).score = max_lives
 		Wipeout_SteamIDs.append(GetPlayerSteamID3(player))
 	}
@@ -90,17 +91,17 @@ function OnPlayerConnect(player)
 	if(Wipeout_SteamIDs.find(steam_id) == null && num_players >= 5)
 	{
 		Wipeout_SteamIDs.append(steam_id)
-		Wipeout_SetupData(data, 1)
+		Wipeout_SetupData(player, data, 1)
 	}
 	else
-		Wipeout_SetupData(data)
+		Wipeout_SetupData(player, data)
 }
 
 function OnPlayerSpawn(player)
 {
 	local data = Ware_GetPlayerSpecialRoundData(player)
 	if (!("lives" in data))
-		Wipeout_SetupData(data, 0)
+		Wipeout_SetupData(player, data, 0)
 }
 
 function OnTakeDamage(params)
@@ -244,7 +245,7 @@ function OnMinigameStart()
 		Ware_ChatPrint(player, "The players are now playing {color}{str}{color}!", COLOR_GREEN, Ware_Minigame.name, TF_COLOR_DEFAULT)
 	
 	local location = Ware_MinigameLocation
-	if(location.name == "waluigi_pinball") // special case, make players use spectator
+	if(location.name == "waluigi_pinball" || location.name == "manor") // special cases, make players use spectator
 	{
 		foreach(player in Spectators)
 			KillPlayerSilently(player)
@@ -263,8 +264,8 @@ function OnMinigameStart()
 			"circlepit-big": 0.4
 			"home": 0.15
 			"home-big": 0.15
-			"rocketjump": 0.9
-			"rocketjump_micro": 0.9
+			"rocketjump": 0.8
+			"rocketjump_micro": 0.8
 			"sawrun" : 0.6
 			"sawrun_micro": 0.6
 		} 
@@ -274,6 +275,7 @@ function OnMinigameStart()
 		{
 			player.SetGravity(0.00001)
 			Ware_AddPlayerAttribute(player, "no_jump", 1.0, Ware_Minigame.duration)
+			Ware_ShowMinigameText(player, Ware_GetPlayerSpecialRoundData(player).lives > 0 ? "Please wait for your turn." : "You are out of lives and cannot continue.")
 			DisablePlayerVisibility(player)
 			
 			local origin = player.GetOrigin()
@@ -365,6 +367,8 @@ function DisablePlayerVisibility(player)
     Ware_TogglePlayerWearables(player, false)
     player.AddHudHideFlags(HIDEHUD_TARGET_ID)
     SetPropInt(player, "m_nRenderMode", kRenderNone)
+	Ware_GetPlayerSpecialRoundData(player).collision_group <- player.GetCollisionGroup()
+	player.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 }
 
 function EnablePlayerVisibility(player)
@@ -372,4 +376,5 @@ function EnablePlayerVisibility(player)
 	player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 	SetPropInt(player, "m_nRenderMode", kRenderNormal)
 	Ware_TogglePlayerWearables(player, true)
+	player.SetCollisionGroup(Ware_GetPlayerSpecialRoundData(player).collision_group)
 }
