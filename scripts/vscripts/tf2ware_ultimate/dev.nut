@@ -173,6 +173,7 @@ Ware_DevCommands <-
 		Ware_DebugForceMinigameOnce = false
 		Ware_DebugForceBossgameOnce = false
 		Ware_DebugNextSpecialRound  = []
+		Ware_DebugForceSpecialRound = false
 		Ware_DebugForceMode         = null
 		Ware_DebugNextTheme         = ""
 		Ware_DebugForceTheme        = ""
