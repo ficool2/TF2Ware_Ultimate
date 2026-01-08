@@ -244,9 +244,19 @@ function OnMinigameStart()
 	foreach(player in Spectators)
 		Ware_ChatPrint(player, "The players are now playing {color}{str}{color}!", COLOR_GREEN, Ware_Minigame.name, TF_COLOR_DEFAULT)
 	
-	local location = Ware_MinigameLocation
+	local location = clone(Ware_MinigameLocation)
 	local name = location.name
-	if(name == "waluigi_pinball" || name == "manor" || startswith(name, "kart")) // special cases, make players use spectator
+	local disabled_locations = [// special cases, make players use spectator for any complex locations
+		"factory"
+		"frogger"
+		"hexplatforms"
+		"homerun_contest"
+		"manor"
+		"obstaclecourse"
+		"typing"
+		"waluigi_pinball"
+	]
+	if(disabled_locations.find(name) != null || startswith(name, "kart") || startswith(name, "beepblock")) 
 	{
 		foreach(player in Spectators)
 			KillPlayerSilently(player)
@@ -254,22 +264,34 @@ function OnMinigameStart()
 		return
 	}
 	
+	if(Ware_Minigame.file_name == "trivia") // another edge case..... would rather show players winners area over invisible players at the question
+	{
+		location = Ware_Location.beach
+		name = location.name
+	}
+		
 	location.Teleport(Spectators)
 	
 	if("maxs" in location && "mins" in location) // TODO: Remove this check once all locations have mins and maxs defined.
 	{
 		local lerps = { // lerp from min.z to max.z; TODO: should we move this to location tables?
 			"beach": 0.75
+			"boxingring": 0.3
 			"circlepit": 0.4
 			"circlepit-big": 0.4
 			"factoryplatform": 0.4
 			"home": 0.15
 			"home-big": 0.15
+			"inventoryday": 0.35
 			"love": 0.5
 			"rocketjump": 0.8
 			"rocketjump_micro": 0.8
 			"sawrun" : 0.6
 			"sawrun_micro": 0.6
+			"smasharena": 0.45
+			"sumobox": 0.6
+			"warehouse": 0.55
+			"wega_challenge": 0.6
 		} 
 		local tele_lerp = name in lerps ? lerps[name] : 0.25
 		
