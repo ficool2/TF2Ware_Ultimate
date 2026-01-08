@@ -54,7 +54,7 @@ function OnPrecache()
 function Wipeout_SetupData(player, lives = 0)
 {
 	local data = Ware_GetPlayerSpecialRoundData(player)
-	data.collision_group <- (player && player.IsPlayer() ? player.GetCollisionGroup() : null)
+	data.solid_flags <- (player && player.IsPlayer() ? GetPropInt(player, "m_Collision.m_usSolidFlags") : null)
 	data.lives <- lives
 	data.is_playing <- false
 	data.has_played <- false
@@ -370,7 +370,7 @@ function DisablePlayerVisibility(player)
     player.AddHudHideFlags(HIDEHUD_TARGET_ID)
     SetPropInt(player, "m_nRenderMode", kRenderNone)
 	Ware_GetPlayerSpecialRoundData(player).collision_group <- player.GetCollisionGroup()
-	player.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+	player.AddSolidFlags(FSOLID_NOT_SOLID)
 }
 
 function EnablePlayerVisibility(player)
@@ -378,5 +378,5 @@ function EnablePlayerVisibility(player)
 	player.RemoveHudHideFlags(HIDEHUD_TARGET_ID)
 	SetPropInt(player, "m_nRenderMode", kRenderNormal)
 	Ware_TogglePlayerWearables(player, true)
-	player.SetCollisionGroup(Ware_GetPlayerSpecialRoundData(player).collision_group)
+	player.SetSolidFlags(Ware_GetPlayerSpecialRoundData(player).solid_flags)
 }
