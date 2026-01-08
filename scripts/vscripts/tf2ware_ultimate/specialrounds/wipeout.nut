@@ -51,8 +51,9 @@ function OnPrecache()
 		PrecacheSound(v)
 }
 
-function Wipeout_SetupData(player, data, lives = 0)
+function Wipeout_SetupData(player, lives = 0)
 {
+	local data = Ware_GetPlayerSpecialRoundData(player)
 	data.collision_group <- (player && player.IsPlayer() ? player.GetCollisionGroup() : null)
 	data.lives <- lives
 	data.is_playing <- false
@@ -77,8 +78,7 @@ function OnStart()
 {
 	foreach(player in Ware_Players)
 	{
-		local data = Ware_GetPlayerSpecialRoundData(player)
-		Wipeout_SetupData(player, data, MaxLives)
+		Wipeout_SetupData(player, MaxLives)
 		Ware_GetPlayerData(player).score = MaxLives
 		Wipeout_SteamIDs.append(GetPlayerSteamID3(player))
 	}
@@ -87,22 +87,21 @@ function OnStart()
 function OnPlayerConnect(player)
 {
 	local steam_id = GetPlayerSteamID3(player)
-	local data = Ware_GetPlayerSpecialRoundData(player)
 	local num_players = Wipeout_GetAlivePlayers().len()
 	if(Wipeout_SteamIDs.find(steam_id) == null && num_players >= 5)
 	{
 		Wipeout_SteamIDs.append(steam_id)
-		Wipeout_SetupData(player, data, 1)
+		Wipeout_SetupData(player, 1)
 	}
 	else
-		Wipeout_SetupData(player, data)
+		Wipeout_SetupData(player)
 }
 
 function OnPlayerSpawn(player)
 {
 	local data = Ware_GetPlayerSpecialRoundData(player)
 	if (!("lives" in data))
-		Wipeout_SetupData(player, data, 0)
+		Wipeout_SetupData(player, 0)
 }
 
 function OnTakeDamage(params)
