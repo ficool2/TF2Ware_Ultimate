@@ -257,10 +257,12 @@ function OnMinigameStart()
 	if("maxs" in location && "mins" in location) // TODO: Remove this check once all locations have mins and maxs defined.
 	{
 		local name = location.name
-		local lerps = { // TODO: should we move this to location tables?
+		local lerps = { // lerp from min.z to max.z; TODO: should we move this to location tables?
 			"beach": 0.75
-			"circlepit": 0.6
-			"circlepit-big": 0.6
+			"circlepit": 0.4
+			"circlepit-big": 0.4
+			"home": 0.15
+			"home-big": 0.15
 			"rocketjump": 0.9
 			"rocketjump_micro": 0.9
 			"sawrun" : 0.6
