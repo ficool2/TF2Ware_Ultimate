@@ -7,6 +7,8 @@
 
 // wipeout description found at https://wiki.teamfortress.com/wiki/TF2Ware
 
+MaxLives <- Ware_Players.len() >= 24 ? 2 : 3
+
 player_thresholds <- [
 	[8, 40],
 	[7, 35],
@@ -34,7 +36,7 @@ special_round <- Ware_SpecialRoundData
 ({
 	name = "Wipeout"
 	author = ["Mecha the Slag", "pokemonPasta"]
-	description = "2 lives, battle in smaller groups until one player remains!" // TODO: better description
+	description = format("%d lives, battle in smaller groups until one player remains!", MaxLives) // TODO: better description
 	category = "meta" // TODO: wipeout modifies special_round late which double trouble doesn't support
 	
 	min_players = 3
@@ -73,12 +75,11 @@ function Wipeout_GetAlivePlayers()
 
 function OnStart()
 {
-	local max_lives = 2 // TODO: Find a different fix to the long rounds then set this back to 3.
 	foreach(player in Ware_Players)
 	{
 		local data = Ware_GetPlayerSpecialRoundData(player)
-		Wipeout_SetupData(player, data, max_lives)
-		Ware_GetPlayerData(player).score = max_lives
+		Wipeout_SetupData(player, data, MaxLives)
+		Ware_GetPlayerData(player).score = MaxLives
 		Wipeout_SteamIDs.append(GetPlayerSteamID3(player))
 	}
 }
