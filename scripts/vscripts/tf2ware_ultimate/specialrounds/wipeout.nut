@@ -245,7 +245,8 @@ function OnMinigameStart()
 		Ware_ChatPrint(player, "The players are now playing {color}{str}{color}!", COLOR_GREEN, Ware_Minigame.name, TF_COLOR_DEFAULT)
 	
 	local location = Ware_MinigameLocation
-	if(location.name == "waluigi_pinball" || location.name == "manor") // special cases, make players use spectator
+	local name = location.name
+	if(name == "waluigi_pinball" || name == "manor" || startswith(name, "kart")) // special cases, make players use spectator
 	{
 		foreach(player in Spectators)
 			KillPlayerSilently(player)
@@ -257,7 +258,6 @@ function OnMinigameStart()
 	
 	if("maxs" in location && "mins" in location) // TODO: Remove this check once all locations have mins and maxs defined.
 	{
-		local name = location.name
 		local lerps = { // lerp from min.z to max.z; TODO: should we move this to location tables?
 			"beach": 0.75
 			"circlepit": 0.4
