@@ -259,8 +259,12 @@ function OnMinigameStart()
 		local name = location.name
 		local lerps = { // TODO: should we move this to location tables?
 			"beach": 0.75
-			"circlepit": 0.9
-			"circlepit-big": 0.9
+			"circlepit": 0.6
+			"circlepit-big": 0.6
+			"rocketjump": 0.9
+			"rocketjump_micro": 0.9
+			"sawrun" : 0.6
+			"sawrun_micro": 0.6
 		} 
 		local tele_lerp = name in lerps ? lerps[name] : 0.25
 		
@@ -268,6 +272,7 @@ function OnMinigameStart()
 		{
 			player.SetGravity(0.00001)
 			Ware_AddPlayerAttribute(player, "no_jump", 1.0, Ware_Minigame.duration)
+			DisablePlayerVisibility(player)
 			
 			local origin = player.GetOrigin()
 			origin.z = Lerp(location.mins.z, location.maxs.z, tele_lerp)
