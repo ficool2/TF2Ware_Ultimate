@@ -9,12 +9,13 @@
 MaxLives <- Ware_Players.len() >= 24 ? 2 : 3
 
 player_thresholds <- [
-	[8, 40],
-	[7, 35],
-	[6, 30],
-	[5, 20], // 5 players at 20 alive or higher
-	[4, 10], // 4 players at 10 or higher
-	[3,  3], // etc
+	[9, 40],
+	[8, 35],
+	[7, 30],
+	[6, 20], // 6 players at 20 alive or higher
+	[5, 10], // 5 players at 10 or higher
+	[4,  7], // etc
+	[3,  3],
 	[2,  0]
 ]
 
@@ -75,6 +76,8 @@ function Wipeout_GetAlivePlayers()
 
 function OnStart()
 {
+	this.OnPrecache() // TODO: Remove when this is added to rotation
+	
 	foreach(player in Ware_Players)
 	{
 		Wipeout_SetupData(player, MaxLives)
