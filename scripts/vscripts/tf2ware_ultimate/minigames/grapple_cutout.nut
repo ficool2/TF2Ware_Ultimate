@@ -3,9 +3,9 @@ local cutout = RandomInt(0, 1)
 
 minigame <- Ware_MinigameData
 ({
-	name            = cutout == 1 ? "Grapple the Deer" : "Grapple the Cow"
+	name            = cutout == 1 ? "Grapple a Deer" : "Grapple a Cow"
 	author          = ["TonyBaretta", "ficool2"]
-	description     = cutout == 1 ? "Smack the deer!" : "Smack the cow!"
+	description     = cutout == 1 ? "Smack a deer!" : "Smack a cow!"
 	duration        = 10.5
 	location        = "boxarena"
 	music           = "farm"
