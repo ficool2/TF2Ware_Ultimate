@@ -10,6 +10,10 @@ minigame <- Ware_MinigameData
 	start_pass    = true
 	fail_on_death = true
 	thirdperson   = true
+	convars       =
+	{
+		tf_avoidteammates_pushaway = 0
+	}
 })
 
 jumprope_door <- null
