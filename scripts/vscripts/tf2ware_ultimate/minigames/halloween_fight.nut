@@ -99,7 +99,7 @@ function OnTakeDamage(params)
 	if (victim.IsPlayer()
 		&& attacker && attacker != victim && attacker.IsPlayer())
 	{
-		params.damage = 500.0
+		params.damage = 400.0
 	}
 }
 
