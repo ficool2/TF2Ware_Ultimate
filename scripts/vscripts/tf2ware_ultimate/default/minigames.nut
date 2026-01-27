@@ -39,6 +39,7 @@ halloween_fight
 headshot
 hit_balls
 hit_player
+homerun_contest
 hoop
 hot_potato
 intel
