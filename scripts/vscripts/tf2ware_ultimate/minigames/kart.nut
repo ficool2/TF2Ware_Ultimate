@@ -19,7 +19,7 @@ tracks <-
 ]
 
 mode <- RandomInt(0, 2)
-if (Ware_Players.len() > 40)
+if (Ware_MinigamePlayers.len() > 40)
 	mode = 0
 
 first <- mode != 2

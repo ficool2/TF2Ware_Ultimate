@@ -158,6 +158,7 @@ if (!("Ware_DebugStop" in this))
 	Ware_DebugForceMinigameOnce <- false
 	Ware_DebugForceBossgameOnce <- false
 	Ware_DebugNextSpecialRound  <- []
+	Ware_DebugForceSpecialRound <- false
 	Ware_DebugForceMode         <- null
 }
 Ware_DebugForceTheme      <- ""
@@ -1051,6 +1052,7 @@ function Ware_SetupSpecialRoundCallbacks()
 	special_round.cb_on_minigame_start       = Ware_Callback(scope, "OnMinigameStart")
 	special_round.cb_on_minigame_end         = Ware_Callback(scope, "OnMinigameEnd")
 	special_round.cb_on_minigame_cleanup     = Ware_Callback(scope, "OnMinigameCleanup")
+	special_round.cb_get_end_effects         = Ware_Callback(scope, "GetMinigameEndEffects")
 	special_round.cb_on_begin_intermission   = Ware_Callback(scope, "OnBeginIntermission")
 	special_round.cb_on_begin_boss           = Ware_Callback(scope, "OnBeginBoss")
 	special_round.cb_on_show_chat_text       = Ware_Callback(scope, "OnShowChatText")
@@ -1151,7 +1153,8 @@ function Ware_BeginSpecialRoundInternal()
 		
 		local scope = Ware_LoadSpecialRound(round, player_count, is_forced)
 						
-		Ware_DebugNextSpecialRound.clear()
+		if(!Ware_DebugForceSpecialRound)
+			Ware_DebugNextSpecialRound.clear()
 		
 		if (scope)
 		{
@@ -1167,8 +1170,47 @@ function Ware_BeginSpecialRoundInternal()
 	}	
 	
 	printf("[TF2Ware] Starting special round '%s'\n", round)
-	
+	local special_round = Ware_SpecialRoundScope.special_round
 	Ware_SpecialRoundPrevious = true
+	
+	local end_initial_sequence = function(special_round){
+		Ware_CriticalZone = true
+				
+		Ware_SpecialRound = special_round
+			
+		Ware_SetupSpecialRoundCallbacks()	
+				
+		// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
+		foreach(name, value in special_round.convars)
+		{
+			Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
+			SetConvarValue(name, value)
+		}
+		
+		if ("OnStart" in Ware_SpecialRoundScope)
+			Ware_SpecialRoundScope.OnStart()
+			
+		if (special_round.allow_damage)
+			Ware_ToggleTruce(false)
+		
+		// TODO this doesn't work with double_trouble
+		Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
+		
+		Ware_CriticalZone = false
+			
+		CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
+		CreateTimer(function() 
+		{
+			Ware_BeginIntermission(false)
+		}, 0.0)
+	}
+	
+	if(Ware_DebugForceSpecialRound)
+	{
+		end_initial_sequence(special_round)
+		Ware_CriticalZone = false
+		return true
+	}
 	
 	// ingame sequence
 	Ware_PlayGameSound(null, "special_round")
@@ -1183,7 +1225,6 @@ function Ware_BeginSpecialRoundInternal()
 	local end_duration = duration - reveal_duration
 	// TODO: show special rounds a better way
 	// maybe just put something behind it?
-	local special_round = Ware_SpecialRoundScope.special_round
 		
 	CreateTimer(function() 
 	{	
@@ -1205,39 +1246,7 @@ function Ware_BeginSpecialRoundInternal()
 			
 			Ware_PlaySoundOnAllClients(Ware_FixupMP3("tf2ware_ultimate/v%d/pass.mp3"))
 			
-			CreateTimer(function()
-			{	
-				Ware_CriticalZone = true
-				
-				Ware_SpecialRound = special_round
-					
-				Ware_SetupSpecialRoundCallbacks()	
-						
-				// actually change things as late as possible so we don't break things e.g. timescale changing while music is playing would lead to overlapping music
-				foreach(name, value in special_round.convars)
-				{
-					Ware_SpecialRoundSavedConvars[name] <- GetConvarValue(name)
-					SetConvarValue(name, value)
-				}
-				
-				if ("OnStart" in Ware_SpecialRoundScope)
-					Ware_SpecialRoundScope.OnStart()
-					
-				if (special_round.allow_damage)
-					Ware_ToggleTruce(false)
-				
-				// TODO this doesn't work with double_trouble
-				Ware_SpecialRoundEvents = CollectGameEventsInScope(Ware_SpecialRoundScope)
-				
-				Ware_CriticalZone = false
-					
-				CreateTimer(@() Ware_ShowSpecialRoundText(Ware_Players), 0.0)			
-				CreateTimer(function() 
-				{
-					Ware_BeginIntermission(false)
-				}, 0.0)
-			
-			}, end_duration - 1.0) // hack: more closely syncs up with the theme
+			CreateTimer(end_initial_sequence(special_round), end_duration - 1.0) // hack: more closely syncs up with the theme
 		}
 		else
 		{
@@ -1547,30 +1556,15 @@ function Ware_StartMinigameInternal(is_boss)
 {
 	Ware_CriticalZone = true
 	
-	local valid_players = []
-	foreach (player in Ware_Players)
-	{
-		if (player.GetTeam() & TF_TEAM_MASK)
-		{
-			if (!player.IsAlive())
-			{
-				// only respawn everyone before the boss
-				// for minigames intentionally not respawning people
-				// as punishment for dying in certain special rounds (like Skull)
-				if (is_boss && Ware_CanPlayerRespawn(player))
-				{
-					player.ForceRespawn()
-					// safety check
-					if (player.IsAlive())
-						valid_players.append(player)	
-				}
-			}
-			else
-			{
-				valid_players.append(player)
-			}
-		}
-	}
+	// only respawn everyone before the boss
+	// for minigames intentionally not respawning people
+	// as punishment for dying in certain special rounds (like Skull)
+	if(is_boss)
+		foreach(player in Ware_Players)
+			if(!player.IsAlive() && Ware_CanPlayerRespawn(player))
+				player.ForceRespawn()
+	
+	local valid_players = Ware_GetValidPlayers()
 
 	Ware_MinigameScope.clear()
 	
@@ -2076,26 +2070,40 @@ function Ware_FinishMinigameInternal()
 			passed = false
 		}
 		
-		if (all_passed)
+		local special_ret = {}
+		if(Ware_SpecialRound && Ware_SpecialRound.cb_get_end_effects.IsValid())
 		{
-			overlay = "hud/tf2ware_ultimate/default_victory_all"
-			sound = "victory"
+			special_ret = Ware_SpecialRound.cb_get_end_effects(player, participated, passed)
+			if("overlay" in special_ret && "sound" in special_ret)
+			{
+				overlay = special_ret.overlay
+				sound = special_ret.sound
+			}
 		}
-		else if (all_failed)
+		
+		if(!overlay || !sound)
 		{
-			overlay = "hud/tf2ware_ultimate/default_failure_all"
-			sound = "failure_all"
+			if (all_passed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_victory_all"
+				sound = "victory"
+			}
+			else if (all_failed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_failure_all"
+				sound = "failure_all"
+			}
+			else if (passed)
+			{
+				overlay = "hud/tf2ware_ultimate/default_victory"
+				sound = "victory"
+			}
+			else
+			{
+				overlay = "hud/tf2ware_ultimate/default_failure"
+				sound = "failure"
+			}		
 		}
-		else if (passed)
-		{
-			overlay = "hud/tf2ware_ultimate/default_victory"
-			sound = "victory"
-		}
-		else
-		{
-			overlay = "hud/tf2ware_ultimate/default_failure"
-			sound = "failure"
-		}		
 		
 		Ware_ShowMinigameText(player, "")
 		Ware_PlayGameSound(player, sound)
