@@ -8,6 +8,7 @@ minigame <- Ware_MinigameData
 	location    = "boxarena"
 	music       = "knockout"
 	min_players = 2
+	sort_teams  = true
 })
 
 ball_model <- "models/player/items/scout/soccer_ball.mdl"
@@ -33,6 +34,7 @@ function OnTeleport(players)
 {
 	local red_players = []
 	local blue_players = []
+
 	foreach (player in players)
 	{
 		local team = player.GetTeam()
@@ -41,7 +43,7 @@ function OnTeleport(players)
 		else if (team == TF_TEAM_BLUE)
 			blue_players.append(player)
 	}
-	
+
 	Ware_TeleportPlayersRow(red_players,
 		Ware_MinigameLocation.center + Vector(0, 500.0, 0),
 		QAngle(0, 270, 0),

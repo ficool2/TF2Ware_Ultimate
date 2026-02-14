@@ -15,6 +15,7 @@ minigame <- Ware_MinigameData
 	fail_on_death  = true
 	friendly_fire  = false
 	collisions     = true
+	sort_teams     = true
 })
 
 start_sound <- "player/taunt_sfx_bell_single.wav"
