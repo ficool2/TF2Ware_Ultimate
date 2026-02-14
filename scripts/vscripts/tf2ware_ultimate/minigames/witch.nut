@@ -11,7 +11,7 @@ minigame <- Ware_MinigameData
 	allow_damage  = true
 })
 
-witch_origin         <- Ware_MinigameLocation.center
+witch_origin         <- null
 witch_model          <- "models/tf2ware_ultimate/alaxe/witch.mdl"
 witch_spawn_particle <- "wrenchmotron_teleport_beam"
 witch_leave_particle <- "halloween_ghost_smoke"
@@ -38,7 +38,7 @@ function OnStart()
 {
 	// detect melee hits against world
 	SetPropInt(World, "m_takedamage", DAMAGE_EVENTS_ONLY)
-	
+	witch_origin = Ware_MinigameLocation.center
 	Ware_ShowAnnotation(witch_origin + Vector(0, 0, 68), "WITCH!", 1.5)
 	Ware_CreateTimer(@() SpawnWitchPre(), 1.0)
 	Ware_CreateTimer(@() SpawnWitch(), 1.5)
