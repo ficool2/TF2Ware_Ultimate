@@ -18,6 +18,15 @@ function OnPrecache()
 	PrecacheScriptSound(hoop_sound)
 }
 
+function OnPick()
+{
+	// noclip breaks this minigame
+	if(Ware_IsSpecialRoundSet("noclip")
+		return false
+
+	return true
+}
+
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Grenade Launcher", { "fuse bonus" : 0.6 })
