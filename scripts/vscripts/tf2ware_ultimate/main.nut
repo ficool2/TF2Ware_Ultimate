@@ -1745,6 +1745,10 @@ function Ware_StartMinigameInternal(is_boss)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
+			
+		// remove top score effect in bosses
+		if (is_boss)
+			SetPropBool(player, "m_bGlowEnabled", false)	
 		
 		local max_scale = Ware_Minigame.max_scale
 		if (max_scale && player.GetModelScale() > max_scale)
