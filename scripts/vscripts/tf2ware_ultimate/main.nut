@@ -8,6 +8,16 @@ Ware_CriticalZone <- false
 // override vscript's own error handler for telemetry purposes
 Ware_ListenHost <- GetListenServerHost()
 Ware_LastErrorTime <- 0.0
+
+// don't rename this. plugins can call this to raise an error
+function Ware_CriticalError()
+{
+	Ware_CriticalZone = false	
+	SetConvarValue("mp_restartgame", 5)
+	PlaySoundOnAllClients(SFX_WARE_ERROR)		
+	Ware_Error("Critical error detected. Restarting in 5 seconds...")
+}
+
 function Ware_ErrorHandler(e)
 {
 	// discard cascading error messages from input hooks
@@ -74,10 +84,7 @@ function Ware_ErrorHandler(e)
 	
 	if (Ware_CriticalZone)
 	{
-		Ware_CriticalZone = false	
-		SetConvarValue("mp_restartgame", 5)
-		PlaySoundOnAllClients(SFX_WARE_ERROR)		
-		Ware_Error("Critical error detected. Restarting in 5 seconds...")
+		Ware_CriticalError()
 	}
 }
 
