@@ -1,5 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
-buffer<-@"VERSION 8
+buffer<-@"VERSION 9
 airblast
 airshot
 avoid_props
@@ -34,6 +34,7 @@ floppy
 ghost
 goomba
 grapple_cutout
+grapple_healthkit
 grapple_player
 halloween_fight
 headshot

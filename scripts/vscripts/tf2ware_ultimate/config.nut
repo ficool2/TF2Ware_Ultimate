@@ -1,7 +1,7 @@
 // whenever new entries are added, these should be incremented so it's automatically added to server configs
-const WARE_MINIGAME_VERSION     = 8
+const WARE_MINIGAME_VERSION     = 9
 const WARE_BOSSGAME_VERSION     = 2
-const WARE_SPECIALROUND_VERSION = 8
+const WARE_SPECIALROUND_VERSION = 9
 const WARE_THEME_VERSION        = 4
 
 // everytime any mp3 sound is changed AND the map is *publicly* updated
@@ -160,7 +160,11 @@ function Ware_LoadConfigMinigames()
 					break
 				case 8:
 					AppendElementIfUnique(lines, "pirate_war")
-					break					
+					break
+				case 9:
+					AppendElementIfUnique(lines, "teleport")
+					AppendElementIfUnique(lines, "grapple_healthkit")
+					break	
 			}
 		}
 	})
@@ -234,6 +238,10 @@ function Ware_LoadConfigSpecialRounds()
 					break	
 				case 8:
 					AppendElementIfUnique(lines, "noclip")
+					break
+				case 9:
+					RemoveElementIfFound(lines, "bonus_points")
+					RemoveElementIfFound(lines, "two_bosses")
 					break					
 			}
 		}
