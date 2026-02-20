@@ -1049,7 +1049,7 @@ function Ware_ShowScreenOverlay2(players, name)
 		foreach (player in players)
 		{
 			player.AddHudHideFlags(HIDEHUD_TARGET_ID)
-			ClientCmd.AcceptInput("Command", "r_screenoverlay" + name, player, null)
+			ClientCmd.AcceptInput("Command", "r_screenoverlay " + name, player, null)
 		}
 	}
 }
