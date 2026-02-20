@@ -21,7 +21,8 @@ function OnPrecache()
 function OnStart()
 {
 	Ware_SetGlobalLoadout(TF_CLASS_UNDEFINED, "Grappling Hook")
-	Ware_ShowAnnotation(Ware_MinigameLocation.center, "Look up!")
+	
+	Ware_ShowAnnotation(Ware_MinigameLocation.center + Vector(0, 0, 40), "Look up!")
 
 	foreach (i, player in Ware_MinigamePlayers)
 	{
