@@ -209,7 +209,7 @@ void Enable()
 	
 	// bump this because loading minigames from disk frequently takes a few ms and clogs the log
 	// ficool2: perf warnings during ontakedamage callback can cause VM crashes, bumped to a Big number now
-	float minWarningMs = 1000.0;
+	float minWarningMs = 3000.0;
 	if (vscript_perf_warning_spew_ms.FloatValue < minWarningMs)
 	{
 		g_ScriptPerfValue = vscript_perf_warning_spew_ms.FloatValue;
