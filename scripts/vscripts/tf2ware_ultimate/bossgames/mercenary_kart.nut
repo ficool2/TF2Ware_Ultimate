@@ -288,9 +288,6 @@ function OnPrecache()
 
 function OnPick()
 {
-	// temporarily disabled to figure out if this is causing the level change crash
-	return false
-	
 	// cramped breaks this boss
 	if(Ware_IsSpecialRoundSet("cramped_quarters") || Ware_IsSpecialRoundSet("skull"))
 		return false

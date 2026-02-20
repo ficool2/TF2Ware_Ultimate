@@ -1,11 +1,10 @@
 spots <- 
 [
-    // TODO: uncomment when mercenary kart is fixed
-    // {
-    //     name = "Waluigi",
-    //     origin = Vector(11491, 28, 8544),
-    //     angles = QAngle(0, 0, 0)
-    // },
+    {
+        name = "Waluigi",
+        origin = Vector(11491, 28, 8544),
+        angles = QAngle(0, 0, 0)
+    },
     {
         name = "Cow",
         origin = Vector(4779, -2721, -4439),
