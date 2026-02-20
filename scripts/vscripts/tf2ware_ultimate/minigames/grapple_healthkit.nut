@@ -23,9 +23,10 @@ function OnStart()
 	Ware_SetGlobalLoadout(TF_CLASS_UNDEFINED, "Grappling Hook")
 	Ware_ShowAnnotation(Ware_MinigameLocation.center, "Look up!")
 
-	local count = Ware_MinigamePlayers.len()
-	for(local i = 0; i < count; i++)
+	foreach (i, player in Ware_MinigamePlayers)
 	{
+		player.SetHealth(1)
+		
 		local pos = Vector(
 				RandomFloat(Ware_MinigameLocation.mins.x + 50.0, Ware_MinigameLocation.maxs.x - 50.0),
 				RandomFloat(Ware_MinigameLocation.mins.y + 50.0, Ware_MinigameLocation.maxs.y - 50.0),
