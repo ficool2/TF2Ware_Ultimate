@@ -1041,7 +1041,7 @@ function Ware_ShowScreenOverlay2(players, name)
 			if (Ware_SpecialRound && Ware_SpecialRound.cb_get_overlay2.IsValid())
 				overlay_name = Ware_SpecialRound.cb_get_overlay2()
 				
-			ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", overlay_name), player, null)
+			ClientCmd.AcceptInput("Command", "r_screenoverlay " + overlay_name, player, null)
 		}
 	}
 	else
@@ -1049,7 +1049,7 @@ function Ware_ShowScreenOverlay2(players, name)
 		foreach (player in players)
 		{
 			player.AddHudHideFlags(HIDEHUD_TARGET_ID)
-			ClientCmd.AcceptInput("Command", format("r_screenoverlay %s", name), player, null)
+			ClientCmd.AcceptInput("Command", "r_screenoverlay" + name, player, null)
 		}
 	}
 }
