@@ -4,6 +4,7 @@ mapsrc/*.bsp
 *.vmx
 *.log
 *.prt
+*.lin
 
 # Junk model stuff
 *.sw.vtx
