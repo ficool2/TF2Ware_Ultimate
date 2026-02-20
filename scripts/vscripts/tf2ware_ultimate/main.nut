@@ -2236,6 +2236,10 @@ function Ware_GameOverInternal()
 	Ware_ToggleTruce(false)
 	Ware_ToggleRespawnRooms(false)
 	
+	// failsafe: loadout whitelister overrides tournament 
+	// but theres an unknown case where it doesnt revert it
+	SetConvarValue("mp_tournament", 0)
+	
 	local winners = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) != null)
 	local losers = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) == null)
 	
