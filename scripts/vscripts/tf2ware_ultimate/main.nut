@@ -261,7 +261,11 @@ if (!("Ware_Precached" in this))
 	}
 
 	// this shuts up incursion distance warnings from the nav mesh
-	CreateEntitySafe("base_boss").KeyValueFromString("classname", "point_commentary_viewpoint")
+	Ware_IncursionDummy <- CreateEntitySafe("base_boss")
+	Ware_IncursionDummy.KeyValueFromString("classname", "point_commentary_viewpoint")
+	Ware_IncursionDummy.AddSolidFlags(FSOLID_NOT_SOLID)
+	// bots now use this as a unreachable dummy target
+	Ware_IncursionDummy.SetAbsOrigin(Vector(16000, 16000, 16000))
 }
 
 function Ware_SetupMap()
@@ -832,6 +836,26 @@ function Ware_FixupPlayerWeaponSwitch()
 		self.Weapon_Switch(activator)
 }
 
+function Ware_PlayerInit(player)
+{
+	MarkForPurge(player)
+	
+	// don't include SourceTV because it's not a real player
+	if (IsPlayerSourceTV(player))
+		return
+		
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
+	scope.ware_data <- Ware_PlayerData(player)
+	scope.ware_minidata <- {}
+	scope.ware_specialdata <- {}
+	Ware_Players.append(player)
+	Ware_PlayersData.append(scope.ware_data)
+	if (Ware_SpecialRound && Ware_SpecialRound.cb_on_player_connect.IsValid())
+		Ware_SpecialRound.cb_on_player_connect(player)		
+}
+
+
 function Ware_CheckPlayerArray()
 {
 	// failsafe: if a player entity gets deleted without disconnecting (such as via external plugins)
@@ -843,6 +867,9 @@ function Ware_CheckPlayerArray()
 		{
 			Ware_Players.remove(i)
 			Ware_PlayersData.remove(i)
+			local idx = Ware_Bots.find(player)
+			if (idx != null)
+				Ware_Bots.remove(idx)
 		}
 	}
 	for (local i = Ware_MinigamePlayers.len() - 1; i >=  0; i--)
@@ -1866,6 +1893,8 @@ function Ware_StartMinigameInternal(is_boss)
 	
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_start()
+		
+	Ware_BotOnMinigameStart()
 	
 	Ware_MinigamePreEndTimer = CreateTimer(function() 
 	{ 
@@ -2193,6 +2222,8 @@ function Ware_FinishMinigameInternal()
 		
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_minigame_end()		
+		
+	Ware_BotOnMinigameEnd()
 	
 	Ware_Minigame = null
 	Ware_MinigameScope.clear()
@@ -2431,6 +2462,8 @@ function Ware_OnUpdate()
 	
 	Ware_UpdateNav()
 
+	Ware_BotUpdate()
+	
 	if (Ware_SpecialRound)
 		Ware_SpecialRound.cb_on_update()
 	
@@ -2700,4 +2733,5 @@ IncludeScript("tf2ware_ultimate/api/specialround", ROOT)
 Ware_SetupMap()
 Ware_SetupLocations()
 Ware_PrecacheEverything()
+Ware_BotLoadBehaviors()
 Ware_CheckPlayerArray()
