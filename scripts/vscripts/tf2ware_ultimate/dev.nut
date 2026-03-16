@@ -91,7 +91,33 @@ Ware_DevCommands <-
 		}
 		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), text)
 	}
-	
+	"forcespecial": function(player, text)
+	{
+		local args = split(text, " ")
+		local text = ""
+		local print = "{str} forced special rounds to '{str}'."
+		if (args.len() >= 1)
+		{
+			Ware_DebugForceSpecialRound = true
+			Ware_DebugNextSpecialRound = clone(args)
+			
+			local len = Ware_DebugNextSpecialRound.len()
+			for (local i = 0; i < len; i++)
+			{
+				text += Ware_DebugNextSpecialRound[i]
+				if (i < len - 1)
+					text += " "
+			}
+			
+			print += " Initial Special Round rolling sequence will not play."
+		}
+		else
+		{
+			Ware_DebugForceSpecialRound = false
+			Ware_DebugNextSpecialRound.clear()
+		}
+		Ware_ChatPrint(null, print, Ware_DevCommandTitle(player), text)
+	}
 	"forcemode": function(player, text)
 	{
 		local args = split(text, " ")
@@ -147,6 +173,7 @@ Ware_DevCommands <-
 		Ware_DebugForceMinigameOnce = false
 		Ware_DebugForceBossgameOnce = false
 		Ware_DebugNextSpecialRound  = []
+		Ware_DebugForceSpecialRound = false
 		Ware_DebugForceMode         = null
 		Ware_DebugNextTheme         = ""
 		Ware_DebugForceTheme        = ""
