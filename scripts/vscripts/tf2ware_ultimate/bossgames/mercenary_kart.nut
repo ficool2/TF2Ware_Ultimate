@@ -614,9 +614,9 @@ function RaceShowResult()
 			{
 				Ware_PassPlayer(player, true)
 
-				// bonus for getting top 3 with more than 24 racers
+				// bonus for getting top 3 with 24 or more racers.
 				// NOTE; not awarding bonus immediately because the callback breaks the generator
-				if (i <= 2 && Ware_MinigamePlayers.len() > 24)
+				if (i <= 2 && Ware_MinigamePlayers.len() >= 24)
 					race_bonus_players.append(player)
 			}
 		}
