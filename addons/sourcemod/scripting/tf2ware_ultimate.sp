@@ -11,7 +11,7 @@
 
 #define PLUGIN_NAME "TF2Ware Ultimate"
 // if changing this, change it in VScript's config.nut too
-#define PLUGIN_VERSION "1.4.0"
+#define PLUGIN_VERSION "1.4.1"
 
 // unused event repurposed for vscript <-> sourcemod communication
 #define PROXY_EVENT "tf_map_time_remaining"
@@ -208,10 +208,12 @@ void Enable()
 	sv_cheats.SetInt(1, true, false);
 	
 	// bump this because loading minigames from disk frequently takes a few ms and clogs the log
-	if (vscript_perf_warning_spew_ms.FloatValue < 10.0)
+	// ficool2: perf warnings during ontakedamage callback can cause VM crashes, bumped to a Big number now
+	float minWarningMs = 3000.0;
+	if (vscript_perf_warning_spew_ms.FloatValue < minWarningMs)
 	{
 		g_ScriptPerfValue = vscript_perf_warning_spew_ms.FloatValue;
-		vscript_perf_warning_spew_ms.SetFloat(10.0, false, false);
+		vscript_perf_warning_spew_ms.SetFloat(minWarningMs, false, false);
 	}
 	
 	HookConVarChange(sv_cheats, OnCheatsChanged);

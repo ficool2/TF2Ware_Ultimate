@@ -8,6 +8,16 @@ Ware_CriticalZone <- false
 // override vscript's own error handler for telemetry purposes
 Ware_ListenHost <- GetListenServerHost()
 Ware_LastErrorTime <- 0.0
+
+// don't rename this. plugins can call this to raise an error
+function Ware_CriticalError()
+{
+	Ware_CriticalZone = false	
+	SetConvarValue("mp_restartgame", 5)
+	PlaySoundOnAllClients(SFX_WARE_ERROR)		
+	Ware_Error("Critical error detected. Restarting in 5 seconds...")
+}
+
 function Ware_ErrorHandler(e)
 {
 	// discard cascading error messages from input hooks
@@ -74,10 +84,7 @@ function Ware_ErrorHandler(e)
 	
 	if (Ware_CriticalZone)
 	{
-		Ware_CriticalZone = false	
-		SetConvarValue("mp_restartgame", 5)
-		PlaySoundOnAllClients(SFX_WARE_ERROR)		
-		Ware_Error("Critical error detected. Restarting in 5 seconds...")
+		Ware_CriticalError()
 	}
 }
 
@@ -1745,6 +1752,10 @@ function Ware_StartMinigameInternal(is_boss)
 			player.SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		if (Ware_Minigame.thirdperson)
 			player.SetForcedTauntCam(1)
+			
+		// remove top score effect in bosses
+		if (is_boss)
+			SetPropBool(player, "m_bGlowEnabled", false)	
 		
 		local max_scale = Ware_Minigame.max_scale
 		if (max_scale && player.GetModelScale() > max_scale)
@@ -2224,6 +2235,10 @@ function Ware_GameOverInternal()
 	
 	Ware_ToggleTruce(false)
 	Ware_ToggleRespawnRooms(false)
+	
+	// failsafe: loadout whitelister overrides tournament 
+	// but theres an unknown case where it doesnt revert it
+	SetConvarValue("mp_tournament", 0)
 	
 	local winners = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) != null)
 	local losers = Ware_PlayersData.filter(@(i, data) top_players.find(data.player) == null)

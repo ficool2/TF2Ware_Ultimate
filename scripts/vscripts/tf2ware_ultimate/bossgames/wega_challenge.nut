@@ -28,7 +28,7 @@ minigame <- Ware_MinigameData
 	convars		   =
 	{
 		tf_avoidteammates_pushaway = 0
-		sv_Friction = 1
+		sv_Friction = 2
 		tf_scout_air_dash_count = 0
 	}
 })
@@ -798,21 +798,22 @@ function AddWegas()
 	// Multi only
 	if (playerCount > 1)
 	{
-		extraWegas = ceil(sqrt(playerCount*4))
+		extraWegas = ceil(sqrt(playerCount*3))
 
 		if (extraWegas + 1 > playerCount)
 			extraWegas = playerCount - 1
+
+		extraWegas--	
 	}
 	// Above 20
 	if (playerCount > 20)
 	{
-		extraWegas = ceil(playerCount / 2.6)
-		extraWegas++
+		extraWegas = ceil(playerCount / 3.0)
 	}
 
-	local buffer = Size
-	if (buffer > 7)
-		buffer = 8
+	local buffer = Size + 1
+	if (buffer > 8)
+		buffer = 9
 
 	for (local i = 0; i < extraWegas ; i++)
 	{
@@ -838,8 +839,8 @@ function AddWegas()
 	{
 		wegaEntity.ValidateScriptScope()
 		wegaEntity.GetScriptScope().id <- i
-		wegaEntity.GetScriptScope().speed <- 345
-		if (i < 15)
+		wegaEntity.GetScriptScope().speed <- 335
+		if (i < 10)
 			wegaEntity.GetScriptScope().speed += ((i+1) * 2)
 
 		wegaEntity.GetScriptScope().sound_stalker_scream <- sound_stalker_scream

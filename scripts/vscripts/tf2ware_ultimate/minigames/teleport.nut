@@ -34,7 +34,7 @@ minigame <- Ware_MinigameData
 		"teleport_home"
 		"teleport_exit"
 	]
-	duration       = 5.0
+	duration       = 5.5
 	location       = "homerun_contest"
 	music          = "settingthescene"
 	max_players    = max_teles

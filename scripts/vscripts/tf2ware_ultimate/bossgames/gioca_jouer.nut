@@ -24,23 +24,23 @@ MICRO_RESET  <- 17  // Reset. If we consider "reset" a microgame then we dont ha
 
 chrises <-
 [
-	"tf2ware_ultimate/v3/gioca/sleep"
-	"tf2ware_ultimate/v3/gioca/wave"
-	"tf2ware_ultimate/v3/gioca/hitch"
-	"tf2ware_ultimate/v3/gioca/sneeze"
-	"tf2ware_ultimate/v3/gioca/walk"
-	"tf2ware_ultimate/v3/gioca/swim"
-	"tf2ware_ultimate/v3/gioca/ski"
-	"tf2ware_ultimate/v3/gioca/spray"
-	"tf2ware_ultimate/v3/gioca/macho"
-	"tf2ware_ultimate/v3/gioca/horn"
-	"tf2ware_ultimate/v3/gioca/ring"
-	"tf2ware_ultimate/v3/gioca/ok"
-	"tf2ware_ultimate/v3/gioca/kiss"
-	"tf2ware_ultimate/v3/gioca/comb"
-	"tf2ware_ultimate/v3/gioca/wave2nd"
-	"tf2ware_ultimate/v3/gioca/wave3rd"
-	"tf2ware_ultimate/v3/gioca/super"
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/sleep")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/wave")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/hitch")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/sneeze")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/walk")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/swim")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/ski")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/spray")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/macho")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/horn")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/ring")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/ok")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/kiss")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/comb")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/wave2nd")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/wave3rd")
+	Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/super")
 ]
 
 micro <- null        // microgame tracker
@@ -67,11 +67,11 @@ fail_sound <- "TF2Ware_Ultimate.Fail"
 
 announcements <-
 [
-	["tf2ware_ultimate/v3/gioca/123.mp3", 5.511],
-	["tf2ware_ultimate/v3/gioca/yaa.mp3", 80.727],
-	["tf2ware_ultimate/v3/gioca/1232.mp3", 83.05],
-	["tf2ware_ultimate/v3/gioca/superdance.mp3", 87.403],
-	["tf2ware_ultimate/v3/gioca/alright.mp3", 132.380],
+	[Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/123.mp3"), 5.511],
+	[Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/yaa.mp3"), 80.727],
+	[Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/1232.mp3"), 83.05],
+	[Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/superdance.mp3"), 87.403],
+	[Ware_FixupMP3("tf2ware_ultimate/v%d/gioca/alright.mp3"), 132.380],
 ]
 
 microgame_info <-

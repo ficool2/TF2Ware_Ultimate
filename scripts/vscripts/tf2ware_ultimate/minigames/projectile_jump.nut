@@ -59,7 +59,10 @@ function OnStart()
 		weapon = [ "Construction PDA", "Toolbox", "Wrangler"]
 		Ware_SetGlobalAttribute("build rate bonus", 0, -1)
 		foreach (player in Ware_MinigamePlayers)
+		{
 			Ware_GetPlayerMiniData(player).took_dmgtype <- 0
+			Ware_SetPlayerAmmo(player, TF_AMMO_METAL, 0) // TODO: Why is this needed? allow_building is true
+		}
 	}
 	else if (Ware_MinigameMode == MODE_FLARE)
 	{
