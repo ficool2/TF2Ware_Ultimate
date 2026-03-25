@@ -43,7 +43,7 @@ minigame <- Ware_MinigameData
 
 function OnPick()
 {
-	return Ware_IsSpecialRoundSet("inclinity_problem")
+	return !Ware_IsSpecialRoundSet("inclinity_problem")
 	
 	// this is a bandaid solution
 	// the issue is the teleporters just steal the location's teleport players function, which assumes players but im using for teleporters
