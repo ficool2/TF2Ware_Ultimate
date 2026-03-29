@@ -1,8 +1,8 @@
 minigame <- Ware_MinigameData
 ({
-	name           = "Grapple Health Kit"
+	name           = "Grapple a Health Kit"
 	author         = ["GeeNoVoid"]
-	description    = "Grab a Health Kit"
+	description    = "Grapple a health kit!"
 	duration       = 5.5
 	music          = "pyoro"
 })
