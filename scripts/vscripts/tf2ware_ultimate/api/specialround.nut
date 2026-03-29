@@ -114,6 +114,13 @@ class Ware_SpecialRoundData
 	cb_on_minigame_end         = null
 	// OnMinigameCleanup()        - Called by Ware_EndMinigame when a minigame cleans up, before scores are calculated.
 	cb_on_minigame_cleanup     = null
+	// GetMinigameEndEffects(player, participated, passed)
+	//                              - Called by Ware_EndMinigame when determining what overlay and sounds to play for each player.
+	//                              - Called after OnMinigameCleanup, but before OnMinigameEnd.
+	//                              - Return an overlay and sound in a table to have that player see that instead.
+	//                              - Return an empty table to use normal logic.
+	//                              - Currently mandatory return, expand functionality as needed.
+	cb_get_end_effects          = null
 	// OnBeginIntermission(is_boss) - Called when intermission starts.
 	//                              - If this returns true, the default logic for Ware_BeginIntermission is replaced.
 	//                              - Note there are some debug functions that are always called.
