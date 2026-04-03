@@ -194,6 +194,7 @@ if (!("Ware_SpecialRoundRotation" in this))
 
 Ware_MinigameMode         <- 0
 Ware_MinigamePlayedModes  <- {}
+Ware_MaxMinigameWeight    <- 2
 Ware_MinigameSavedConvars <- {}
 Ware_MinigameEvents       <- []
 Ware_MinigameOverlay2Set  <- false
@@ -1511,7 +1512,7 @@ function Ware_ReloadMinigameRotation(is_boss)
 			{
 				local modes = Ware_MinigameCache[minigame].modes
 				// cap max count so minigames with a lot of modes (simon says) don't appear too much
-				local weight = Min(modes, 3)
+				local weight = Min(modes, Ware_MaxMinigameWeight)
 				for (local i = 0; i < weight; i++)
 					Ware_MinigameRotation.append(minigame)
 			}
