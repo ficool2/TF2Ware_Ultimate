@@ -1,23 +1,29 @@
-fov <- 130 
-
 special_round <- Ware_SpecialRoundData
 ({
-	name             = "Quake Pro"
-	author           = ["TonyBaretta", "ficool2"]
-	description      = "FOV increased to 130!"
-	category         = ""
+	name		= "Double Vision"
+	author		= ["TonyBaretta", "ficool2"]
+	description	= "Zoom in and zoom out."
+	category	= ""
 })
 
 function OnStart()
 {
+	local roll = RandomInt(1, 2)
+	local fov = 50
+	if (roll == 2) fov = 130
+
 	foreach (player in Ware_Players)
 		SetPropInt(player, "m_iFOV", fov)
 }
 
 function OnMinigameEnd()
 {
+	local roll = RandomInt(1, 2)
+	local fov = 50
+	if (roll == 2) fov = 130
+
 	foreach (player in Ware_Players)
-		SetPropInt(player, "m_iFOV", fov)	
+		SetPropInt(player, "m_iFOV", fov)
 }
 
 function OnEnd()
