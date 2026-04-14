@@ -336,6 +336,10 @@ function OnTeleport(players)
 
 function OnStart()
 {
+	Ware_ChatPrint(null, "{color}HINT:{color} Hold SPACE while turning to charge boost, then release it to active boost.", COLOR_GREEN, TF_COLOR_DEFAULT)
+	Ware_ChatPrint(null, "{color}HINT:{color} Pick up power-ups scattered on the track, then press MOUSE1 to use them.", COLOR_GREEN, TF_COLOR_DEFAULT)
+	Ware_ChatPrint(null, "{color}HINT:{color} Press CTRL to look behind you.", COLOR_GREEN, TF_COLOR_DEFAULT)
+
 	local keyframe = intro_camera_keyframes[0][0]
 	local camera = Ware_SpawnEntity("point_viewcontrol",
 	{
