@@ -1,24 +1,15 @@
-// 0: Iron Bomber
-// 1: Thermal Thruster
-
 minigame <- Ware_MinigameData
 ({
-	name          = "Land the Platform"
-	author        = ["Gemidyne", "ficool2"]
-	description   = "Land on the platform!"
-	modes         = 2
-	duration      = Ware_MinigameMode == 0 ? 6.0 : 5.0
-	location      = "factoryplatform"
-	music         = Ware_MinigameMode == 0 ? "sweetdays" : "surfin"
-	max_scale     = 1.0
-	start_freeze  = 0.4
+	name           = "Land the Platform"
+	author         = ["Gemidyne", "ficool2"]
+	description    = "Land on the platform!"
+	duration       = 6.0
+	location       = "factoryplatform"
+	music          = "surfin"
+	custom_overlay = "land_platform"
+	max_scale      = 1.0
+	start_freeze   = 0.4
 })
-
-function OnPrecache()
-{
-	Ware_PrecacheMinigameMusic("sweetdays", false)
-	Ware_PrecacheMinigameMusic("surfin", false)
-}
 
 function OnTeleport(players)
 {
@@ -42,6 +33,7 @@ function OnTeleport(players)
 		QAngle(0, 0, 0),
 		500.0,
 		-spacing_x, spacing_y)
+
 	Ware_TeleportPlayersRow(blue_players,
 		Ware_MinigameLocation.center_right,
 		QAngle(0, 180, 0),
@@ -51,15 +43,22 @@ function OnTeleport(players)
 
 function OnStart()
 {
-	if (Ware_MinigameMode == 0)
+	local weapon = RandomInt(0, 2)
+
+	if (weapon == 0)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_DEMOMAN, "Iron Bomber")
 	}
-	else
+	else if (weapon == 1)
 	{
 		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Thermal Thruster")
+
 		foreach (player in Ware_MinigamePlayers)
 			SetPropFloatArray(player, "m_Shared.m_flItemChargeMeter", 50.0, 1)
+	}
+	else if (weapon == 2)
+	{
+		Ware_SetGlobalLoadout(TF_CLASS_PYRO, "Detonator", {"self dmg push force increased" : 1.8})
 	}
 }
 
