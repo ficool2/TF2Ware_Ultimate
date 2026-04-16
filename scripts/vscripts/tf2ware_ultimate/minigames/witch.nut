@@ -6,7 +6,6 @@ minigame <- Ware_MinigameData
 	duration       = 15.0
 	end_delay      = 1.0
 	music          = "witchhour"
-	custom_overlay = "witch"
 	start_pass     = true
 	fail_on_death  = true
 	allow_damage   = true
