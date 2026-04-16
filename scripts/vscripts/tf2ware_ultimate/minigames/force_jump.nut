@@ -4,7 +4,6 @@ minigame <- Ware_MinigameData
 	author		= ["Kimmy", "ficool2"]
 	description	= "Time your force jump!"
 	duration	= 5.0
-	custom_overlay	= "force_jump"
 	music		= "falling"
 	start_pass	= true
 	fail_on_death	= true
