@@ -7,8 +7,9 @@ minigame <- Ware_MinigameData
 		"Collect every page!"
 		"You are Slender: Kill every survivor!"
 	]
-	duration       = 215.0
+	duration       = 222.0
 	end_delay      = 1.5
+	start_freeze   = 7.0
 	music          = "slender"
 	location       = "manor"
 	custom_overlay =
@@ -129,6 +130,9 @@ function OnPrecache()
 
 function OnStart()
 {
+
+	ScreenFade(null, 0, 0, 0, 255, 5, 7, 17)
+
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
 		fogenable = true,
@@ -198,7 +202,7 @@ function OnStart()
 		return 28.5
 	}, 28.5)
 	
-	Ware_CreateTimer(@() ShowStatusText(), 1.0)
+	Ware_CreateTimer(@() ShowStatusText(), 7)
 }
 
 function OnTeleport(players)
