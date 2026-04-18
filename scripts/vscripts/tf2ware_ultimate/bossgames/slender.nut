@@ -202,7 +202,7 @@ function OnStart()
 		return 28.5
 	}, 28.5)
 	
-	Ware_CreateTimer(@() ShowStatusText(), 7)
+	Ware_CreateTimer(@() ShowStatusText(), 7.0)
 }
 
 function OnTeleport(players)
