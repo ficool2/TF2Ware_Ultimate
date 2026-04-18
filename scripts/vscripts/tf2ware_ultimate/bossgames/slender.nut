@@ -133,6 +133,11 @@ function OnStart()
 
 	ScreenFade(null, 0, 0, 0, 255, 5, 7, 17)
 
+	foreach (player in Ware_MinigamePlayers)
+	{
+	player.AddCustomAttribute("voice pitch scale", 0, 7.0)
+	}
+
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
 		fogenable = true,
