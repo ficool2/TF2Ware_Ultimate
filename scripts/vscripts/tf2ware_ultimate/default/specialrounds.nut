@@ -16,6 +16,7 @@ hale
 hunger_update
 inclinity_problem
 low_gravity
+magnetic_field
 math_only
 merasmus
 mirrored_world
