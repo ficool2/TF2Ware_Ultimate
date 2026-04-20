@@ -135,8 +135,16 @@ function OnStart()
 
 	foreach (player in Ware_MinigamePlayers)
 	{
-	player.AddCustomAttribute("voice pitch scale", 0, 7.0)
+		player.AddCustomAttribute("voice pitch scale", 0, 7.0)
 	}
+
+	Ware_CreateTimer(function()
+	{
+		foreach (player in Ware_MinigamePlayers)
+			PlayerBlink(player)
+
+		return RandomFloat(15.0, 20.0)
+	}, 7.0 + RandomFloat(15.0, 20.0))
 
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
@@ -238,6 +246,17 @@ function ShowStatusText()
 	local hms = FloatToTimeHMS(Max(end_time - Time(), 0.0))
 	Ware_ShowMinigameText(null, format("%d/%d\n%d:%02d", pages_collected, pages_max, hms.minutes, hms.seconds))
 	return 1.0
+}
+
+function PlayerBlink(player)
+{
+	if (!player || !player.IsAlive())
+		return
+	
+	if (Ware_GetPlayerMission(player) != MISSION_SURVIVOR)
+		return
+	
+	ScreenFade(player, 0, 0, 0, 255, 0.2, 0.2, 1)
 }
 
 function OnUpdate()
