@@ -7,8 +7,9 @@ minigame <- Ware_MinigameData
 		"Collect every page!"
 		"You are Slender: Kill every survivor!"
 	]
-	duration       = 215.0
+	duration       = 222.0
 	end_delay      = 1.5
+	start_freeze   = 7.0
 	music          = "slender"
 	location       = "manor"
 	custom_overlay =
@@ -129,6 +130,22 @@ function OnPrecache()
 
 function OnStart()
 {
+
+	ScreenFade(null, 0, 0, 0, 255, 5, 7, 17)
+
+	foreach (player in Ware_MinigamePlayers)
+	{
+		player.AddCustomAttribute("voice pitch scale", 0, 7.0)
+	}
+
+	Ware_CreateTimer(function()
+	{
+		foreach (player in Ware_MinigamePlayers)
+			PlayerBlink(player)
+
+		return RandomFloat(15.0, 20.0)
+	}, 7.0 + RandomFloat(15.0, 20.0))
+
 	fog = Ware_SpawnEntity("env_fog_controller",
 	{
 		fogenable = true,
@@ -198,7 +215,7 @@ function OnStart()
 		return 28.5
 	}, 28.5)
 	
-	Ware_CreateTimer(@() ShowStatusText(), 1.0)
+	Ware_CreateTimer(@() ShowStatusText(), 7.0)
 }
 
 function OnTeleport(players)
@@ -229,6 +246,17 @@ function ShowStatusText()
 	local hms = FloatToTimeHMS(Max(end_time - Time(), 0.0))
 	Ware_ShowMinigameText(null, format("%d/%d\n%d:%02d", pages_collected, pages_max, hms.minutes, hms.seconds))
 	return 1.0
+}
+
+function PlayerBlink(player)
+{
+	if (!player || !player.IsAlive())
+		return
+	
+	if (Ware_GetPlayerMission(player) != MISSION_SURVIVOR)
+		return
+	
+	ScreenFade(player, 0, 0, 0, 255, 0.2, 0.2, 1)
 }
 
 function OnUpdate()
