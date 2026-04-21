@@ -62,7 +62,7 @@ function OnUpdate()
 		if (height > bonus_height)
 		{
 			local idx = bonus_players.find(player)
-			if(idx != null)
+			if(idx == null)
 				bonus_players.append(player)
 		}
 	}
