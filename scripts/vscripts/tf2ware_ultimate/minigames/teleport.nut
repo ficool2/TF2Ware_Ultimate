@@ -41,20 +41,6 @@ minigame <- Ware_MinigameData
 	allow_damage   = true
 })
 
-function OnPick()
-{
-	return !Ware_IsSpecialRoundSet("inclinity_problem")
-	
-	// this is a bandaid solution
-	// the issue is the teleporters just steal the location's teleport players function, which assumes players but im using for teleporters
-	// but teleportplayer has a special round callback that relies on player data that teleporters dont have
-	// either i add a isplayer check there (kinda lame)
-	// or something else
-	// i was planning on making the locations table above, the values would be teleport functions instead
-	// but that is also a lot of work
-	// bleh
-}
-
 function OnTeleport(players)
 {
 	local center = Ware_MinigameLocation.center + Vector(0, 10000, 0)
