@@ -1,14 +1,14 @@
 minigame <- Ware_MinigameData
 ({
-	name          = "Witch"
-	author        = "ficool2"
-	description   = "Don't startle the witch!"
-	duration      = 12.0
-	end_delay     = 1.0
-	music         = "witchhour"
-	start_pass    = true
-	fail_on_death = true
-	allow_damage  = true
+	name           = "Witch"
+	author         = "ficool2"
+	description    = "Don't startle the witch!"
+	duration       = 15.0
+	end_delay      = 1.0
+	music          = "witchhour"
+	start_pass     = true
+	fail_on_death  = true
+	allow_damage   = true
 })
 
 witch_origin         <- Ware_MinigameLocation.center
@@ -106,8 +106,12 @@ function WitchThink()
 		
 		if (VectorDistance(threat.GetOrigin(), my_origin) < 70.0)
 		{
-			self.EmitSound(shriek_sound)
-			threat.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+			if (time >= kill_cooldown)
+			{
+				self.EmitSound(shriek_sound)
+				threat.TakeDamageCustom(self, self, null, Vector(), Vector(), 1000.0, DMG_CLUB|DMG_CRIT, TF_DMG_CUSTOM_DECAPITATION)
+				kill_cooldown = time + 1.5
+			}
 		}			
 
 		amb_timer = time + 1.5
@@ -126,7 +130,12 @@ function WitchThink()
 		
 		local angle = new_yaw * DEG2RAD
 		move_dir = Vector(cos(angle), sin(angle))
-		local move_speed = threat ? 600.0 : 60.0
+
+		local move_speed
+		if (Ware_MinigameLocation.name.find("big") != null)
+			move_speed = threat ? 600.0 : 140.0
+		else
+			move_speed = threat ? 600.0 : 70.0
 		
 		// collision check
 		// assumes location is flat
@@ -170,7 +179,7 @@ function WitchStartle(player)
 		started_players[player] <- true
 		Ware_ChatPrint(null, "{player} {color}startled the {color}WITCH{color}!", 
 			player, TF_COLOR_DEFAULT, COLOR_RED, TF_COLOR_DEFAULT)
-		Ware_ChatPrint(player, "{color}TIP{color}: Don't attack, type in chat or use voice!", 
+		Ware_ChatPrint(player, "{color}TIP{color}: Don't get near her, attack, type in chat, use voice chat, or voice commands!", 
 			COLOR_GREEN, TF_COLOR_DEFAULT)
 		EntityEntFire(player, "SpeakResponseConcept", "TLK_PLAYER_NEGATIVE")
 	}
@@ -213,6 +222,7 @@ function SpawnWitch()
 	scope.shake_timer <- 0.0
 	scope.step_timer <- 0.0
 	scope.move_dir <- null
+	scope.kill_cooldown <- Time() + 1.5
 	scope.cry_sound <- witch_cry_sound
 	scope.scream_sound <- witch_scream_sound
 	scope.shriek_sound <- witch_shriek_sound
@@ -242,8 +252,35 @@ function StartleWitch(player, radius)
 	}	
 }
 
+function CheckAllPlayersProximity()
+{
+	foreach (player in Ware_Players)
+	{
+		if (!player.IsValid() || !player.IsAlive())
+			continue
+		
+		foreach (witch in witches)
+		{
+			local scope = witch.GetScriptScope()
+			
+			if (scope.threat != null)
+				continue
+			
+			if (Time() < scope.kill_cooldown)
+				continue
+			
+			if (VectorDistance(player.GetOrigin(), witch.GetOrigin()) < 100.0)
+			{
+				scope.WitchStartle(player)
+			}
+		}
+	}
+}
+
 function OnUpdate()
 {
+	CheckAllPlayersProximity()
+	
 	foreach (player in Ware_Players)
 	{
 		if (PlayerVoiceListener.IsPlayerSpeaking(player.entindex()))
