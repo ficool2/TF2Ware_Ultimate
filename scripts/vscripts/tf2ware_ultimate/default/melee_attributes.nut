@@ -185,7 +185,11 @@ buffer<-@"// atomizer
 // vita saw
 [173] = { ""max health additive penalty"" : 0 },
 // bushwacka
-[232] = { ""dmg taken increase"" : 1 },
+[232] =
+{ 
+	""dmg taken increase"" : 1 ,
+	""minicrits become crits"" : 0 ,
+},
 // tribalman's shiv
 [171] = { ""bleeding duration"" : 0 },
 // conniver's kunai
