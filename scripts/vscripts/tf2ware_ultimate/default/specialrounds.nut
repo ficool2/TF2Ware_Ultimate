@@ -1,6 +1,5 @@
 // auto-generated file, do not edit. edit the matching file in the "cfg" folder instead
 buffer<-@"VERSION 9
-adrenaline_shot
 all_in
 barrels
 bonk
