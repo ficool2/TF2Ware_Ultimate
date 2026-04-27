@@ -127,6 +127,13 @@ function OnPrecache()
 	PrecacheModel(page_model)
 }
 
+function OnPick()
+{
+	// guarantee lost to the team with fewer players
+	if(Ware_IsSpecialRoundSet("cramped_quarters"))
+		return false
+}
+
 function OnStart()
 {
 	fog = Ware_SpawnEntity("env_fog_controller",

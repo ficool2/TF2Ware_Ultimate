@@ -20,6 +20,13 @@ jumprope_door <- null
 jumprope_mins <- null
 jumprope_maxs <- null
 
+function OnPick()
+{
+	// very little space for players
+	if(Ware_IsSpecialRoundSet("cramped_quarters"))
+		return false
+}
+
 function OnStart()
 {
 	Ware_SetGlobalAttribute("no double jump", 1, -1)

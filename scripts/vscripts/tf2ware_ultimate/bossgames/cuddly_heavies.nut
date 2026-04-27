@@ -44,6 +44,13 @@ function OnPrecache()
 	PrecacheParticle(love_particle)
 }
 
+function OnPick()
+{
+	// guarantee lost to the team with fewer players
+	if(Ware_IsSpecialRoundSet("cramped_quarters"))
+		return false
+}
+
 function OnStart()
 {
 	local vo_count = 0
