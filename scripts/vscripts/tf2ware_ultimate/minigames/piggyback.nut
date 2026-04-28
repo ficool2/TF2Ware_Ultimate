@@ -4,7 +4,7 @@ minigame <- Ware_MinigameData
 	author         = ["TonyBaretta", "ficool2"]
 	description    = 
 	[
-		"Piggyback the heavy before he reaches the end!"
+		"Piggyback the Heavy before he reaches the end!"
 		"Reach the end without all players on your back!"
 	]
 	duration       = 27.7
@@ -108,7 +108,7 @@ function PiggybackUnparent(player, invis_hack)
 
 function PiggybackKilled(disconnect)
 {
-	Ware_ChatPrint(null, "Heavy {str}, so pyros win!", disconnect ? "disconnected" : "died")
+	Ware_ChatPrint(null, "Heavy {str}, so Pyros win!", disconnect ? "disconnected" : "died")
 	Ware_CreateTimer(function(){piggybacker_killed <- true}, 2.0)
 	
 	foreach (player in Ware_MinigamePlayers)
