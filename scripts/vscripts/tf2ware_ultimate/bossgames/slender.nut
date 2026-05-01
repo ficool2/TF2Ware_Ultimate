@@ -177,6 +177,7 @@ function OnStart()
 			Ware_StripPlayer(player, true)
 			Ware_SetPlayerTeam(player, TF_TEAM_RED)
 			Ware_PassPlayer(player, false)
+			Ware_AddPlayerAttribute(player, "no_attack", 1, 7.0)
 			if (!debug_pages)
 				SetPropEntity(player, "m_Local.m_PlayerFog.m_hCtrl", fog)
 			Ware_GetPlayerMiniData(player).pages_collected <- 0
