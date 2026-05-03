@@ -44,12 +44,12 @@ function OnUpdate()
 
 function OnTakeDamage(params)
 {
-	params.damage = 0.0
-	
 	if (params.damage_stats == TF_DMG_CUSTOM_BASEBALL)
 	{
 		local victim = params.const_entity
 		local attacker = params.attacker
+	
+		params.damage = 0.0
 	
 		victim.StunPlayer(Ware_GetMinigameRemainingTime(), 0.6, TF_STUN_SPECIAL_SOUND|TF_STUN_MOVEMENT, null)
 		
@@ -63,6 +63,10 @@ function OnTakeDamage(params)
 		
 		if (attacker)
 			Ware_PassPlayer(attacker, true)
+	}
+	else if (!touch_dmg)
+	{
+		params.damage = 0.0
 	}
 }
 
