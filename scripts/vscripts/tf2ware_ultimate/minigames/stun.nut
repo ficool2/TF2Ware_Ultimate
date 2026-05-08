@@ -64,10 +64,6 @@ function OnTakeDamage(params)
 		if (attacker)
 			Ware_PassPlayer(attacker, true)
 	}
-	else if (!touch_dmg)
-	{
-		params.damage = 0.0
-	}
 }
 
 function OnEnd()
