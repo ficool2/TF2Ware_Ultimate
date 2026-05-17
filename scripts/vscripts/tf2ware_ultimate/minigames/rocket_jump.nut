@@ -38,6 +38,9 @@ function OnStart()
 
 function OnReachEnd(player)
 {
+	if(!(player in Ware_MinigamePlayers))
+		return
+	
 	Ware_PassPlayer(player, true)
 	
 	if (first)
