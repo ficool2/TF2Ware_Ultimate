@@ -58,6 +58,14 @@ function OnStart()
 					disableshadows = true
 					disablereceiveshadows = true
 				})
+				
+				Ware_SpawnEntity("func_brush",
+					{
+						origin = block_pos + Vector(0, 0, 208) // these blocks arent square..... :(
+						model          = block_model
+						disableshadows = true
+						disablereceiveshadows = true
+					})
 			}
 		}
 		//print("\n")
