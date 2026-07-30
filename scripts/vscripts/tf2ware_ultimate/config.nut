@@ -54,6 +54,7 @@ function Ware_LoadConfigSettings()
 	Ware_PointsMinigame       <- 1
 	Ware_PointsBossgame       <- 5
 	Ware_BonusPoints          <- 0
+	Ware_SilentCommands		  <- 0
 		
 	local settings_map = 
 	{
@@ -66,6 +67,7 @@ function Ware_LoadConfigSettings()
 		points_bossgame        = "Ware_PointsBossgame"
 		bonus_points           = "Ware_BonusPoints"
 		// removed: max_miniweight         = "Ware_MaxMinigameWeight"
+		silent_commands        = "Ware_SilentCommands"
 	}
 	
 	local file = Ware_LoadConfigFile("settings")

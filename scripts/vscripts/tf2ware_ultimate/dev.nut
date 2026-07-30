@@ -4,6 +4,42 @@ DEVELOPER_STEAMID3 <-
 	"[U:1:111328277]" : 1 // pokemonPasta
 }
 
+function Ware_CanUseDevCommands(player)
+{
+	return (/*GetPlayerSteamID3(player) in DEVELOPER_STEAMID3 ||*/
+			player == Ware_ListenHost || 
+			GetPropBool(player, "m_autoKickDisabled")) // has rcon access
+}
+
+function Ware_GetDevPlayers()
+{
+	local players = []
+	
+	foreach(player in Ware_Players)
+		if(Ware_CanUseDevCommands(player))
+			players.append(player)
+		
+	return players
+}
+
+function Ware_ChatPrintDev(target, fmt, ...)
+{
+	local args = [this, target, fmt]
+	args.extend(vargv)
+	
+	if(Ware_SilentCommands && target == null)
+	{
+		local devs = Ware_GetDevPlayers()
+		foreach(player in devs)
+		{
+			args[1] = player
+			Ware_ChatPrint.acall(args)
+		}
+	}
+	else
+		Ware_ChatPrint.acall(args)
+}
+
 function Ware_DevCommandTitle(player)
 {
 	if (GetPlayerSteamID3(player) in DEVELOPER_STEAMID3)
@@ -28,9 +64,9 @@ function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 	
 	local name = is_boss ? "bossgame" : "minigame"
 	if (once)
-		Ware_ChatPrint(player, "{str} set next {str} to '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
+		Ware_ChatPrintDev(player, "{str} set next {str} to '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
 	else
-		Ware_ChatPrint(player, "{str} forced {str} '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
+		Ware_ChatPrintDev(player, "{str} forced {str} '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
 }
 
 Ware_DevCommands <-
@@ -52,7 +88,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugNextTheme = ""
-		Ware_ChatPrint(null, "{str} forced next theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextTheme)
+		Ware_ChatPrintDev(null, "{str} forced next theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugNextTheme)
 	}
 	"forcetheme": function(player, text)
 	{
@@ -67,7 +103,7 @@ Ware_DevCommands <-
 		}
 		else
 			Ware_DebugForceTheme = ""
-		Ware_ChatPrint(null, "{str} forced theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugForceTheme)
+		Ware_ChatPrintDev(null, "{str} forced theme to '{str}'", Ware_DevCommandTitle(player), Ware_DebugForceTheme)
 	}
 	"nextspecial": function(player, text)
 	{
@@ -89,7 +125,7 @@ Ware_DevCommands <-
 		{
 			Ware_DebugNextSpecialRound.clear()
 		}
-		Ware_ChatPrint(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), text)
+		Ware_ChatPrintDev(null, "{str} forced next special round to '{str}'", Ware_DevCommandTitle(player), text)
 	}
 	
 	"forcemode": function(player, text)
@@ -101,17 +137,17 @@ Ware_DevCommands <-
 			if (mode != null && mode >= 0)
 			{
 				Ware_DebugForceMode = mode
-				Ware_ChatPrint(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
+				Ware_ChatPrintDev(null, "{str} set moded minigames to mode {int}", Ware_DevCommandTitle(player), Ware_DebugForceMode)
 			}
 			else
 			{
-				Ware_ChatPrint(player, "Arguments: <mode>, where mode >= 0")
+				Ware_ChatPrintDev(player, "Arguments: <mode>, where mode >= 0")
 			}
 		}
 		else
 		{
 			Ware_DebugForceMode = null
-			Ware_ChatPrint(null, "{str} cleared forced mode for moded minigames", Ware_DevCommandTitle(player))
+			Ware_ChatPrintDev(null, "{str} cleared forced mode for moded minigames", Ware_DevCommandTitle(player))
 		}	
 	}
 	"shownext": function(player, text)
@@ -298,12 +334,21 @@ Ware_DevCommands <-
 		{
 			local scale = args[0].tofloat()
 			Ware_SetTimeScale(scale)
-			Ware_ChatPrint(null, "{str} has forced timescale to {%g}", Ware_DevCommandTitle(player), scale)
+			Ware_ChatPrintDev(null, "{str} has forced timescale to {%g}", Ware_DevCommandTitle(player), scale)
 		}
 		else		
 		{
 			Ware_ChatPrint(player, "Missing required scale parameter")
 		}
+	}
+	"silent" : function(player, text)
+	{
+		Ware_SilentCommands = 1 ^ Ware_SilentCommands
+		
+		if(Ware_SilentCommands)
+			Ware_ChatPrint(player, "Dev commands are now silent except to devs. Some commands such as restart, stop, resume are unaffected.")
+		else
+			Ware_ChatPrint(player, "Dev commands are no longer silent.")
 	}
 	"help" : function(player, text)
 	{
