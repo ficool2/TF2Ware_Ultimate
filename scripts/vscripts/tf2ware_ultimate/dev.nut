@@ -63,10 +63,10 @@ function Ware_DevCommandForceMinigame(player, text, is_boss, once)
 	ROOT[gamename + "Once"] = once	
 	
 	local name = is_boss ? "bossgame" : "minigame"
-	if (once)
-		Ware_ChatPrintDev(player, "{str} set next {str} to '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
-	else
-		Ware_ChatPrintDev(player, "{str} forced {str} '{str}'", Ware_DevCommandTitle(player), name, ROOT[gamename])	
+	local text = once ? "{str} set next {str} to '{str}'" : "{str} forced {str} '{str}'"
+	local devs = Ware_GetDevPlayers()
+	foreach(dev in devs)
+		Ware_ChatPrint(dev, text, Ware_DevCommandTitle(player), name, ROOT[gamename])
 }
 
 Ware_DevCommands <-
