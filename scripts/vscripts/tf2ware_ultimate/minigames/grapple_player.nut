@@ -1,7 +1,7 @@
 minigame <- Ware_MinigameData
 ({
 	name           = "Grapple a Player"
-	author         = ["ficool2"]
+	author         = "ficool2"
 	description    = Ware_MinigameMode == 1 ? "Grapple nobody!" : "Grapple a player!"
 	duration       = 4.0
 	min_players    = 2
