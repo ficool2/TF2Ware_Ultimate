@@ -2,13 +2,13 @@ minigame <- Ware_MinigameData
 ({
 	name           = "Grapple a Player"
 	author         = ["ficool2"]
-	description    = Ware_MinigameMode == 2 ? "Grapple nobody!" : "Grapple a player!"
+	description    = Ware_MinigameMode == 1 ? "Grapple nobody!" : "Grapple a player!"
 	duration       = 4.0
 	min_players    = 2
 	music          = "ridealong"
-	custom_overlay = Ware_MinigameMode == 2 ? "grapple_nobody" : "grapple_player"
-	modes          = 3
-	start_pass     = Ware_MinigameMode == 2
+	custom_overlay = Ware_MinigameMode == 1 ? "grapple_nobody" : "grapple_player"
+	modes          = 2
+	start_pass     = Ware_MinigameMode == 1
 })
 
 function OnStart()
@@ -28,9 +28,9 @@ function OnUpdate()
 		local target = player.GetGrapplingHookTarget()
 		if (target && target.IsPlayer())
 		{
-			if (Ware_MinigameMode == 0 || Ware_MinigameMode == 1)
+			if (Ware_MinigameMode == 0)
 				Ware_PassPlayer(player, true)
-			else if (Ware_MinigameMode == 2)
+			else
 				Ware_PassPlayer(player, false)
 		}
 	}
