@@ -10,7 +10,6 @@ cocanium
 collisions
 cramped_quarters
 double_trouble
-extended_round
 fov
 hale
 hunger_update
