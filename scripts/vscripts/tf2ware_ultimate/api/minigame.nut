@@ -147,7 +147,7 @@ class Ware_MinigameData
 	//                                     - Use this to revert any changes done to the map, players, etc
 	cb_on_cleanup           = null
 	
-	// OnTakeDamage(params)                - Called by OnTakeDamage in main.nut and functions as normal.
+	// OnTakeDamage(params)                - Called by OnTakeDamage in main.nut. Return false to shortcut an early out/damage=0. Otherwise functions as normal.
 	cb_on_take_damage		= null
 	// OnPlayerAttack(player)              - Called by Ware_OnUpdate, when a player attacks and passes that player.
 	cb_on_player_attack		= null

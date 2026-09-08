@@ -175,7 +175,7 @@ class Ware_SpecialRoundData
 	cb_can_player_respawn      = null
 	// OnPlayerTouch(player, other_player) - Called by Ware_OnUpdate when two players touch and passes the two players.
 	cb_on_player_touch         = null
-	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut and functions as normal.
+	// OnTakeDamage(params)       - Called by OnTakeDamage in main.nut. Return false to shortcut an early out/damage=0. Otherwise functions as normal.
 	cb_on_take_damage          = null
 	
 	// NOTE: if you are adding callbacks, update the double_trouble special round (it forwards every callback!)
