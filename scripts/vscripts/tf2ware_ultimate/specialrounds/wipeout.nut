@@ -24,7 +24,7 @@ duel_sounds <- {
 	two_lives        = "ui/duel_challenge_accepted.wav"
 	one_life         = "ui/duel_event.wav"
 	three_lives_last = "ui/duel_challenge_with_restriction.wav"
-	two_lives_last   = "duel_challenge_accepted_with_restriction.wav"
+	two_lives_last   = "ui/duel_challenge_accepted_with_restriction.wav"
 }
 
 overlay <- "hud/tf2ware_ultimate/get_ready.vmt"
