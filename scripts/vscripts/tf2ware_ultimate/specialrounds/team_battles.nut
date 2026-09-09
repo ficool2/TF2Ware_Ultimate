@@ -6,7 +6,7 @@ special_round <- Ware_SpecialRoundData
 	author = ["Gemidyne", "pokemonPasta"]
 	description = "Your score goes towards your team's score. The team with the highest score at the end wins!"
 	category = "scores"	
-	min_players = 4 // 2 on each team minimum seems fair, could do min_players = 3 either maybe. minimum players of 2 is pointless.
+	min_players = 4
 	friendly_fire = false
 
 })
@@ -27,12 +27,13 @@ function OnCalculateScore(data)
 	{
 		local team = data.player.GetTeam()
 		local score = Ware_Minigame.boss ? Ware_PointsBossgame : Ware_PointsMinigame
-		data.score += score
 		if (team == TF_TEAM_RED)
 			red_score += score
 		else if (team == TF_TEAM_BLUE)
 			blu_score += score
 	}
+	
+	return false
 }
 
 function OnCalculateTopScorers(top_players)
