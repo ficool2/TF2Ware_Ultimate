@@ -20,7 +20,7 @@ function OnStart()
 
 function OnPlayerDeath(player, attacker, params)
 {
-	if (player && player != attacker)
+	if (player && attacker && player != attacker)
 		Ware_PassPlayer(attacker, true)
 }
 
