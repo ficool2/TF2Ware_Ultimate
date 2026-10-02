@@ -31,6 +31,7 @@ extinguish
 flipper_ball
 flood
 floppy
+force_jump
 ghost
 goomba
 grapple_cutout
