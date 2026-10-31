@@ -21,6 +21,7 @@ friends <- [
 	"Sniper"
 	"Spy"
 	"Sebastian"
+	"Solomon"
 ]
 
 special_round <- Ware_SpecialRoundData
